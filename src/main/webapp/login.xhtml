@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Osniel
+  Date: 11/8/2024
+  Time: 09:59
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html" xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body class="">
+    <main class="main-content  mt-0">
+        <section>
+            <div class="page-header min-vh-100">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
+                            <div class="card card-plain">
+                                <div class="card-header pb-0 text-start">
+                                    <h4 class="font-weight-bolder">SIGENU-EaD</h4>
+                                    <p class="mb-0">Introduzca su usuario y contrase&ntilde;a para acceder al sistema</p>
+                                </div>
+                                <div class="card-body">
+                                    <form id="loginForm" method="post" action="#{request.contextPath}/login"
+                                          role="form">
+                                        <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
+                                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                                <strong>Atenci&oacute;n! </strong> <h:outputText
+                                                    value="#{templateBean.translateMessage(SPRING_SECURITY_LAST_EXCEPTION.message)}"/>
+                                            </div>
+                                        </c:if>
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control form-control-lg"
+                                                   placeholder="Usuario"
+                                                   aria-label="Usuario" id="username" name="username" required="true"/>
+                                        </div>
+                                        <div class="mb-3">
+                                            <input type="password" class="form-control form-control-lg"
+                                                   placeholder="Contrase&ntilde;a"
+                                                   aria-label="Contrase&ntilde;a" id="password" name="password"
+                                                   required="true"/>
+                                        </div>
+                                        <div class="text-center">
+                                            <button type="submit"
+                                                    class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Acceder
+                                            </button>
+                                        </div>
+                                        <input type="hidden"
+                                               name="${_csrf.parameterName}"
+                                               value="${_csrf.token}"/>
+                                        <br/>
+                                    </form>
+                                </div>
+                                <!--                                <div class="card-footer text-center pt-0 px-lg-2 px-1">-->
+                                <!--                                    <p class="mb-4 text-sm mx-auto">-->
+                                <!--                                        <a href="#" onclick="PF('about').show()"-->
+                                <!--                                           class="text-primary text-gradient font-weight-bold"> Acerca de...</a>-->
+                                <!--                                    </p>-->
+                                <!--                                </div>-->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+                        <div class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden"
+                             style="background-image: url('#{request.contextPath}/resources/img/login-study.jpg');
+          background-size: cover;">
+                            <span class="mask bg-gradient-primary opacity-6"></span>
+                            <h4 class="mt-5 text-white font-weight-bolder position-relative">SIGENU-EaD</h4>
+                            <p class="text-white position-relative">
+                                Es un módulo web para SIGENU, desarrollado en la Universidad Agraria de La Habana. Es utilizado para la gestión de los procesos de la secretaría docente correspondiente a la Educaci&oacute;n a Distancia (EaD) de las universidades cubanas.
+                                Permite realizar un seguimiento desde que los estudiantes matriculan en la universidad hasta que culminan sus estudios por parte de las secretarías docentes. Incluye los procesos de matricular asignaturas, notas, baja, promoción, entre otros.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+</h:body>
+
+</html>
