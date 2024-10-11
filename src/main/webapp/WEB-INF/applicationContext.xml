@@ -16,6 +16,9 @@
         <security:intercept-url pattern="/pages/errorPages/**" access="permitAll()"/>
 
         <security:intercept-url pattern="/pages/page1.xhtml" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/AdminUsers.xhtml" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/pages/AdminUser.xhtml" access="hasRole('ROLE_ADMIN')"/>
+
 
 <!--        -->
 
@@ -56,7 +59,7 @@
 <!--        <security:intercept-url pattern="/pages/reportPages/**" access="isAuthenticated()"/>-->
 
         <!--Configuration of login and logout pages-->
-        <security:form-login login-page='/login.xhtml' default-target-url='/pages/index.xhtml'
+        <security:form-login login-page='/login.xhtml' default-target-url='/pages/AdminUser.xhtml'
                              always-use-default-target='true'/>
         <security:logout logout-success-url="/login.xhtml" delete-cookies="JSESSIONID"/>
 

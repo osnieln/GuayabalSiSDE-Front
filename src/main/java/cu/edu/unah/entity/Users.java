@@ -1,12 +1,14 @@
 package cu.edu.unah.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 
 import java.io.Serializable;
 
 
 @Entity
 @Table(name = "users")
+@Builder
 @NamedQueries({
         @NamedQuery(name = "Users.findAll", query = "SELECT u FROM Users u"),
         @NamedQuery(name = "Users.findByUsername", query = "SELECT u FROM Users u WHERE u.username = :username"),
@@ -143,7 +145,6 @@ public class Users implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Users)) {
             return false;
         }

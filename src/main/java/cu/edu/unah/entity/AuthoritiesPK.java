@@ -3,8 +3,6 @@ package cu.edu.unah.entity;
 import java.io.Serializable;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-
 @Embeddable
 public class AuthoritiesPK implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -49,7 +47,6 @@ public class AuthoritiesPK implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof AuthoritiesPK)) {
             return false;
         }

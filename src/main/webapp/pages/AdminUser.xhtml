@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Osniel
+  Date: 10/10/2024
+  Time: 14:50
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body>
+
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="title">
+            Administrar Usuarios
+        </ui:define>
+
+        <ui:define name="content">
+            #{adminUsersBean.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Adicionar" icon="pi pi-plus"
+                                         update=":dialogs:add-users-content"
+                                         oncomplete="PF('addusersDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:add-users-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable tableStyleClass="table-striped" id="dt-users" widgetVar="dtusers" var="users"
+                             value="#{adminUsersBean.listUsers}" size="small"
+                             reflow="true"
+                             rowKey="#{users.username}" paginator="true" rows="10"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="users-table-header">
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtusers').filter()" placeholder="Buscar"/>
+                    </span>
+                        </div>
+                    </f:facet>
+                    <p:column exportHeaderValue="Usuario" headerText="Usuario" sortOrder="asc" filterBy="#{users.username}">
+                        <h:outputText value="#{users.username}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Identificaci&oacute;n" headerText="Identificaci&oacute;n">
+                        <h:outputText value="#{users.identificacion}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Nombre" headerText="Nombre">
+                        <h:outputText value="#{users.nombre}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Email" headerText="Email">
+                        <h:outputText value="#{users.email}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Descripci&oacute;n" headerText="Descripci&oacute;n">
+                        <h:outputText value="#{users.descripcion}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Estado" headerText="Estado">
+                        <h:outputText styleClass="#{adminUsersBean.translateBooleanToSeverity(users.enabled)}"
+                                      value="#{adminUsersBean.translateEstado(users.enabled)}"/>
+                    </p:column>
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-info-circle"
+                                         oncomplete="PF('infousersDialog').show()"
+                                         styleClass="rounded-button ui-button-info" process="@this"
+                                         actionListener="#{adminUsersBean.updateSelectedUsers(users)}"
+                                         update=":dialogs:info-users-content"
+                                         title="Informaci&oacute;n">
+                            <p:resetInput target=":dialogs:info-users-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-users-content"
+                                         style="margin-left: 10px"
+                                         oncomplete="PF('editusersDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"
+                                         actionListener="#{adminUsersBean.updateSelected_Users_toEdit(users)}">
+                            <p:resetInput target=":dialogs:edit-users-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash"
+                                         oncomplete="PF('deletUserDialog').show()"
+                                         style="margin-left: 10px"
+                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"
+                                         actionListener="#{adminUsersBean.updateSelectedUserToDelete(users)}">
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+            <h:form id="dialogs">
+
+                <!--Info Dialog-->
+                <p:dialog header="Informaci&oacute;n" showEffect="fade" modal="true"
+                          widgetVar="infousersDialog"
+                          responsive="true">
+                    <p:outputPanel id="info-users-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Usuario: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminUsersBean.selectedUser.username}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Identificaci&oacute;n: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminUsersBean.selectedUser.identificacion}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Nombre: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminUsersBean.selectedUser.nombre}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Email: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminUsersBean.selectedUser.email}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Descripci&oacute;n: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminUsersBean.selectedUser.descripcion}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Estado: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminUsersBean.translateEstado(adminUsersBean.selectedUser.enabled)}"
+                                            styleClass="#{adminUsersBean.translateBooleanToSeverity(adminUsersBean.selectedUser.enabled)}"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infousersDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Info Dialog-->
+
+                <!--Add Dialog-->
+                <p:dialog header="A&ntilde;adir Usuario" height="400px" showEffect="fade" modal="true"
+                          widgetVar="addusersDialog"
+                          responsive="true">
+                    <p:outputPanel id="add-users-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="id" value="Identificaci&oacute;n"/><br/>
+                                <p:inputMask label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                             id="id" value="#{adminUsersBean.identificacion}"
+                                             placeholder="Identificaci&oacute;n" required="true"
+                                             mask="99999999999"/>
+                            </div>
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="input_nombre" value="Nombre"/><br/>
+                                <p:inputText label="Nombre" id="input_nombre"
+                                             validatorMessage="ERROR: Nombre no v&aacute;lido" autocomplete="false"
+                                             required="true" class="form-control" placeholder="Nombre"
+                                             value="#{adminUsersBean.nombre}">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputText>
+                            </div>
+                            <div class="col col-sm-1">
+                                <p:outputLabel for="estado" value="Estado"/><br/>
+                                <p:toggleSwitch id="estado" value="#{adminUsersBean.enable}" onIcon="pi pi-check"
+                                                offIcon="pi pi-times"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="input_username" value="Nombre de usuario"/><br/>
+                                <p:inputText label="Usuario" id="input_username"
+                                             validatorMessage="ERROR: Usuario no v&aacute;lido" autocomplete="false"
+                                             required="true" class="form-control" placeholder="Usuario"
+                                             value="#{adminUsersBean.username}">
+                                    <f:validateLength maximum="45"/>
+                                    <f:validateRegex pattern="[a-z]+[0-9]*[_.-]?[a-z0-9]+$"/>
+                                </p:inputText>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="input_email" value="E-mail"/><br/>
+                                <p:inputText label="Correo" id="input_email"
+                                             validatorMessage="ERROR: Correo no v&aacute;lido" autocomplete="false"
+                                             required="true" class="form-control" placeholder="Correo"
+                                             value="#{adminUsersBean.email}">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex
+                                            pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="input_password" value="Contrase&ntilde;a"/><br/>
+                                <p:password label="Contrase&ntilde;a" id="input_password" name="inputsecret1"
+                                            feedback="true"
+                                            autocomplete="false" required="true" class="form-control"
+                                            promptLabel="Contrase&ntilde;a" weakLabel="Débil"
+                                            goodLabel="Buena" strongLabel="Fuerte"
+                                            placeholder="Contrase&ntilde;a" value="#{adminUsersBean.password}">
+                                    <f:validateLength maximum="45"/>
+                                </p:password>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="input_password1" value="Repetir Contrase&ntilde;a"/><br/>
+                                <p:password label="Repetir Contrase&ntilde;a" id="input_password1"
+                                            feedback="true"
+                                            name="inputsecret2" autocomplete="false" required="true"
+                                            promptLabel="Repetir Contrase&ntilde;a" weakLabel="Débil"
+                                            goodLabel="Buena" strongLabel="Fuerte"
+                                            class="form-control" placeholder="Repetir Contrase&ntilde;a"
+                                            value="#{adminUsersBean.password1}">
+                                    <f:validateLength maximum="45"/>
+                                </p:password>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="descripcion" style="height: 30px;"
+                                                 value="#{adminUsersBean.descripcion}"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="basic" value="Roles:"/>
+                                <p:selectManyMenu filter="true" filterMatchMode="contains"
+                                                  requiredMessage="Roles: Se requiere al menos un ROL"
+                                                  required="true" showCheckbox="true" label="Roles" id="basic"
+                                                  value="#{adminUsersBean.roles}">
+                                    <f:selectItem itemLabel=" Administrador" itemValue="ROLE_ADMIN"/>
+                                    <f:selectItem itemLabel=" Usuario" itemValue="ROLE_USER"/>
+                                </p:selectManyMenu>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnAddModal" actionListener="#{adminUsersBean.addUsers()}"
+                                         update="add-users-content form:messages"
+                                         process="add-users-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addusersDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Add Dialog-->
+
+                <!--Edit Dialog-->
+                <p:dialog header="Editar Usuario" height="400px" showEffect="fade" modal="true"
+                          widgetVar="editusersDialog"
+                          responsive="true">
+                    <p:outputPanel id="edit-users-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="edit-id" value="Identificaci&oacute;n"/><br/>
+                                <p:inputMask label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                             id="edit-id" value="#{adminUsersBean.identificacion}"
+                                             placeholder="Identificaci&oacute;n" required="true"
+                                             mask="99999999999"/>
+                            </div>
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="edit-input_nombre" value="Nombre"/><br/>
+                                <p:inputText label="Nombre" id="edit-input_nombre"
+                                             validatorMessage="ERROR: Nombre no v&aacute;lido" autocomplete="false"
+                                             required="true" class="form-control" placeholder="Nombre"
+                                             value="#{adminUsersBean.nombre}">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputText>
+                            </div>
+                            <div class="col col-sm-1">
+                                <p:outputLabel for="edit-estado" value="Estado"/><br/>
+                                <p:toggleSwitch id="edit-estado" value="#{adminUsersBean.enable}" onIcon="pi pi-check"
+                                                offIcon="pi pi-times"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-input_username" value="Nombre de usuario"/><br/>
+                                <p:inputText label="Usuario" id="edit-input_username"
+                                             validatorMessage="ERROR: Usuario no v&aacute;lido" autocomplete="false"
+                                             required="true" class="form-control" placeholder="Usuario"
+                                             value="#{adminUsersBean.username}">
+                                    <f:validateLength maximum="45"/>
+                                    <f:validateRegex pattern="[a-z]+[0-9]*[_.-]?[a-z0-9]+$"/>
+                                </p:inputText>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-input_email" value="E-mail"/><br/>
+                                <p:inputText label="Correo" id="edit-input_email"
+                                             validatorMessage="ERROR: Correo no v&aacute;lido" autocomplete="false"
+                                             required="true" class="form-control" placeholder="Correo"
+                                             value="#{adminUsersBean.email}">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex
+                                            pattern="[\w\.-]*[a-zA-Z0-9_]@[\w\.-]*[a-zA-Z0-9]\.[a-zA-Z][a-zA-Z\.]*[a-zA-Z]"/>
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-input_password" value="Contrase&ntilde;a"/><br/>
+                                <p:password label="Contrase&ntilde;a" id="edit-input_password" name="inputsecret1"
+                                            feedback="true"
+                                            autocomplete="false"
+                                            class="form-control"
+                                            promptLabel="Contrase&ntilde;a" weakLabel="Débil"
+                                            goodLabel="Buena" strongLabel="Fuerte"
+                                            placeholder="Contrase&ntilde;a" value="#{adminUsersBean.password}">
+                                    <f:validateLength maximum="45"/>
+                                </p:password>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-input_password1" value="Repetir Contrase&ntilde;a"/><br/>
+                                <p:password label="Repetir Contrase&ntilde;a" id="edit-input_password1"
+                                            feedback="true"
+                                            name="inputsecret2" autocomplete="false"
+                                            promptLabel="Repetir Contrase&ntilde;a" weakLabel="Débil"
+                                            goodLabel="Buena" strongLabel="Fuerte"
+                                            class="form-control" placeholder="Repetir Contrase&ntilde;a"
+                                            value="#{adminUsersBean.password1}">
+                                    <f:validateLength maximum="45"/>
+                                </p:password>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="edit-descripcion" style="height: 30px;"
+                                                 value="#{adminUsersBean.descripcion}"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-basic" value="Roles:"/>
+                                <p:selectManyMenu filter="true" filterMatchMode="contains"
+                                                  requiredMessage="Roles: Se requiere al menos un ROL"
+                                                  required="true" showCheckbox="true" label="Roles" id="edit-basic"
+                                                  value="#{adminUsersBean.roles}">
+                                    <f:selectItem itemLabel=" Administrador" itemValue="ROLE_ADMIN"/>
+                                    <f:selectItem itemLabel=" Usuario" itemValue="ROLE_USER"/>
+                                </p:selectManyMenu>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnEditModal" actionListener="#{adminUsersBean.editUsers()}"
+                                         update="edit-users-content form:messages"
+                                         process="edit-users-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editusersDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Delete Dialog -->
+                <p:confirmDialog widgetVar="deletUserDialog" showEffect="fade" width="300" message="¿Desea eliminar el usuario?"
+                                 header="Confirm" severity="info">
+                    <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminUsersBean.deleteUsers()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deletUserDialog').hide()"/>
+                </p:confirmDialog>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>

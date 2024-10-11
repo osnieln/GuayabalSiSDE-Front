@@ -3,8 +3,6 @@ package cu.edu.unah.entity;
 import java.io.Serializable;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
-
 
 @Entity
 @Table(name = "authorities")
@@ -56,7 +54,6 @@ public class Authorities implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Authorities)) {
             return false;
         }
