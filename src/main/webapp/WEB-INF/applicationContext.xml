@@ -12,7 +12,7 @@
         <security:intercept-url pattern="/resources/**" access="permitAll()"/>
         <security:intercept-url pattern="/fonts/**" access="permitAll()"/>
         <security:intercept-url pattern="/jakarta.faces.resource/**" access="permitAll()"/>
-        <security:intercept-url pattern="/login.xhtml" access="permitAll()"/>
+        <security:intercept-url pattern="/login.xhtml" access="!isAuthenticated()"/>
         <security:intercept-url pattern="/pages/errorPages/**" access="permitAll()"/>
 
         <security:intercept-url pattern="/pages/page1.xhtml" access="hasRole('ROLE_ADMIN')"/>
