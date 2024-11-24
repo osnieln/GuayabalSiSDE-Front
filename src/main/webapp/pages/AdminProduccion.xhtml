@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Osniel
+  Date: 10/10/2024
+  Time: 14:50
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body>
+
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="title">
+            Administrar Producci&oacute;n
+        </ui:define>
+
+        <ui:define name="content">
+            #{adminProduccion.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Adicionar" icon="pi pi-plus"
+                                         update=":dialogs:add-produccion-content"
+                                         oncomplete="PF('addproduccionDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:add-produccion-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable tableStyleClass="table-striped" id="dt-produccion" widgetVar="dtproduccion" var="produccion"
+                             value="#{adminProduccion.listProduccion}" size="small"
+                             reflow="true"
+                             rowKey="#{produccion.descripcion}" paginator="true" rows="10"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="produccion-table-header">
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtproduccion').filter()" placeholder="Buscar"/>
+                    </span>
+                        </div>
+                    </f:facet>
+                    <p:column exportHeaderValue="ID" headerText="ID" sortOrder="asc" filterBy="#{produccion.id}">
+                        <h:outputText value="#{produccion.id}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Descripci&oacute;n" headerText="Descripci&oacute;n">
+                        <h:outputText value="#{produccion.descripcion}"/>
+                    </p:column>
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-info-circle"
+                                         oncomplete="PF('infoproduccionDialog').show()"
+                                         styleClass="rounded-button ui-button-info" process="@this"
+                                         actionListener="#{adminProduccion.updateSelectedProduccion(produccion)}"
+                                         update=":dialogs:info-produccion-content"
+                                         title="Informaci&oacute;n">
+                            <p:resetInput target=":dialogs:info-produccion-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-produccion-content"
+                                         style="margin-left: 10px"
+                                         oncomplete="PF('editproduccionDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"
+                                         actionListener="#{adminProduccion.updateSelected_Produccion_toEdit(produccion)}">
+                            <p:resetInput target=":dialogs:edit-produccion-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash"
+                                         oncomplete="PF('deleteProduccionDialog').show()"
+                                         style="margin-left: 10px"
+                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"
+                                         actionListener="#{adminProduccion.updateSelectedProduccionToDelete(produccion)}">
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+            <h:form id="dialogs">
+
+                <!--Info Dialog-->
+                <p:dialog header="Informaci&oacute;n" showEffect="fade" modal="true"
+                          widgetVar="infoproduccionDialog"
+                          responsive="true">
+                    <p:outputPanel id="info-produccion-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="ID: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminProduccion.selectedProduccion.id}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Descripci&oacute;n: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminProduccion.selectedProduccion.descripcion}"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infoproduccionDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Info Dialog-->
+
+                <!--Add Dialog-->
+                <p:dialog header="A&ntilde;adir Produccion" showEffect="fade" modal="true"
+                          widgetVar="addproduccionDialog"
+                          responsive="true">
+                    <p:outputPanel id="add-produccion-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="descripcion" style="height: 30px;"
+                                                 value="#{adminProduccion.descripcion}"/>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnAddModal" actionListener="#{adminProduccion.addProduccion()}"
+                                         update="add-produccion-content form:messages"
+                                         process="add-produccion-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addproduccionDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Add Dialog-->
+
+                <!--Edit Dialog-->
+                <p:dialog header="Editar Produccion" showEffect="fade" modal="true"
+                          widgetVar="editproduccionDialog"
+                          responsive="true">
+                    <p:outputPanel id="edit-produccion-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="edit-id" value="Identificaci&oacute;n"/><br/>
+                                <p:inputText label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                             id="edit-id" value="#{adminProduccion.selectedProduccion.id}"
+                                             placeholder="Identificaci&oacute;n" disabled="true"
+                                             mask="99999999999"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="edit-descripcion" style="height: 30px;"
+                                                 value="#{adminProduccion.descripcion}"/>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnEditModal" actionListener="#{adminProduccion.editProduccion()}"
+                                         update="edit-produccion-content form:messages"
+                                         process="edit-produccion-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editproduccionDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Delete Dialog -->
+                <p:confirmDialog widgetVar="deleteProduccionDialog" showEffect="fade" width="300" message="¿Desea eliminar la Produccion?"
+                                 header="Confirm" severity="info">
+                    <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminProduccion.deleteProduccion()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deleteProduccionDialog').hide()"/>
+                </p:confirmDialog>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>
