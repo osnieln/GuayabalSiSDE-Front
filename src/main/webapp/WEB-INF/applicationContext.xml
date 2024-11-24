@@ -59,7 +59,7 @@
 <!--        <security:intercept-url pattern="/pages/reportPages/**" access="isAuthenticated()"/>-->
 
         <!--Configuration of login and logout pages-->
-        <security:form-login login-page='/login.xhtml' default-target-url='/pages/AdminUser.xhtml'
+        <security:form-login login-page='/login.xhtml' default-target-url='/pages/index.xhtml'
                              always-use-default-target='true'/>
         <security:logout logout-success-url="/login.xhtml" delete-cookies="JSESSIONID"/>
 
