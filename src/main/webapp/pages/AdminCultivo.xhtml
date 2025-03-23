@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Osniel
+  Date: 10/10/2024
+  Time: 14:50
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body>
+
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="title">
+            Administrar Cultivo
+        </ui:define>
+
+        <ui:define name="content">
+            #{adminCultivo.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Adicionar" icon="pi pi-plus"
+                                         update=":dialogs:add-cultivo-content"
+                                         oncomplete="PF('addcultivoDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:add-cultivo-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable tableStyleClass="table-striped" id="dt-cultivo" widgetVar="dtcultivo" var="cultivo"
+                             value="#{adminCultivo.listCultivo}" size="small"
+                             reflow="true"
+                             rowKey="#{cultivo.descripcion}" paginator="true" rows="10"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="cultivo-table-header">
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtcultivo').filter()" placeholder="Buscar"/>
+                    </span>
+                        </div>
+                    </f:facet>
+                    <p:column exportHeaderValue="ID" headerText="ID" sortOrder="asc" filterBy="#{cultivo.id}">
+                        <h:outputText value="#{cultivo.id}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Descripci&oacute;n" headerText="Descripci&oacute;n">
+                        <h:outputText value="#{cultivo.descripcion}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Producci&oacute;n" headerText="Producci&oacute;n">
+                        <h:outputText value="#{cultivo.produccion.descripcion}"/>
+                    </p:column>
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-info-circle"
+                                         oncomplete="PF('infocultivoDialog').show()"
+                                         styleClass="rounded-button ui-button-info" process="@this"
+                                         actionListener="#{adminCultivo.updateSelectedCultivo(cultivo)}"
+                                         update=":dialogs:info-cultivo-content"
+                                         title="Informaci&oacute;n">
+                            <p:resetInput target=":dialogs:info-cultivo-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-cultivo-content"
+                                         style="margin-left: 10px"
+                                         oncomplete="PF('editcultivoDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"
+                                         actionListener="#{adminCultivo.updateSelected_Cultivo_toEdit(cultivo)}">
+                            <p:resetInput target=":dialogs:edit-cultivo-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash"
+                                         oncomplete="PF('deleteCultivoDialog').show()"
+                                         style="margin-left: 10px"
+                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"
+                                         actionListener="#{adminCultivo.updateSelectedCultivoToDelete(cultivo)}">
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+            <h:form id="dialogs">
+
+                <!--Info Dialog-->
+                <p:dialog header="Informaci&oacute;n" showEffect="fade" modal="true"
+                          widgetVar="infocultivoDialog"
+                          responsive="true">
+                    <p:outputPanel id="info-cultivo-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="ID: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminCultivo.selectedCultivo.id}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Descripci&oacute;n: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminCultivo.selectedCultivo.descripcion}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Producci&oacute;n: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminCultivo.selectedCultivo.produccion.descripcion}"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infocultivoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Info Dialog-->
+
+                <!--Add Dialog-->
+                <p:dialog header="A&ntilde;adir Cultivo" showEffect="fade" modal="true"
+                          widgetVar="addcultivoDialog"
+                          responsive="true">
+                    <p:outputPanel id="add-cultivo-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="descripcion" style="height: 30px;"
+                                                 value="#{adminCultivo.descripcion}"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="add-produccion" value="Producci&oacute;n"/><br/>
+                                <p:selectOneMenu id="add-produccion" value="#{adminCultivo.produccionId}">
+                                    <f:selectItems itemLabel="${prod.descripcion}" itemValue="${prod.id}" var="prod" value="#{adminCultivo.listProduccion}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnAddModal" actionListener="#{adminCultivo.addCultivo()}"
+                                         update="add-cultivo-content form:messages"
+                                         process="add-cultivo-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addcultivoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Add Dialog-->
+
+                <!--Edit Dialog-->
+                <p:dialog header="Editar Cultivo" showEffect="fade" modal="true"
+                          widgetVar="editcultivoDialog"
+                          responsive="true">
+                    <p:outputPanel id="edit-cultivo-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="edit-id" value="Identificaci&oacute;n"/><br/>
+                                <p:inputText label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                             id="edit-id" value="#{adminCultivo.selectedCultivo.id}"
+                                             placeholder="Identificaci&oacute;n" disabled="true"
+                                             mask="99999999999"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="edit-descripcion" style="height: 30px;"
+                                                 value="#{adminCultivo.descripcion}"/>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-produccion" value="Producci&oacute;n"/><br/>
+                                <p:selectOneMenu id="edit-produccion" value="#{adminCultivo.produccionId}">
+                                    <f:selectItems itemLabel="${prod.descripcion}" itemValue="${prod.id}" var="prod" value="#{adminCultivo.listProduccion}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnEditModal" actionListener="#{adminCultivo.editCultivo()}"
+                                         update="edit-cultivo-content form:messages"
+                                         process="edit-cultivo-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editcultivoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Delete Dialog -->
+                <p:confirmDialog widgetVar="deleteCultivoDialog" showEffect="fade" width="300" message="¿Desea eliminar la Cultivo?"
+                                 header="Confirm" severity="info">
+                    <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminCultivo.deleteCultivo()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deleteCultivoDialog').hide()"/>
+                </p:confirmDialog>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>
