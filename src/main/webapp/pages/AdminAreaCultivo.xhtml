@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Osniel
+  Date: 10/10/2024
+  Time: 14:50
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body>
+
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="title">
+            Administrar Producci&oacute;n
+        </ui:define>
+
+        <ui:define name="content">
+            #{adminAreaCultivo.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Adicionar" icon="pi pi-plus"
+                                         update=":dialogs:add-areaCultivo-content"
+                                         oncomplete="PF('addareaCultivoDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:add-areaCultivo-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable tableStyleClass="table-striped" id="dt-areaCultivo" widgetVar="dtareaCultivo" var="areaCultivo"
+                             value="#{adminAreaCultivo.listAreaCultivo}" size="small"
+                             reflow="true"
+                             rowKey="#{areaCultivo.descripcion}" paginator="true" rows="10"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="areaCultivo-table-header">
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtareaCultivo').filter()" placeholder="Buscar"/>
+                    </span>
+                        </div>
+                    </f:facet>
+                    <p:column exportHeaderValue="Area" headerText="Area" filterBy="#{areaCultivo.areaResponse.descripcion}">
+                        <h:outputText value="#{areaCultivo.areaResponse.descripcion}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Cultivo" headerText="Cultivo" filterBy="#{areaCultivo.cultivo.descripcion}">
+                        <h:outputText value="#{areaCultivo.cultivo.descripcion}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Fecha de siembra" headerText="Fecha de siembra" sortOrder="asc" filterBy="#{areaCultivo.areaCultivoPk.fechaSiembra}">
+                        <h:outputText value="#{areaCultivo.areaCultivoPk.fechaSiembra}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Fecha de recogida" headerText="Fecha de recogida" filterBy="#{areaCultivo.fechaRecogida}">
+                        <h:outputText value="#{areaCultivo.fechaRecogida}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Plan de producción" headerText="Plan de producci&oacute;n" filterBy="#{areaCultivo.planProd}">
+                        <h:outputText value="#{areaCultivo.planProd}"/>
+                    </p:column>
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-info-circle"
+                                         oncomplete="PF('infoareaCultivoDialog').show()"
+                                         styleClass="rounded-button ui-button-info" process="@this"
+                                         actionListener="#{adminAreaCultivo.updateSelectedAreaCultivo(areaCultivo)}"
+                                         update=":dialogs:info-areaCultivo-content"
+                                         title="Informaci&oacute;n">
+                            <p:resetInput target=":dialogs:info-areaCultivo-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-areaCultivo-content"
+                                         style="margin-left: 10px"
+                                         oncomplete="PF('editareaCultivoDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"
+                                         actionListener="#{adminAreaCultivo.updateSelected_AreaCultivo_toEdit(areaCultivo)}">
+                            <p:resetInput target=":dialogs:edit-areaCultivo-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash"
+                                         oncomplete="PF('deleteAreaCultivoDialog').show()"
+                                         style="margin-left: 10px"
+                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"
+                                         actionListener="#{adminAreaCultivo.updateSelectedAreaCultivoToDelete(areaCultivo)}">
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+            <h:form id="dialogs">
+
+                <!--Info Dialog-->
+                <p:dialog header="Informaci&oacute;n" showEffect="fade" modal="true"
+                          widgetVar="infoareaCultivoDialog"
+                          responsive="true">
+                    <p:outputPanel id="info-areaCultivo-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="&Aacute;rea: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAreaCultivo.selectedAreaCultivo.areaResponse.descripcion}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Cultivo: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAreaCultivo.selectedAreaCultivo.cultivo.descripcion}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Fecha de siembra: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAreaCultivo.selectedAreaCultivo.areaCultivoPk.fechaSiembra}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Fecha de recogida: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAreaCultivo.selectedAreaCultivo.fechaRecogida}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Plan de producci&oacute;n: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAreaCultivo.selectedAreaCultivo.planProd}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Producci&oacute;n de cultivos permanentes: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAreaCultivo.selectedAreaCultivo.prodCultivosPermanente}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Producci&oacute;n de cultivos temporal: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAreaCultivo.selectedAreaCultivo.prodCultivosTemporales}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Producci&oacute;n real: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAreaCultivo.selectedAreaCultivo.produccionReal}"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infoareaCultivoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Info Dialog-->
+
+                <!--Add Dialog-->
+                <p:dialog header="A&ntilde;adir AreaCultivo" showEffect="fade" modal="true"
+                          widgetVar="addareaCultivoDialog"
+                          responsive="true">
+                    <p:outputPanel id="add-areaCultivo-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="descripcion" style="height: 30px;"
+                                                 value="#{adminAreaCultivo.descripcion}"/>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnAddModal" actionListener="#{adminAreaCultivo.addAreaCultivo()}"
+                                         update="add-areaCultivo-content form:messages"
+                                         process="add-areaCultivo-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addareaCultivoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Add Dialog-->
+
+                <!--Edit Dialog-->
+                <p:dialog header="Editar AreaCultivo" showEffect="fade" modal="true"
+                          widgetVar="editareaCultivoDialog"
+                          responsive="true">
+                    <p:outputPanel id="edit-areaCultivo-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="edit-id" value="Identificaci&oacute;n"/><br/>
+                                <p:inputText label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                             id="edit-id" value="#{adminAreaCultivo.selectedAreaCultivo.id}"
+                                             placeholder="Identificaci&oacute;n" disabled="true"
+                                             mask="99999999999"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="edit-descripcion" style="height: 30px;"
+                                                 value="#{adminAreaCultivo.descripcion}"/>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnEditModal" actionListener="#{adminAreaCultivo.editAreaCultivo()}"
+                                         update="edit-areaCultivo-content form:messages"
+                                         process="edit-areaCultivo-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editareaCultivoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Delete Dialog -->
+                <p:confirmDialog widgetVar="deleteAreaCultivoDialog" showEffect="fade" width="300" message="¿Desea eliminar la AreaCultivo?"
+                                 header="Confirm" severity="info">
+                    <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminAreaCultivo.deleteAreaCultivo()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deleteAreaCultivoDialog').hide()"/>
+                </p:confirmDialog>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>

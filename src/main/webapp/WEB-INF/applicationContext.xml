@@ -20,6 +20,7 @@
         <security:intercept-url pattern="/pages/Area.xhtml" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/pages/AdminProduccion.xhtml" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/pages/AdminCultivo.xhtml" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/pages/AdminAreaCultivo.xhtml" access="hasRole('ROLE_ADMIN')"/>
 
 
 <!--        -->
