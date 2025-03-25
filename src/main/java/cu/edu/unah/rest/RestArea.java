@@ -2,6 +2,7 @@ package cu.edu.unah.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import cu.edu.unah.entity.Area;
+import cu.edu.unah.util.AreaResponse;
 import cu.edu.unah.util.JSONUtils;
 
 import java.net.URI;
@@ -15,16 +16,16 @@ import java.util.concurrent.ExecutionException;
 public class RestArea {
 
     private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
-    private static final String serviceURL = "http://localhost:8081/Area/";
+    private static final String serviceURL = "http://localhost:8081/area";
 
     //sending request to retrieve all Area available.
-    public List<Area> findAllArea() {
+    public List<AreaResponse> findAllArea() {
         HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL)).GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
-        List<Area> list_Area = null;
+        List<AreaResponse> list_Area = null;
         try {
             list_Area = JSONUtils.convertFromJsonToList(response.get().body(), new
-                    TypeReference<List<Area>>() {});
+                    TypeReference<List<AreaResponse>>() {});
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -35,9 +36,9 @@ public class RestArea {
     }
 
     //sending request retrieve the area based on the areaname
-    public Area findById(Long id) {
-        Area area = null;
-        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findById/"+id)).GET().build();
+    public AreaResponse findById(Long id) {
+        AreaResponse area = null;
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/findById/"+id)).GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
         try {
             if(response.get().statusCode() == 500){
@@ -46,7 +47,7 @@ public class RestArea {
             }else {
 
                 try {
-                    area = JSONUtils.covertFromJsonToObject(response.get().body(), Area.class);
+                    area = JSONUtils.covertFromJsonToObject(response.get().body(), AreaResponse.class);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
@@ -64,10 +65,10 @@ public class RestArea {
     }
 
     //send request to add the product details.
-    public boolean create(Area area){
+    public boolean create(AreaResponse area){
         String inputJson = null;
         inputJson = JSONUtils.covertFromObjectToJson(area);
-        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"create"))
+        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"/create"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
@@ -86,10 +87,10 @@ public class RestArea {
     }
 
     //send request to update a area details.
-    public boolean update(Area area){
+    public boolean update(AreaResponse area){
         String inputJson= null;
         inputJson = JSONUtils.covertFromObjectToJson(area);
-        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"edit"))
+        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"/edit"))
                 .header("Content-Type", "application/json")
                 .PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
@@ -98,7 +99,7 @@ public class RestArea {
                 response.join();
                 return false;
             } else {
-                area = JSONUtils.covertFromJsonToObject(response.get().body(), Area.class);
+                area = JSONUtils.covertFromJsonToObject(response.get().body(), AreaResponse.class);
                 response.join();
                 return true;
             }
@@ -112,14 +113,14 @@ public class RestArea {
 
     //send request to delete the area by its areaname
     public boolean delete(long id) {
-        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+id)).DELETE().build();
+        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"/delete/"+id)).DELETE().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
             if(response.get().statusCode() == 500) {
                 response.join();
                 return false;
             } else {
-                Area area = JSONUtils.covertFromJsonToObject(response.get().body(), Area.class);
+                AreaResponse area = JSONUtils.covertFromJsonToObject(response.get().body(), AreaResponse.class);
                 response.join();
                 return true;
             }

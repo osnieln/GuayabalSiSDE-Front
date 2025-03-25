@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Osniel
+  Date: 10/10/2024
+  Time: 14:50
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body>
+
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="title">
+            Administrar &Aacute;rea
+        </ui:define>
+
+        <ui:define name="content">
+            #{adminArea.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+
+                <script src="https://maps.google.com/maps/api/js?key=AIzaSyCvCDkYieuUBmMWon_mfLAfjuaeuosuqow&amp;sensor=true"></script>
+                <p:gmap id="gmap" center="22.9985905,-82.1645741" zoom="16" type="HYBRID" style="width:100%;height:400px"
+                        model="#{adminArea.polygonModel}">
+                    <p:ajax event="overlaySelect" listener="#{adminArea.onPolygonSelect}" update="messages"/>
+                </p:gmap>
+
+<!--                <p:toolbar>-->
+<!--                    <p:toolbarGroup align="right">-->
+<!--                        <p:commandButton value="Adicionar" icon="pi pi-plus"-->
+<!--                                         update=":dialogs:add-area-content"-->
+<!--                                         oncomplete="PF('addareaDialog').show()"-->
+<!--                                         styleClass="ui-button-success" style="margin-right: .5rem">-->
+<!--                            <p:resetInput target=":dialogs:add-area-content"/>-->
+<!--                        </p:commandButton>-->
+<!--                    </p:toolbarGroup>-->
+<!--                </p:toolbar>-->
+
+                <p:dataTable tableStyleClass="table-striped" id="dt-area" widgetVar="dtarea" var="area"
+                             value="#{adminArea.listArea}" size="small"
+                             reflow="true"
+                             rowKey="#{area.descripcion}" paginator="true" rows="10"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="area-table-header">
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtarea').filter()" placeholder="Buscar"/>
+                    </span>
+                        </div>
+                    </f:facet>
+                    <p:column exportHeaderValue="ID" headerText="ID" sortOrder="asc" filterBy="#{area.id}">
+                        <h:outputText value="#{area.id}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Descripci&oacute;n" headerText="Descripci&oacute;n">
+                        <h:outputText value="#{area.descripcion}"/>
+                    </p:column>
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-info-circle"
+                                         oncomplete="PF('infoareaDialog').show()"
+                                         styleClass="rounded-button ui-button-info" process="@this"
+                                         actionListener="#{adminArea.updateSelectedArea(area)}"
+                                         update=":dialogs:info-area-content"
+                                         title="Informaci&oacute;n">
+                            <p:resetInput target=":dialogs:info-area-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-area-content"
+                                         style="margin-left: 10px"
+                                         oncomplete="PF('editareaDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"
+                                         actionListener="#{adminArea.updateSelected_Area_toEdit(area)}">
+                            <p:resetInput target=":dialogs:edit-area-content"/>
+                        </p:commandButton>
+<!--                        <p:commandButton icon="pi pi-trash"-->
+<!--                                         oncomplete="PF('deleteAreaDialog').show()"-->
+<!--                                         style="margin-left: 10px"-->
+<!--                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"-->
+<!--                                         actionListener="#{adminArea.updateSelectedAreaToDelete(area)}">-->
+<!--                        </p:commandButton>-->
+                    </p:column>
+
+                </p:dataTable>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+            <h:form id="dialogs">
+
+                <!--Info Dialog-->
+                <p:dialog header="Informaci&oacute;n" showEffect="fade" modal="true"
+                          widgetVar="infoareaDialog"
+                          responsive="true">
+                    <p:outputPanel id="info-area-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="ID: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminArea.selectedArea.id}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Descripci&oacute;n: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminArea.selectedArea.descripcion}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p:gmap id="gmapInfo" center="#{adminArea.centerCoords}" zoom="16" type="HYBRID" style="width:400px;height:400px"
+                                        model="#{adminArea.polygonModelInfo}">
+                                </p:gmap>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infoareaDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Info Dialog-->
+
+                <!--Add Dialog-->
+                <p:dialog header="A&ntilde;adir Area" showEffect="fade" modal="true"
+                          widgetVar="addareaDialog"
+                          responsive="true">
+                    <p:outputPanel id="add-area-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="descripcion" style="height: 30px;"
+                                                 value="#{adminArea.descripcion}"/>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnAddModal" actionListener="#{adminArea.addArea()}"
+                                         update="add-area-content form:messages"
+                                         process="add-area-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addareaDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Add Dialog-->
+
+                <!--Edit Dialog-->
+                <p:dialog header="Editar Area" showEffect="fade" modal="true"
+                          widgetVar="editareaDialog"
+                          responsive="true">
+                    <p:outputPanel id="edit-area-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="edit-id" value="Identificaci&oacute;n"/><br/>
+                                <p:inputText label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                             id="edit-id" value="#{adminArea.selectedArea.id}"
+                                             placeholder="Identificaci&oacute;n" disabled="true"
+                                             mask="99999999999"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
+                                <p:inputTextarea id="edit-descripcion" style="height: 30px;"
+                                                 value="#{adminArea.descripcion}"/>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnEditModal" actionListener="#{adminArea.editArea()}"
+                                         update="edit-area-content form:messages"
+                                         process="edit-area-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editareaDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Delete Dialog -->
+                <p:confirmDialog widgetVar="deleteAreaDialog" showEffect="fade" width="300" message="¿Desea eliminar la Area?"
+                                 header="Confirm" severity="info">
+                    <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminArea.deleteArea()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deleteAreaDialog').hide()"/>
+                </p:confirmDialog>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>
