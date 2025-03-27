@@ -73,11 +73,11 @@ public class AdminCultivo implements Serializable{
         FacesContext context = FacesContext.getCurrentInstance();
 
         if(restCultivo.create(cultivoToAdd)){
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "PRODUCCION ADICIONADA CORRECTAMENTE", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "CULTIVO ADICIONADO CORRECTAMENTE", ""));
             init();
             PrimeFaces.current().ajax().update("form:messages", "form:dt-cultivo");
         } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL CREAR LA PRODUCCION", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL CREAR EL CULTIVO", ""));
         }
         PrimeFaces.current().executeScript("PF('addcultivoDialog').hide()");
     }
@@ -93,11 +93,11 @@ public class AdminCultivo implements Serializable{
         FacesContext context = FacesContext.getCurrentInstance();
         if(restCultivo.update(cultivoToEdit)){
             init();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "PRODUCCION EDITADA", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "CULTIVO EDITADO", ""));
             PrimeFaces.current().ajax().update("form:messages", "form:dt-cultivo");
         }
         else{
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL EDITAR LA PRODUCCION", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL EDITAR EL CULTIVO", ""));
         }
         PrimeFaces.current().executeScript("PF('editcultivoDialog').hide()");
     }
@@ -105,12 +105,12 @@ public class AdminCultivo implements Serializable{
     public void deleteCultivo() {
         FacesContext context = FacesContext.getCurrentInstance();
         if(restCultivo.delete(selectedCultivo.getId())){
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "PRODUCCION ELIMINADA CORRECTAMENTE", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "CULTIVO ELIMINADO CORRECTAMENTE", ""));
             init();
             PrimeFaces.current().ajax().update("form:messages", "form:dt-cultivo");
         }
         else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR LA PRODUCCION", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR EL CULTIVO", ""));
         }
         PrimeFaces.current().executeScript("PF('deleteCultivoDialog').hide()");
     }

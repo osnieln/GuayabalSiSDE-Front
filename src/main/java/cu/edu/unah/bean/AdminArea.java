@@ -119,11 +119,11 @@ public class AdminArea implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
 
         if (restArea.create(areaToAdd)) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "PRODUCCION ADICIONADA CORRECTAMENTE", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "AREA ADICIONADA CORRECTAMENTE", ""));
             init();
             PrimeFaces.current().ajax().update("form:messages", "form:dt-area");
         } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL CREAR LA PRODUCCION", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL CREAR EL AREA", ""));
         }
         PrimeFaces.current().executeScript("PF('addareaDialog').hide()");
     }
@@ -138,10 +138,10 @@ public class AdminArea implements Serializable {
         FacesContext context = FacesContext.getCurrentInstance();
         if (restArea.update(areaToEdit)) {
             init();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "PRODUCCION EDITADA", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "AREA EDITADA", ""));
             PrimeFaces.current().ajax().update("form:messages", "form:dt-area");
         } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL EDITAR LA PRODUCCION", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL EDITAR EL AREA", ""));
         }
         PrimeFaces.current().executeScript("PF('editareaDialog').hide()");
     }
@@ -149,11 +149,11 @@ public class AdminArea implements Serializable {
     public void deleteArea() {
         FacesContext context = FacesContext.getCurrentInstance();
         if (restArea.delete(selectedArea.getId())) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "PRODUCCION ELIMINADA CORRECTAMENTE", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "AREA ELIMINADA CORRECTAMENTE", ""));
             init();
             PrimeFaces.current().ajax().update("form:messages", "form:dt-area");
         } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR LA PRODUCCION", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR EL AREA", ""));
         }
         PrimeFaces.current().executeScript("PF('deleteAreaDialog').hide()");
     }

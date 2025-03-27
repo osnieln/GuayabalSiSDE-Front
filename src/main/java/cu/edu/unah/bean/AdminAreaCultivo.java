@@ -1,8 +1,14 @@
 package cu.edu.unah.bean;
 
-import cu.edu.unah.entity.AreaCultivo;
+import cu.edu.unah.entity.Area;
+import cu.edu.unah.entity.Cultivo;
+import cu.edu.unah.rest.RestArea;
 import cu.edu.unah.rest.RestAreaCultivo;
+import cu.edu.unah.rest.RestCultivo;
 import cu.edu.unah.util.AreaCultivoResponse;
+import cu.edu.unah.util.AreaCultivoResponsePK;
+import cu.edu.unah.util.AreaResponse;
+import cu.edu.unah.util.DateFormatter;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -13,6 +19,7 @@ import org.primefaces.PrimeFaces;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Named
@@ -24,14 +31,31 @@ public class AdminAreaCultivo implements Serializable{
     private List<AreaCultivoResponse> listAreaCultivo = new ArrayList<AreaCultivoResponse>();
     private String descripcion ="";
 
+    List<AreaResponse> areaResponsesList = new ArrayList<>();
+    List<Cultivo> cultivoList = new ArrayList<>();
+
     private AreaCultivoResponse areaCultivo = new AreaCultivoResponse();
     private AreaCultivoResponse selectedAreaCultivo;
+
+    String cultivoSelected = "";
+    String areaSelected = "";
+
     RestAreaCultivo restAreaCultivo = new RestAreaCultivo();
-    
+    RestArea restArea = new RestArea();
+    RestCultivo restCultivo = new RestCultivo();
+
+    Date fechaSiembra = new Date(System.currentTimeMillis());
+    Date fechaRecogida = new Date(System.currentTimeMillis());
+    double planProduccion, prodPermanente, prodTemporal, prodReal;
+
     public void init(){
         listAreaCultivo.clear();
         cleanVariables();
+        areaResponsesList.clear();
+        cultivoList.clear();
         listAreaCultivo = restAreaCultivo.findAllAreaCultivo();
+        areaResponsesList = restArea.findAllArea();
+        cultivoList = restCultivo.findAllCultivo();
         System.out.println(listAreaCultivo.size());
     }
 
@@ -45,7 +69,14 @@ public class AdminAreaCultivo implements Serializable{
 
     public void updateSelected_AreaCultivo_toEdit(AreaCultivoResponse areaCultivoResponse) {
         selectedAreaCultivo = areaCultivoResponse;
-//        descripcion = areaCultivo.getDescripcion();
+        areaSelected = areaCultivoResponse.getAreaCultivoResponsePK().getAreaId().toString();
+        cultivoSelected = areaCultivoResponse.getAreaCultivoResponsePK().getCultivoId().toString();
+        fechaSiembra = DateFormatter.format(areaCultivoResponse.getAreaCultivoResponsePK().getFechaSiembra());
+        fechaRecogida= DateFormatter.format(areaCultivoResponse.getFechaRecogida());
+        planProduccion = areaCultivoResponse.getPlanProd();
+        prodPermanente =areaCultivoResponse.getProdCultivosPermanente();
+        prodTemporal = areaCultivoResponse.getProdCultivosTemporales();
+        prodReal = areaCultivoResponse.getProduccionReal();
     }
 
     public void updateSelectedAreaCultivoToDelete(AreaCultivoResponse areaCultivoResponse){
@@ -54,48 +85,71 @@ public class AdminAreaCultivo implements Serializable{
 
     public void addAreaCultivo() {
         AreaCultivoResponse areaCultivoResponseToAdd = AreaCultivoResponse.builder()
-//                        .descripcion(descripcion)
+                .areaCultivoResponsePK(
+                        AreaCultivoResponsePK.builder()
+                                .areaId(Long.parseLong(areaSelected))
+                                .cultivoId(Long.parseLong(cultivoSelected))
+                                .fechaSiembra(DateFormatter.formatUtil(fechaSiembra))
+                                .build()
+                )
+                .fechaRecogida(DateFormatter.formatUtil(fechaRecogida))
+                .prodCultivosPermanente(prodPermanente)
+                .prodCultivosTemporales(prodTemporal)
+                .produccionReal(prodReal)
+                .planProd((long) planProduccion)
                 .build();
         FacesContext context = FacesContext.getCurrentInstance();
 
         if(restAreaCultivo.create(areaCultivoResponseToAdd)){
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "PRODUCCION ADICIONADA CORRECTAMENTE", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ESPACIAL ADICIONADO CORRECTAMENTE", ""));
             init();
             PrimeFaces.current().ajax().update("form:messages", "form:dt-areaCultivo");
         } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL CREAR LA PRODUCCION", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL CREAR ESPACIAL", ""));
         }
         PrimeFaces.current().executeScript("PF('addareaCultivoDialog').hide()");
     }
 
     public void editAreaCultivo() {
         AreaCultivoResponse areaCultivoResponseToEdit = AreaCultivoResponse.builder()
-//                .id(selectedAreaCultivo.getId())
-//                .descripcion(descripcion)
+                .areaCultivoResponsePK(selectedAreaCultivo.getAreaCultivoResponsePK())
+                .fechaRecogida(DateFormatter.formatUtil(fechaRecogida))
+                .prodCultivosPermanente(prodPermanente)
+                .prodCultivosTemporales(prodTemporal)
+                .produccionReal(prodReal)
+                .planProd((long) planProduccion)
                 .build();
 
         FacesContext context = FacesContext.getCurrentInstance();
         if(restAreaCultivo.update(areaCultivoResponseToEdit)){
             init();
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "PRODUCCION EDITADA", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ESPACIAL EDITADO", ""));
             PrimeFaces.current().ajax().update("form:messages", "form:dt-areaCultivo");
         }
         else{
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL EDITAR LA PRODUCCION", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL EDITAR ESPACIAL", ""));
         }
         PrimeFaces.current().executeScript("PF('editareaCultivoDialog').hide()");
     }
 
     public void deleteAreaCultivo() {
         FacesContext context = FacesContext.getCurrentInstance();
-        if(restAreaCultivo.delete(selectedAreaCultivo.getAreaCultivoPk())){
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "PRODUCCION ELIMINADA CORRECTAMENTE", ""));
+        if(restAreaCultivo.delete(selectedAreaCultivo.getAreaCultivoResponsePK())){
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "ESPACIAL ELIMINADO CORRECTAMENTE", ""));
             init();
             PrimeFaces.current().ajax().update("form:messages", "form:dt-areaCultivo");
         }
         else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR LA PRODUCCION", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR ESPACIAL", ""));
         }
         PrimeFaces.current().executeScript("PF('deleteAreaCultivoDialog').hide()");
+    }
+
+    public AreaResponse findAreaById(long id) {
+        return restArea.findById(id);
+    }
+
+    public Cultivo findCultivoById(long id) {
+        return restCultivo.findById(id);
     }
 }

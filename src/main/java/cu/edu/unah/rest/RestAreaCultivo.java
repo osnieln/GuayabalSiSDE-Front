@@ -1,9 +1,8 @@
 package cu.edu.unah.rest;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import cu.edu.unah.entity.AreaCultivo;
-import cu.edu.unah.entity.AreaCultivoPk;
 import cu.edu.unah.util.AreaCultivoResponse;
+import cu.edu.unah.util.AreaCultivoResponsePK;
 import cu.edu.unah.util.JSONUtils;
 
 import java.net.URI;
@@ -37,10 +36,10 @@ public class RestAreaCultivo {
     }
 
     //sending request retrieve the areaCultivo based on the areaCultivoname
-    public AreaCultivoResponse findById(AreaCultivoPk areaCultivoPk) {
+    public AreaCultivoResponse findById(AreaCultivoResponsePK areaCultivoResponsePK) {
         AreaCultivoResponse areaCultivo = null;
         String inputJson = null;
-        inputJson = JSONUtils.covertFromObjectToJson(areaCultivoPk);
+        inputJson = JSONUtils.covertFromObjectToJson(areaCultivoResponsePK);
         HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/findById"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
@@ -117,10 +116,11 @@ public class RestAreaCultivo {
     }
 
     //send request to delete the areaCultivo by its areaCultivoname
-    public boolean delete(AreaCultivoPk areaCultivoPk) {
+    public boolean delete(AreaCultivoResponsePK areaCultivoResponsePK) {
         String inputJson = null;
-        inputJson = JSONUtils.covertFromObjectToJson(areaCultivoPk);
-        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"/delete/"))
+        inputJson = JSONUtils.covertFromObjectToJson(areaCultivoResponsePK);
+        AreaCultivoResponse areaCultivoResponse = null;
+        HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"/delete"))
                 .header("Content-Type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
@@ -129,7 +129,7 @@ public class RestAreaCultivo {
                 response.join();
                 return false;
             } else {
-                AreaCultivo areaCultivo = JSONUtils.covertFromJsonToObject(response.get().body(), AreaCultivo.class);
+                areaCultivoResponse = JSONUtils.covertFromJsonToObject(response.get().body(), AreaCultivoResponse.class);
                 response.join();
                 return true;
             }

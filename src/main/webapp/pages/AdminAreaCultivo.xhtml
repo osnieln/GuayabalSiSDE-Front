@@ -22,7 +22,7 @@
     <ui:composition template="template.xhtml">
 
         <ui:define name="title">
-            Administrar Producci&oacute;n
+            Administrar Espacial
         </ui:define>
 
         <ui:define name="content">
@@ -41,7 +41,8 @@
                     </p:toolbarGroup>
                 </p:toolbar>
 
-                <p:dataTable tableStyleClass="table-striped" id="dt-areaCultivo" widgetVar="dtareaCultivo" var="areaCultivo"
+                <p:dataTable tableStyleClass="table-striped" id="dt-areaCultivo" widgetVar="dtareaCultivo"
+                             var="areaCultivo"
                              value="#{adminAreaCultivo.listAreaCultivo}" size="small"
                              reflow="true"
                              rowKey="#{areaCultivo.descripcion}" paginator="true" rows="10"
@@ -53,19 +54,27 @@
                     </span>
                         </div>
                     </f:facet>
-                    <p:column exportHeaderValue="Area" headerText="Area" filterBy="#{areaCultivo.areaResponse.descripcion}">
-                        <h:outputText value="#{areaCultivo.areaResponse.descripcion}"/>
+                    <p:column exportHeaderValue="Area" headerText="Area"
+                              filterBy="#{adminAreaCultivo.findAreaById(areaCultivo.areaCultivoResponsePK.areaId).descripcion}"
+                              sortOrder="#{adminAreaCultivo.findAreaById(areaCultivo.areaCultivoResponsePK.areaId).descripcion}">
+                        <h:outputText
+                                value="#{adminAreaCultivo.findAreaById(areaCultivo.areaCultivoResponsePK.areaId).descripcion}"/>
                     </p:column>
-                    <p:column exportHeaderValue="Cultivo" headerText="Cultivo" filterBy="#{areaCultivo.cultivo.descripcion}">
-                        <h:outputText value="#{areaCultivo.cultivo.descripcion}"/>
+                    <p:column exportHeaderValue="Cultivo" headerText="Cultivo"
+                              filterBy="#{adminAreaCultivo.findCultivoById(areaCultivo.areaCultivoResponsePK.cultivoId).descripcion}">
+                        <h:outputText
+                                value="#{adminAreaCultivo.findCultivoById(areaCultivo.areaCultivoResponsePK.cultivoId).descripcion}"/>
                     </p:column>
-                    <p:column exportHeaderValue="Fecha de siembra" headerText="Fecha de siembra" sortOrder="asc" filterBy="#{areaCultivo.areaCultivoPk.fechaSiembra}">
-                        <h:outputText value="#{areaCultivo.areaCultivoPk.fechaSiembra}"/>
+                    <p:column exportHeaderValue="Fecha de siembra" headerText="Fecha de siembra" sortOrder="asc"
+                              filterBy="#{areaCultivo.areaCultivoResponsePK.fechaSiembra}">
+                        <h:outputText value="#{areaCultivo.areaCultivoResponsePK.fechaSiembra}"/>
                     </p:column>
-                    <p:column exportHeaderValue="Fecha de recogida" headerText="Fecha de recogida" filterBy="#{areaCultivo.fechaRecogida}">
+                    <p:column exportHeaderValue="Fecha de recogida" headerText="Fecha de recogida"
+                              filterBy="#{areaCultivo.fechaRecogida}">
                         <h:outputText value="#{areaCultivo.fechaRecogida}"/>
                     </p:column>
-                    <p:column exportHeaderValue="Plan de producción" headerText="Plan de producci&oacute;n" filterBy="#{areaCultivo.planProd}">
+                    <p:column exportHeaderValue="Plan de producción" headerText="Plan de producci&oacute;n"
+                              filterBy="#{areaCultivo.planProd}">
                         <h:outputText value="#{areaCultivo.planProd}"/>
                     </p:column>
                     <p:column exportable="false">
@@ -112,7 +121,7 @@
                                 </div>
                                 <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.selectedAreaCultivo.areaResponse.descripcion}"/>
+                                            value="#{adminAreaCultivo.findAreaById(adminAreaCultivo.selectedAreaCultivo.areaCultivoResponsePK.areaId).descripcion}"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -121,7 +130,7 @@
                                 </div>
                                 <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.selectedAreaCultivo.cultivo.descripcion}"/>
+                                            value="#{adminAreaCultivo.findCultivoById(adminAreaCultivo.selectedAreaCultivo.areaCultivoResponsePK.cultivoId).descripcion}"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -130,7 +139,7 @@
                                 </div>
                                 <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.selectedAreaCultivo.areaCultivoPk.fechaSiembra}"/>
+                                            value="#{adminAreaCultivo.selectedAreaCultivo.areaCultivoResponsePK.fechaSiembra}"/>
                                 </div>
                             </div>
                             <div class="row">
@@ -153,7 +162,8 @@
                             </div>
                             <div class="row">
                                 <div class="col col-lg-5">
-                                    <strong><h:outputLabel value="Producci&oacute;n de cultivos permanentes: "/></strong>
+                                    <strong><h:outputLabel
+                                            value="Producci&oacute;n de cultivos permanentes: "/></strong>
                                 </div>
                                 <div class="col col-lg-7">
                                     <h:outputText
@@ -189,18 +199,61 @@
                 <!--/Info Dialog-->
 
                 <!--Add Dialog-->
-                <p:dialog header="A&ntilde;adir AreaCultivo" showEffect="fade" modal="true"
-                          widgetVar="addareaCultivoDialog"
+                <p:dialog header="A&ntilde;adir Espacial" showEffect="fade" modal="true"
+                          widgetVar="addareaCultivoDialog" width="800px"
                           responsive="true">
                     <p:outputPanel id="add-areaCultivo-content" class="ui-fluid">
-                        <div class="row">
-                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
-                                <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
-                                <p:inputTextarea id="descripcion" style="height: 30px;"
-                                                 value="#{adminAreaCultivo.descripcion}"/>
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="add-area" value="&Aacute;rea: "/><br/>
+                                <p:selectOneMenu id="add-area" value="#{adminAreaCultivo.areaSelected}">
+                                    <f:selectItems itemLabel="${area.descripcion}" itemValue="${area.id}" var="area"
+                                                   value="#{adminAreaCultivo.areaResponsesList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="add-cultivo" value="Cultivo: "/><br/>
+                                <p:selectOneMenu id="add-cultivo" value="#{adminAreaCultivo.cultivoSelected}">
+                                    <f:selectItems itemLabel="${cul.descripcion}" itemValue="${cul.id}" var="cul"
+                                                   value="#{adminAreaCultivo.cultivoList}"/>
+                                </p:selectOneMenu>
                             </div>
                         </div>
                         <br/>
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="add-fechaSiembra" value="Fecha de Siembra: "/><br/>
+                                <p:datePicker id="add-fechaSiembra" value="#{adminAreaCultivo.fechaSiembra}"/>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="add-fechaRecogida" value="Fecha de Recogida: "/><br/>
+                                <p:datePicker id="add-fechaRecogida" value="#{adminAreaCultivo.fechaRecogida}"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-3">
+                                <p:outputLabel for="add-planProduccion" value="Plan de Producción: "/><br/>
+                                <p:inputNumber id="add-planProduccion" value="#{adminAreaCultivo.planProduccion}"
+                                               modifyValueOnWheel="false"/>
+                            </div>
+                            <div class="col col-sm-3">
+                                <p:outputLabel for="add-planPermanente"
+                                               value="Producción de cultivos permanentes: "/><br/>
+                                <p:inputNumber id="add-planPermanente" value="#{adminAreaCultivo.prodPermanente}"
+                                               modifyValueOnWheel="false"/>
+                            </div>
+                            <div class="col col-sm-3">
+                                <p:outputLabel for="add-prodTemp" value="Producción de cultivos temporales: "/><br/>
+                                <p:inputNumber id="add-prodTemp" value="#{adminAreaCultivo.prodTemporal}"
+                                               modifyValueOnWheel="false"/>
+                            </div>
+                            <div class="col col-sm-3">
+                                <p:outputLabel for="add-prodReal" value="Producción real: "/><br/>
+                                <p:inputNumber id="add-prodReal" value="#{adminAreaCultivo.prodReal}"
+                                               modifyValueOnWheel="false"/>
+                            </div>
+                        </div>
                     </p:outputPanel>
 
                     <f:facet name="footer">
@@ -215,28 +268,64 @@
                 <!--/Add Dialog-->
 
                 <!--Edit Dialog-->
-                <p:dialog header="Editar AreaCultivo" showEffect="fade" modal="true"
+                <p:dialog header="Editar Espacial" showEffect="fade" modal="true"
                           widgetVar="editareaCultivoDialog"
                           responsive="true">
                     <p:outputPanel id="edit-areaCultivo-content" class="ui-fluid">
-                        <div class="row">
-                            <div class="col col-sm-5">
-                                <p:outputLabel for="edit-id" value="Identificaci&oacute;n"/><br/>
-                                <p:inputText label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
-                                             id="edit-id" value="#{adminAreaCultivo.selectedAreaCultivo.id}"
-                                             placeholder="Identificaci&oacute;n" disabled="true"
-                                             mask="99999999999"/>
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-area" value="&Aacute;rea: "/><br/>
+                                <p:selectOneMenu disabled="true" id="edit-area"
+                                                 value="#{adminAreaCultivo.areaSelected}">
+                                    <f:selectItems itemLabel="${area.descripcion}" itemValue="${area.id}" var="area"
+                                                   value="#{adminAreaCultivo.areaResponsesList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-cultivo" value="Cultivo: "/><br/>
+                                <p:selectOneMenu id="edit-cultivo" disabled="true"
+                                                 value="#{adminAreaCultivo.cultivoSelected}">
+                                    <f:selectItems itemLabel="${cul.descripcion}" itemValue="${cul.id}" var="cul"
+                                                   value="#{adminAreaCultivo.cultivoList}"/>
+                                </p:selectOneMenu>
                             </div>
                         </div>
                         <br/>
-                        <div class="row">
-                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
-                                <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
-                                <p:inputTextarea id="edit-descripcion" style="height: 30px;"
-                                                 value="#{adminAreaCultivo.descripcion}"/>
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-fechaSiembra" value="Fecha de Siembra: "/><br/>
+                                <p:datePicker id="edit-fechaSiembra" disabled="true"
+                                              value="#{adminAreaCultivo.fechaSiembra}"/>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-fechaRecogida" value="Fecha de Recogida: "/><br/>
+                                <p:datePicker id="edit-fechaRecogida" value="#{adminAreaCultivo.fechaRecogida}"/>
                             </div>
                         </div>
                         <br/>
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-3">
+                                <p:outputLabel for="edit-planProduccion" value="Plan de Producción: "/><br/>
+                                <p:inputNumber id="edit-planProduccion" value="#{adminAreaCultivo.planProduccion}"
+                                               modifyValueOnWheel="false"/>
+                            </div>
+                            <div class="col col-sm-3">
+                                <p:outputLabel for="edit-planPermanente"
+                                               value="Producción de cultivos permanentes: "/><br/>
+                                <p:inputNumber id="edit-planPermanente" value="#{adminAreaCultivo.prodPermanente}"
+                                               modifyValueOnWheel="false"/>
+                            </div>
+                            <div class="col col-sm-3">
+                                <p:outputLabel for="edit-prodTemp" value="Producción de cultivos temporales: "/><br/>
+                                <p:inputNumber id="edit-prodTemp" value="#{adminAreaCultivo.prodTemporal}"
+                                               modifyValueOnWheel="false"/>
+                            </div>
+                            <div class="col col-sm-3">
+                                <p:outputLabel for="edit-prodReal" value="Producción real: "/><br/>
+                                <p:inputNumber id="edit-prodReal" value="#{adminAreaCultivo.prodReal}"
+                                               modifyValueOnWheel="false"/>
+                            </div>
+                        </div>
                     </p:outputPanel>
 
                     <f:facet name="footer">
@@ -250,9 +339,11 @@
                 </p:dialog>
 
                 <!--Delete Dialog -->
-                <p:confirmDialog widgetVar="deleteAreaCultivoDialog" showEffect="fade" width="300" message="¿Desea eliminar la AreaCultivo?"
+                <p:confirmDialog widgetVar="deleteAreaCultivoDialog" showEffect="fade" width="300"
+                                 message="¿Desea eliminar la AreaCultivo?"
                                  header="Confirm" severity="info">
-                    <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminAreaCultivo.deleteAreaCultivo()}"
+                    <p:commandButton value="Si" icon="ui-icon-check"
+                                     actionListener="#{adminAreaCultivo.deleteAreaCultivo()}"
                                      process="@this"/>
                     <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
                                      onclick="PF('deleteAreaCultivoDialog').hide()"/>
