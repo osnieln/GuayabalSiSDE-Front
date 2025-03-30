@@ -18,6 +18,7 @@ import lombok.Setter;
 import org.primefaces.PrimeFaces;
 
 import java.io.Serializable;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -98,6 +99,14 @@ public class AdminAreaCultivo implements Serializable{
                 .produccionReal(prodReal)
                 .planProd((long) planProduccion)
                 .build();
+
+        try {
+            if(!validarFechas(DateFormatter.formatUtil(DateFormatter.formatUtil(fechaSiembra)), fechaRecogida))
+                return;
+        } catch (ParseException e) {
+            return;
+        }
+
         FacesContext context = FacesContext.getCurrentInstance();
 
         if(restAreaCultivo.create(areaCultivoResponseToAdd)){
@@ -119,6 +128,13 @@ public class AdminAreaCultivo implements Serializable{
                 .produccionReal(prodReal)
                 .planProd((long) planProduccion)
                 .build();
+
+        try {
+            if(!validarFechas(DateFormatter.formatUtil(selectedAreaCultivo.getAreaCultivoResponsePK().getFechaSiembra()), fechaRecogida))
+                return;
+        } catch (ParseException e) {
+            return;
+        }
 
         FacesContext context = FacesContext.getCurrentInstance();
         if(restAreaCultivo.update(areaCultivoResponseToEdit)){
@@ -151,5 +167,14 @@ public class AdminAreaCultivo implements Serializable{
 
     public Cultivo findCultivoById(long id) {
         return restCultivo.findById(id);
+    }
+
+    public boolean validarFechas(Date fechaInicio, Date fechaFinal){
+        if (!fechaInicio.before(fechaFinal)){
+            FacesContext context = FacesContext.getCurrentInstance();
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR: LA FECHA DE SIEMBRA DEBE SER ANTERIOR QUE LA FECHA DE RECOGIDA", ""));
+            return false;
+        }
+        return true;
     }
 }

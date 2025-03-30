@@ -181,7 +181,11 @@
                             <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
                                 <p:inputTextarea id="edit-descripcion" style="height: 30px;"
-                                                 value="#{adminArea.descripcion}"/>
+                                                 value="#{adminArea.descripcion}"
+                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputTextarea>
                             </div>
                         </div>
                         <br/>

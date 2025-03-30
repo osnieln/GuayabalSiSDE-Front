@@ -223,11 +223,13 @@
                         <div class="row" style="padding-left: 15px; padding-right: 15px">
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-fechaSiembra" value="Fecha de Siembra: "/><br/>
-                                <p:datePicker id="add-fechaSiembra" value="#{adminAreaCultivo.fechaSiembra}"/>
+                                <p:datePicker id="add-fechaSiembra" value="#{adminAreaCultivo.fechaSiembra}"
+                                />
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-fechaRecogida" value="Fecha de Recogida: "/><br/>
-                                <p:datePicker id="add-fechaRecogida" value="#{adminAreaCultivo.fechaRecogida}"/>
+                                <p:datePicker id="add-fechaRecogida" value="#{adminAreaCultivo.fechaRecogida}"
+                                />
                             </div>
                         </div>
                         <br/>
@@ -235,22 +237,26 @@
                             <div class="col col-sm-3">
                                 <p:outputLabel for="add-planProduccion" value="Plan de Producción: "/><br/>
                                 <p:inputNumber id="add-planProduccion" value="#{adminAreaCultivo.planProduccion}"
+                                               minValue="0"
                                                modifyValueOnWheel="false"/>
                             </div>
                             <div class="col col-sm-3">
                                 <p:outputLabel for="add-planPermanente"
                                                value="Producción de cultivos permanentes: "/><br/>
                                 <p:inputNumber id="add-planPermanente" value="#{adminAreaCultivo.prodPermanente}"
+                                               minValue="0"
                                                modifyValueOnWheel="false"/>
                             </div>
                             <div class="col col-sm-3">
                                 <p:outputLabel for="add-prodTemp" value="Producción de cultivos temporales: "/><br/>
                                 <p:inputNumber id="add-prodTemp" value="#{adminAreaCultivo.prodTemporal}"
+                                               minValue="0"
                                                modifyValueOnWheel="false"/>
                             </div>
                             <div class="col col-sm-3">
                                 <p:outputLabel for="add-prodReal" value="Producción real: "/><br/>
                                 <p:inputNumber id="add-prodReal" value="#{adminAreaCultivo.prodReal}"
+                                               minValue="0"
                                                modifyValueOnWheel="false"/>
                             </div>
                         </div>

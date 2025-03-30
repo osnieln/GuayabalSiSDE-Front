@@ -41,7 +41,8 @@
                     </p:toolbarGroup>
                 </p:toolbar>
 
-                <p:dataTable tableStyleClass="table-striped" id="dt-produccion" widgetVar="dtproduccion" var="produccion"
+                <p:dataTable tableStyleClass="table-striped" id="dt-produccion" widgetVar="dtproduccion"
+                             var="produccion"
                              value="#{adminProduccion.listProduccion}" size="small"
                              reflow="true"
                              rowKey="#{produccion.descripcion}" paginator="true" rows="10"
@@ -134,7 +135,11 @@
                             <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
                                 <p:inputTextarea id="descripcion" style="height: 30px;"
-                                                 value="#{adminProduccion.descripcion}"/>
+                                                 value="#{adminProduccion.descripcion}"
+                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputTextarea>
                             </div>
                         </div>
                         <br/>
@@ -170,7 +175,11 @@
                             <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
                                 <p:inputTextarea id="edit-descripcion" style="height: 30px;"
-                                                 value="#{adminProduccion.descripcion}"/>
+                                                 value="#{adminProduccion.descripcion}"
+                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputTextarea>
                             </div>
                         </div>
                         <br/>
@@ -187,9 +196,11 @@
                 </p:dialog>
 
                 <!--Delete Dialog -->
-                <p:confirmDialog widgetVar="deleteProduccionDialog" showEffect="fade" width="300" message="¿Desea eliminar la Produccion?"
+                <p:confirmDialog widgetVar="deleteProduccionDialog" showEffect="fade" width="300"
+                                 message="¿Desea eliminar la Produccion?"
                                  header="Confirm" severity="info">
-                    <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminProduccion.deleteProduccion()}"
+                    <p:commandButton value="Si" icon="ui-icon-check"
+                                     actionListener="#{adminProduccion.deleteProduccion()}"
                                      process="@this"/>
                     <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
                                      onclick="PF('deleteProduccionDialog').hide()"/>
