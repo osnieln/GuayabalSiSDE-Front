@@ -28,12 +28,13 @@
         <ui:define name="content">
             #{adminAreaCultivo.init()}
             <h:form id="form">
-                <p:growl id="messages" showDetail="true"/>
+                <p:growl id="messages" showDetail="true" escape="false"/>
 
                 <p:toolbar>
                     <p:toolbarGroup align="right">
                         <p:commandButton value="Adicionar" icon="pi pi-plus"
                                          update=":dialogs:add-areaCultivo-content"
+                                         actionListener="#{adminAreaCultivo.initAddAreaCultivo()}"
                                          oncomplete="PF('addareaCultivoDialog').show()"
                                          styleClass="ui-button-success" style="margin-right: .5rem">
                             <p:resetInput target=":dialogs:add-areaCultivo-content"/>
@@ -112,80 +113,76 @@
                 <!--Info Dialog-->
                 <p:dialog header="Informaci&oacute;n" showEffect="fade" modal="true"
                           widgetVar="infoareaCultivoDialog"
-                          responsive="true">
+                          responsive="true" width="800px">
                     <p:outputPanel id="info-areaCultivo-content" class="ui-fluid">
                         <p:outputPanel>
                             <div class="row">
-                                <div class="col col-lg-5">
+                                <div class="col col-lg-6">
                                     <strong><h:outputLabel value="&Aacute;rea: "/></strong>
-                                </div>
-                                <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.findAreaById(adminAreaCultivo.selectedAreaCultivo.areaCultivoResponsePK.areaId).descripcion}"/>
+                                            value=" #{adminAreaCultivo.findAreaById(adminAreaCultivo.selectedAreaCultivo.areaCultivoResponsePK.areaId).descripcion}"/>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-lg-5">
+                                <div class="col col-lg-6">
                                     <strong><h:outputLabel value="Cultivo: "/></strong>
-                                </div>
-                                <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.findCultivoById(adminAreaCultivo.selectedAreaCultivo.areaCultivoResponsePK.cultivoId).descripcion}"/>
+                                            value=" #{adminAreaCultivo.findCultivoById(adminAreaCultivo.selectedAreaCultivo.areaCultivoResponsePK.cultivoId).descripcion}"/>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col col-lg-5">
+                                <div class="col col-lg-6">
                                     <strong><h:outputLabel value="Fecha de siembra: "/></strong>
-                                </div>
-                                <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.selectedAreaCultivo.areaCultivoResponsePK.fechaSiembra}"/>
+                                            value=" #{adminAreaCultivo.selectedAreaCultivo.areaCultivoResponsePK.fechaSiembra}"/>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-lg-5">
+                                <div class="col col-lg-6">
                                     <strong><h:outputLabel value="Fecha de recogida: "/></strong>
-                                </div>
-                                <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.selectedAreaCultivo.fechaRecogida}"/>
+                                            value=" #{adminAreaCultivo.selectedAreaCultivo.fechaRecogida}"/>
                                 </div>
                             </div>
+
                             <div class="row">
-                                <div class="col col-lg-5">
+                                <div class="col col-lg-6">
                                     <strong><h:outputLabel value="Plan de producci&oacute;n: "/></strong>
-                                </div>
-                                <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.selectedAreaCultivo.planProd}"/>
+                                            value=" #{adminAreaCultivo.selectedAreaCultivo.planProd}"/>
                                 </div>
-                            </div>
-                            <div class="row">
-                                <div class="col col-lg-5">
+                                <div class="col col-lg-6">
                                     <strong><h:outputLabel
                                             value="Producci&oacute;n de cultivos permanentes: "/></strong>
-                                </div>
-                                <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.selectedAreaCultivo.prodCultivosPermanente}"/>
+                                            value=" #{adminAreaCultivo.selectedAreaCultivo.prodCultivosPermanente}"/>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col col-lg-5">
+                                <div class="col col-lg-6">
                                     <strong><h:outputLabel value="Producci&oacute;n de cultivos temporal: "/></strong>
-                                </div>
-                                <div class="col col-lg-7">
                                     <h:outputText
-                                            value="#{adminAreaCultivo.selectedAreaCultivo.prodCultivosTemporales}"/>
+                                            value=" #{adminAreaCultivo.selectedAreaCultivo.prodCultivosTemporales}"/>
+                                </div>
+                                <div class="col col-lg-6">
+                                    <strong><h:outputLabel value="Producci&oacute;n real: "/></strong>
+                                    <h:outputText
+                                            value=" #{adminAreaCultivo.selectedAreaCultivo.produccionReal}"/>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col col-lg-5">
-                                    <strong><h:outputLabel value="Producci&oacute;n real: "/></strong>
+                                <div class="col col-lg-12">
+                                    <strong><h:outputLabel value="Planificación de Riegos: "/></strong>
                                 </div>
-                                <div class="col col-lg-7">
-                                    <h:outputText
-                                            value="#{adminAreaCultivo.selectedAreaCultivo.produccionReal}"/>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-12">
+                                    <p:timeline id="timeline" value="#{adminAreaCultivo.model}"
+                                                selectable="${true}"
+                                                zoomable="${true}"
+                                                moveable="${true}"
+                                                stackEvents="${true}"
+                                                eventStyle="box"
+                                                showCurrentTime="${true}">
+                                        <p:ajax event="select" listener="#{adminAreaCultivo.onSelect}"
+                                                update="form:messages"/>
+                                    </p:timeline>
                                 </div>
                             </div>
                         </p:outputPanel>
@@ -260,6 +257,52 @@
                                                modifyValueOnWheel="false"/>
                             </div>
                         </div>
+                        <br/>
+                        <p:outputLabel for="dt-riego" value="Planificaci&oacute;n de riego: "/>
+                        <div class="row">
+                            <div class="col col-sm-3">
+                                <p:commandButton value="Adicionar" icon="pi pi-plus"
+                                                 update=":dialogs:add-riego-content"
+                                                 oncomplete="PF('addRiegoDialog').show()"
+                                                 styleClass="ui-button-success" style="margin-right: .5rem">
+                                    <p:resetInput target=":dialogs:add-riego-content"/>
+                                </p:commandButton>
+                            </div>
+
+                            <p:dataTable tableStyleClass="table-striped" id="dt-riego" widgetVar="dtriego"
+                                         var="riego"
+                                         value="#{adminAreaCultivo.riegoResponseList}" size="small"
+                                         reflow="true"
+                                         paginator="true" rows="5"
+                                         paginatorPosition="bottom">
+                                <p:column exportHeaderValue="Planificado" headerText="Planificado">
+                                    <h:outputText
+                                            value="${riego.fechaPlanificacion}"/>
+                                </p:column>
+                                <p:column exportHeaderValue="Real" headerText="Real">
+                                    <h:outputText
+                                            value="${riego.fechaReal}"/>
+                                </p:column>
+                                <p:column exportable="false">
+                                    <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-riego-content"
+                                                     style="margin-left: 10px"
+                                                     oncomplete="PF('editRiegoDialog').show()"
+                                                     styleClass="edit-button rounded-button ui-button-warning"
+                                                     process="@this"
+                                                     actionListener="#{adminAreaCultivo.updateSelectedRiegoToEdit(riego)}">
+                                        <p:resetInput target=":dialogs:edit-riego-content"/>
+                                    </p:commandButton>
+                                    <p:commandButton icon="pi pi-trash"
+                                                     oncomplete="PF('deleteRiegoDialog').show()"
+                                                     style="margin-left: 10px"
+                                                     styleClass="edit-button rounded-button ui-button-danger"
+                                                     process="@this"
+                                                     actionListener="#{adminAreaCultivo.updateSelectedRiegoToDelete(riego)}">
+                                    </p:commandButton>
+                                </p:column>
+
+                            </p:dataTable>
+                        </div>
                     </p:outputPanel>
 
                     <f:facet name="footer">
@@ -272,6 +315,71 @@
                     </f:facet>
                 </p:dialog>
                 <!--/Add Dialog-->
+
+                <!--Add Riego Dialog-->
+                <p:dialog header="A&ntilde;adir Riego" showEffect="fade" modal="true"
+                          widgetVar="addRiegoDialog" width="600px"
+                          responsive="true">
+                    <p:outputPanel id="add-riego-content" class="ui-fluid">
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="add-fechaPlanif" value="Fecha planificada: "/><br/>
+                                <p:datePicker id="add-fechaPlanif" value="#{adminAreaCultivo.fechaPlanificada}"/>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="add-fechaReal" value="Fecha Real: "/><br/>
+                                <p:datePicker id="add-fechaReal" value="#{adminAreaCultivo.fechaReal}"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnAddRiegoModal" actionListener="#{adminAreaCultivo.addRiego()}"
+                                         update="add-riego-content form:messages"
+                                         process="add-riego-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addRiegoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Edit Riego Dialog-->
+                <p:dialog header="Editar Riego" showEffect="fade" modal="true"
+                          widgetVar="editRiegoDialog" width="600px"
+                          responsive="true">
+                    <p:outputPanel id="edit-riego-content" class="ui-fluid">
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-fechaPlanif" value="Fecha planificada: "/><br/>
+                                <p:datePicker id="edit-fechaPlanif" value="#{adminAreaCultivo.fechaPlanificada}"/>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-fechaReal" value="Fecha Real: "/><br/>
+                                <p:datePicker id="edit-fechaReal" value="#{adminAreaCultivo.fechaReal}"/>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnEditRiegoModal" actionListener="#{adminAreaCultivo.editRiego()}"
+                                         update="edit-riego-content form:messages"
+                                         process="edit-riego-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editRiegoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Delete Riego Dialog -->
+                <p:confirmDialog widgetVar="deleteRiegoDialog" showEffect="fade" width="300"
+                                 message="¿Desea eliminar el Riego?"
+                                 header="Confirm" severity="info">
+                    <p:commandButton value="Si" icon="ui-icon-check"
+                                     actionListener="#{adminAreaCultivo.deleteRiego()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deleteRiegoDialog').hide()"/>
+                </p:confirmDialog>
 
                 <!--Edit Dialog-->
                 <p:dialog header="Editar Espacial" showEffect="fade" modal="true"
@@ -330,6 +438,52 @@
                                 <p:outputLabel for="edit-prodReal" value="Producción real: "/><br/>
                                 <p:inputNumber id="edit-prodReal" value="#{adminAreaCultivo.prodReal}"
                                                modifyValueOnWheel="false"/>
+                            </div>
+                            <br/>
+                            <p:outputLabel for="dt-riego" value="Planificaci&oacute;n de riego: "/>
+                            <div class="row">
+                                <div class="col col-sm-3">
+                                    <p:commandButton value="Adicionar" icon="pi pi-plus"
+                                                     update=":dialogs:add-riego-content"
+                                                     oncomplete="PF('addRiegoDialog').show()"
+                                                     styleClass="ui-button-success" style="margin-right: .5rem">
+                                        <p:resetInput target=":dialogs:add-riego-content"/>
+                                    </p:commandButton>
+                                </div>
+
+                                <p:dataTable tableStyleClass="table-striped" id="dt-riego1" widgetVar="dtriego"
+                                             var="riego"
+                                             value="#{adminAreaCultivo.riegoResponseList}" size="small"
+                                             reflow="true"
+                                             paginator="true" rows="5"
+                                             paginatorPosition="bottom">
+                                    <p:column exportHeaderValue="Planificado" headerText="Planificado">
+                                        <h:outputText
+                                                value="${riego.fechaPlanificacion}"/>
+                                    </p:column>
+                                    <p:column exportHeaderValue="Real" headerText="Real">
+                                        <h:outputText
+                                                value="${riego.fechaReal}"/>
+                                    </p:column>
+                                    <p:column exportable="false">
+                                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-riego-content"
+                                                         style="margin-left: 10px"
+                                                         oncomplete="PF('editRiegoDialog').show()"
+                                                         styleClass="edit-button rounded-button ui-button-warning"
+                                                         process="@this"
+                                                         actionListener="#{adminAreaCultivo.updateSelectedRiegoToEdit(riego)}">
+                                            <p:resetInput target=":dialogs:edit-riego-content"/>
+                                        </p:commandButton>
+                                        <p:commandButton icon="pi pi-trash"
+                                                         oncomplete="PF('deleteRiegoDialog').show()"
+                                                         style="margin-left: 10px"
+                                                         styleClass="edit-button rounded-button ui-button-danger"
+                                                         process="@this"
+                                                         actionListener="#{adminAreaCultivo.updateSelectedRiegoToDelete(riego)}">
+                                        </p:commandButton>
+                                    </p:column>
+
+                                </p:dataTable>
                             </div>
                         </div>
                     </p:outputPanel>

@@ -22,4 +22,8 @@ public class Cultivo {
     @ManyToOne (cascade = CascadeType.ALL)
     @JoinColumn(name = "produccionid")
     Produccion produccion;
+
+    @ManyToOne (cascade = CascadeType.ALL)
+    @JoinColumn(name = "tipoCultivoid")
+    TipoCultivo tipoCultivo;
 }

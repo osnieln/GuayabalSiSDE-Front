@@ -5,7 +5,6 @@ import cu.edu.unah.entity.AuthoritiesPK;
 import cu.edu.unah.entity.Users;
 import cu.edu.unah.rest.RestAuthorities;
 import cu.edu.unah.rest.RestUsers;
-import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -90,7 +89,7 @@ public class AdminUsersBean implements Serializable{
         identificacion = users.getIdentificacion();
         descripcion = users.getDescripcion();
         email = users.getEmail();
-        enable = users.getEnabled();
+        enable = users.isEnabled();
 
         List<Authorities> authoritiesList = restAuthorities.findAuthorityByUsername(users.getUsername());
         Roles.clear();

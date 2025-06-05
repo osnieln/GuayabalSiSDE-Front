@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Osniel
+  Date: 10/10/2024
+  Time: 14:50
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body>
+
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="title">
+            Administrar Tipo de Cultivo
+        </ui:define>
+
+        <ui:define name="content">
+            #{adminTipoCultivoBean.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Adicionar" icon="pi pi-plus"
+                                         update=":dialogs:add-tipoCultivo-content"
+                                         oncomplete="PF('addtipoCultivoDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:add-tipoCultivo-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable tableStyleClass="table-striped" id="dt-tipoCultivo" widgetVar="dttipoCultivo"
+                             var="tipoCultivo"
+                             value="#{adminTipoCultivoBean.listTipoCultivo}" size="small"
+                             reflow="true"
+                             rowKey="#{tipoCultivo.nombre}" paginator="true" rows="10"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="tipoCultivo-table-header">
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dttipoCultivo').filter()" placeholder="Buscar"/>
+                    </span>
+                        </div>
+                    </f:facet>
+                    <p:column exportHeaderValue="ID" headerText="ID" sortOrder="asc" filterBy="#{tipoCultivo.id}">
+                        <h:outputText value="#{tipoCultivo.id}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Nombre" headerText="Nombre">
+                        <h:outputText value="#{tipoCultivo.nombre}"/>
+                    </p:column>
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-info-circle"
+                                         oncomplete="PF('infotipoCultivoDialog').show()"
+                                         styleClass="rounded-button ui-button-info" process="@this"
+                                         actionListener="#{adminTipoCultivoBean.updateSelectedTipoCultivo(tipoCultivo)}"
+                                         update=":dialogs:info-tipoCultivo-content"
+                                         title="Informaci&oacute;n">
+                            <p:resetInput target=":dialogs:info-tipoCultivo-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-tipoCultivo-content"
+                                         style="margin-left: 10px"
+                                         oncomplete="PF('edittipoCultivoDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"
+                                         actionListener="#{adminTipoCultivoBean.updateSelected_TipoCultivo_toEdit(tipoCultivo)}">
+                            <p:resetInput target=":dialogs:edit-tipoCultivo-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash"
+                                         oncomplete="PF('deletetipoCultivoDialog').show()"
+                                         style="margin-left: 10px"
+                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"
+                                         actionListener="#{adminTipoCultivoBean.updateSelectedTipoCultivoToDelete(tipoCultivo)}">
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+            <h:form id="dialogs">
+
+                <!--Info Dialog-->
+                <p:dialog header="Informaci&oacute;n" showEffect="fade" modal="true"
+                          widgetVar="infotipoCultivoDialog"
+                          responsive="true">
+                    <p:outputPanel id="info-tipoCultivo-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="ID: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTipoCultivoBean.selectedTipoCultivo.id}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Nombre: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTipoCultivoBean.selectedTipoCultivo.nombre}"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infotipoCultivoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Info Dialog-->
+
+                <!--Add Dialog-->
+                <p:dialog header="A&ntilde;adir Tipo de Cultivo" showEffect="fade" modal="true"
+                          widgetVar="addtipoCultivoDialog"
+                          responsive="true">
+                    <p:outputPanel id="add-tipoCultivo-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="nombre" value="Nombre"/><br/>
+                                <p:inputTextarea id="nombre" style="height: 30px;"
+                                                 value="#{adminTipoCultivoBean.nombre}"
+                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputTextarea>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnAddModal" actionListener="#{adminTipoCultivoBean.addTipoCultivo()}"
+                                         update="add-tipoCultivo-content form:messages"
+                                         process="add-tipoCultivo-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addtipoCultivoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Add Dialog-->
+
+                <!--Edit Dialog-->
+                <p:dialog header="Editar Tipo de Cultivo" showEffect="fade" modal="true"
+                          widgetVar="edittipoCultivoDialog"
+                          responsive="true">
+                    <p:outputPanel id="edit-tipoCultivo-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="edit-id" value="Identificaci&oacute;n"/><br/>
+                                <p:inputText label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                             id="edit-id" value="#{adminTipoCultivoBean.selectedTipoCultivo.id}"
+                                             placeholder="Identificaci&oacute;n" disabled="true"
+                                             mask="99999999999"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-descripcion" value="Nombre"/><br/>
+                                <p:inputTextarea id="edit-descripcion" style="height: 30px;"
+                                                 value="#{adminTipoCultivoBean.nombre}"
+                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputTextarea>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnEditModal" actionListener="#{adminTipoCultivoBean.editTipoCultivo()}"
+                                         update="edit-tipoCultivo-content form:messages"
+                                         process="edit-tipoCultivo-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('edittipoCultivoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Delete Dialog -->
+                <p:confirmDialog widgetVar="deletetipoCultivoDialog" showEffect="fade" width="300"
+                                 message="¿Desea eliminar la Tipo de Cultivo?"
+                                 header="Confirm" severity="info">
+                    <p:commandButton value="Si" icon="ui-icon-check"
+                                     actionListener="#{adminTipoCultivoBean.deleteTipoCultivo()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deletetipoCultivoDialog').hide()"/>
+                </p:confirmDialog>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>

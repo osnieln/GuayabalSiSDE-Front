@@ -1,6 +1,5 @@
 package cu.edu.unah.util;
 
-
 import cu.edu.unah.entity.Area;
 import cu.edu.unah.entity.AreaCultivo;
 import cu.edu.unah.entity.AreaCultivoPk;
@@ -25,7 +24,7 @@ public class AreaCultivoResponse implements Serializable {
     Double prodCultivosTemporales;
     Double produccionReal;
 
-    public static AreaCultivoResponse AreaCultivoToAreaCultivoResponse(AreaCultivo areaCultivo){
+    public static AreaCultivoResponse map(AreaCultivo areaCultivo){
         return AreaCultivoResponse.builder()
                 .areaCultivoResponsePK(AreaCultivoResponsePK.builder()
                         .areaId(areaCultivo.getAreaCultivoPk().getAreaId())
@@ -40,7 +39,7 @@ public class AreaCultivoResponse implements Serializable {
                 .build();
     }
 
-    public static AreaCultivo AreaCultivoResponseAreaCultivo(AreaCultivoResponse areaCultivoResponse, Area area, Cultivo cultivo){
+    public static AreaCultivo map(AreaCultivoResponse areaCultivoResponse, Area area, Cultivo cultivo){
         return AreaCultivo.builder()
                 .areaCultivoPk(AreaCultivoPk.builder()
                         .areaId(areaCultivoResponse.areaCultivoResponsePK.getAreaId())

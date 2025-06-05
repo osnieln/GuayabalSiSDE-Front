@@ -59,6 +59,9 @@
                     <p:column exportHeaderValue="Descripci&oacute;n" headerText="Descripci&oacute;n">
                         <h:outputText value="#{cultivo.descripcion}"/>
                     </p:column>
+                    <p:column exportHeaderValue="Tipo de cultivo" headerText="Tipo de cultivo">
+                        <h:outputText value="#{cultivo.tipoCultivo.nombre}"/>
+                    </p:column>
                     <p:column exportHeaderValue="Producci&oacute;n" headerText="Producci&oacute;n">
                         <h:outputText value="#{cultivo.produccion.descripcion}"/>
                     </p:column>
@@ -120,6 +123,15 @@
                             </div>
                             <div class="row">
                                 <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Tipo de cultivo: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminCultivo.selectedCultivo.tipoCultivo.nombre}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
                                     <strong><h:outputLabel value="Producci&oacute;n: "/></strong>
                                 </div>
                                 <div class="col col-lg-7">
@@ -154,6 +166,15 @@
                             </div>
                         </div>
                         <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="add-tipoCultivo" value="Tipo de Cultivo"/><br/>
+                                <p:selectOneMenu id="add-tipoCultivo" value="#{adminCultivo.tipoCultivoId}">
+                                    <f:selectItems itemLabel="${tc.nombre}" itemValue="${tc.id}" var="tc"
+                                                   value="#{adminCultivo.tipoCultivoList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="add-produccion" value="Producci&oacute;n"/><br/>
@@ -200,6 +221,15 @@
                                     <f:validateLength maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputTextarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-tipoCultivo" value="Tipo de Cultivo"/><br/>
+                                <p:selectOneMenu id="edit-tipoCultivo" value="#{adminCultivo.tipoCultivoId}">
+                                    <f:selectItems itemLabel="${tc.nombre}" itemValue="${tc.id}" var="tc"
+                                                   value="#{adminCultivo.tipoCultivoList}"/>
+                                </p:selectOneMenu>
                             </div>
                         </div>
                         <div class="row">
