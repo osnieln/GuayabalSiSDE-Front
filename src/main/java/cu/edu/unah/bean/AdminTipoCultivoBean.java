@@ -61,10 +61,10 @@ public class AdminTipoCultivoBean implements Serializable{
         if(restTipoCultivo.create(cultivoToAdd)){
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "TIPO DE CULTIVO ADICIONADO CORRECTAMENTE", ""));
             init();
-            PrimeFaces.current().ajax().update("form:messages", "form:dt-tipoCultivo");
         } else {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL CREAR EL TIPO DE CULTIVO", ""));
         }
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-tipoCultivo");
         PrimeFaces.current().executeScript("PF('addtipoCultivoDialog').hide()");
     }
 
@@ -78,11 +78,11 @@ public class AdminTipoCultivoBean implements Serializable{
         if(restTipoCultivo.update(cultivoToEdit)){
             init();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "TIPO DE CULTIVO EDITADO", ""));
-            PrimeFaces.current().ajax().update("form:messages", "form:dt-tipoCultivo");
         }
         else{
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL EDITAR EL TIPO DE CULTIVO", ""));
         }
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-tipoCultivo");
         PrimeFaces.current().executeScript("PF('edittipoCultivoDialog').hide()");
     }
 
@@ -91,11 +91,11 @@ public class AdminTipoCultivoBean implements Serializable{
         if(restTipoCultivo.delete(selectedTipoCultivo.getId())){
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "TIPO DE CULTIVO ELIMINADO CORRECTAMENTE", ""));
             init();
-            PrimeFaces.current().ajax().update("form:messages", "form:dt-tipoCultivo");
         }
         else {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR EL TIPO DE CULTIVO", ""));
         }
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-tipoCultivo");
         PrimeFaces.current().executeScript("PF('deletetipoCultivoDialog').hide()");
     }
 }
