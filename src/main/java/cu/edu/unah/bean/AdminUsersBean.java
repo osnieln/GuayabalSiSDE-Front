@@ -11,6 +11,8 @@ import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import lombok.*;
 import org.primefaces.PrimeFaces;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -47,6 +49,11 @@ public class AdminUsersBean implements Serializable{
         listUsers.clear();
         cleanVariables();
         listUsers = restUsers.findAllUsers();
+    }
+
+    public String getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName();
     }
 
     public void cleanVariables(){
@@ -181,19 +188,24 @@ public class AdminUsersBean implements Serializable{
 
     public void deleteUsers() {
         FacesContext context = FacesContext.getCurrentInstance();
-        // TODO VERIFICAR USUARIO ACTUAL
-        List<Authorities> authoritiesList = restAuthorities.findAuthorityByUsername(selectedUser.getUsername());
-        for (Authorities authorities : authoritiesList) {
-            restAuthorities.deleteAuthority(authorities.getAuthoritiesPK());
+        if(getCurrentUser().equals(selectedUser.getUsername())){
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "NO ES POSIBLE ELIMINAR EL USUARIO QUE ACTUALMENTE SE ENCUENTRA AUTENTICADO", ""));
+            PrimeFaces.current().ajax().update("form:messages");
         }
-        if(restUsers.deleteUser(selectedUser.getUsername())){
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "USUARIO ELIMINADO CORRECTAMENTE", ""));
-            init();
-            PrimeFaces.current().ajax().update("form:messages", "form:dt-users");
+        else{
+            List<Authorities> authoritiesList = restAuthorities.findAuthorityByUsername(selectedUser.getUsername());
+            for (Authorities authorities : authoritiesList) {
+                restAuthorities.deleteAuthority(authorities.getAuthoritiesPK());
+            }
+            if(restUsers.deleteUser(selectedUser.getUsername())){
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "USUARIO ELIMINADO CORRECTAMENTE", ""));
+                init();
+                PrimeFaces.current().ajax().update("form:messages", "form:dt-users");
 
-        }
-        else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR EL USUARIO", ""));
+            }
+            else {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR EL USUARIO", ""));
+            }
         }
         PrimeFaces.current().executeScript("PF('deletUserDialog').hide()");
     }
