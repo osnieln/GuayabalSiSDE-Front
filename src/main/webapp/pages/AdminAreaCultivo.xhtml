@@ -168,6 +168,14 @@
                             </div>
                             <div class="row">
                                 <div class="col col-lg-12">
+                                    <strong><h:outputLabel value="Agroquímicos: "/></strong>
+                                    <ui:repeat value="#{adminAreaCultivo.selectedAreaCultivo.agroquimicos}" var="a">
+                                        <p:chip label="#{a}" style="margin-left: 5px;"/>
+                                    </ui:repeat>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-12">
                                     <strong><h:outputLabel value="Planificación de Riegos: "/></strong>
                                 </div>
                             </div>
@@ -197,7 +205,7 @@
 
                 <!--Add Dialog-->
                 <p:dialog header="A&ntilde;adir Espacial" showEffect="fade" modal="true"
-                          widgetVar="addareaCultivoDialog" width="800px"
+                          widgetVar="addareaCultivoDialog" width="1000px" height="600px"
                           responsive="true">
                     <p:outputPanel id="add-areaCultivo-content" class="ui-fluid">
                         <div class="row" style="padding-left: 15px; padding-right: 15px">
@@ -258,8 +266,21 @@
                             </div>
                         </div>
                         <br/>
-                        <p:outputLabel for="dt-riego" value="Planificaci&oacute;n de riego: "/>
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-12">
+                                <p:outputLabel for="add-pickList" value="Agroquímicos: "/><br/>
+                            </div>
+                            <div class="col col-sm-12">
+                                <p:pickList id="add-pickList" value="#{adminAreaCultivo.agroquimicos}" var="a"
+                                            itemLabel="#{a}" itemValue="#{a}"/>
+                            </div>
+                        </div>
+                        <br/>
+
                         <div class="row">
+                            <div class="col col-sm-12">
+                                <p:outputLabel for="dt-riego" value="Planificaci&oacute;n de riego: "/>
+                            </div>
                             <div class="col col-sm-3">
                                 <p:commandButton value="Adicionar" icon="pi pi-plus"
                                                  update=":dialogs:add-riego-content"
@@ -269,39 +290,41 @@
                                 </p:commandButton>
                             </div>
 
-                            <p:dataTable tableStyleClass="table-striped" id="dt-riego" widgetVar="dtriego"
-                                         var="riego"
-                                         value="#{adminAreaCultivo.riegoResponseList}" size="small"
-                                         reflow="true"
-                                         paginator="true" rows="5"
-                                         paginatorPosition="bottom">
-                                <p:column exportHeaderValue="Planificado" headerText="Planificado">
-                                    <h:outputText
-                                            value="${riego.fechaPlanificacion}"/>
-                                </p:column>
-                                <p:column exportHeaderValue="Real" headerText="Real">
-                                    <h:outputText
-                                            value="${riego.fechaReal}"/>
-                                </p:column>
-                                <p:column exportable="false">
-                                    <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-riego-content"
-                                                     style="margin-left: 10px"
-                                                     oncomplete="PF('editRiegoDialog').show()"
-                                                     styleClass="edit-button rounded-button ui-button-warning"
-                                                     process="@this"
-                                                     actionListener="#{adminAreaCultivo.updateSelectedRiegoToEdit(riego)}">
-                                        <p:resetInput target=":dialogs:edit-riego-content"/>
-                                    </p:commandButton>
-                                    <p:commandButton icon="pi pi-trash"
-                                                     oncomplete="PF('deleteRiegoDialog').show()"
-                                                     style="margin-left: 10px"
-                                                     styleClass="edit-button rounded-button ui-button-danger"
-                                                     process="@this"
-                                                     actionListener="#{adminAreaCultivo.updateSelectedRiegoToDelete(riego)}">
-                                    </p:commandButton>
-                                </p:column>
+                            <div class="col col-sm-12">
+                                <p:dataTable tableStyleClass="table-striped" id="dt-riego" widgetVar="dtriego"
+                                             var="riego"
+                                             value="#{adminAreaCultivo.riegoResponseList}" size="small"
+                                             reflow="true"
+                                             paginator="true" rows="5"
+                                             paginatorPosition="bottom">
+                                    <p:column exportHeaderValue="Planificado" headerText="Planificado">
+                                        <h:outputText
+                                                value="${riego.fechaPlanificacion}"/>
+                                    </p:column>
+                                    <p:column exportHeaderValue="Real" headerText="Real">
+                                        <h:outputText
+                                                value="${riego.fechaReal}"/>
+                                    </p:column>
+                                    <p:column exportable="false">
+                                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-riego-content"
+                                                         style="margin-left: 10px"
+                                                         oncomplete="PF('editRiegoDialog').show()"
+                                                         styleClass="edit-button rounded-button ui-button-warning"
+                                                         process="@this"
+                                                         actionListener="#{adminAreaCultivo.updateSelectedRiegoToEdit(riego)}">
+                                            <p:resetInput target=":dialogs:edit-riego-content"/>
+                                        </p:commandButton>
+                                        <p:commandButton icon="pi pi-trash"
+                                                         oncomplete="PF('deleteRiegoDialog').show()"
+                                                         style="margin-left: 10px"
+                                                         styleClass="edit-button rounded-button ui-button-danger"
+                                                         process="@this"
+                                                         actionListener="#{adminAreaCultivo.updateSelectedRiegoToDelete(riego)}">
+                                        </p:commandButton>
+                                    </p:column>
 
-                            </p:dataTable>
+                                </p:dataTable>
+                            </div>
                         </div>
                     </p:outputPanel>
 
@@ -383,7 +406,7 @@
 
                 <!--Edit Dialog-->
                 <p:dialog header="Editar Espacial" showEffect="fade" modal="true"
-                          widgetVar="editareaCultivoDialog"
+                          widgetVar="editareaCultivoDialog" width="1000px" height="600px"
                           responsive="true">
                     <p:outputPanel id="edit-areaCultivo-content" class="ui-fluid">
                         <div class="row" style="padding-left: 15px; padding-right: 15px">
@@ -440,8 +463,21 @@
                                                modifyValueOnWheel="false"/>
                             </div>
                             <br/>
-                            <p:outputLabel for="dt-riego" value="Planificaci&oacute;n de riego: "/>
+
+                            <div class="row" style="padding-left: 15px; padding-right: 15px">
+                                <div class="col col-sm-12">
+                                    <p:outputLabel for="edit-pickList" value="Agroquímicos: "/><br/>
+                                </div>
+                                <div class="col col-sm-12">
+                                    <p:pickList id="edit-pickList" value="#{adminAreaCultivo.agroquimicos}" var="a"
+                                                itemLabel="#{a}" itemValue="#{a}"/>
+                                </div>
+                            </div>
+                            <br/>
                             <div class="row">
+                                <div class="col col-sm-12">
+                                    <p:outputLabel for="dt-riego" value="Planificaci&oacute;n de riego: "/>
+                                </div>
                                 <div class="col col-sm-3">
                                     <p:commandButton value="Adicionar" icon="pi pi-plus"
                                                      update=":dialogs:add-riego-content"
@@ -451,39 +487,41 @@
                                     </p:commandButton>
                                 </div>
 
-                                <p:dataTable tableStyleClass="table-striped" id="dt-riego1" widgetVar="dtriego"
-                                             var="riego"
-                                             value="#{adminAreaCultivo.riegoResponseList}" size="small"
-                                             reflow="true"
-                                             paginator="true" rows="5"
-                                             paginatorPosition="bottom">
-                                    <p:column exportHeaderValue="Planificado" headerText="Planificado">
-                                        <h:outputText
-                                                value="${riego.fechaPlanificacion}"/>
-                                    </p:column>
-                                    <p:column exportHeaderValue="Real" headerText="Real">
-                                        <h:outputText
-                                                value="${riego.fechaReal}"/>
-                                    </p:column>
-                                    <p:column exportable="false">
-                                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-riego-content"
-                                                         style="margin-left: 10px"
-                                                         oncomplete="PF('editRiegoDialog').show()"
-                                                         styleClass="edit-button rounded-button ui-button-warning"
-                                                         process="@this"
-                                                         actionListener="#{adminAreaCultivo.updateSelectedRiegoToEdit(riego)}">
-                                            <p:resetInput target=":dialogs:edit-riego-content"/>
-                                        </p:commandButton>
-                                        <p:commandButton icon="pi pi-trash"
-                                                         oncomplete="PF('deleteRiegoDialog').show()"
-                                                         style="margin-left: 10px"
-                                                         styleClass="edit-button rounded-button ui-button-danger"
-                                                         process="@this"
-                                                         actionListener="#{adminAreaCultivo.updateSelectedRiegoToDelete(riego)}">
-                                        </p:commandButton>
-                                    </p:column>
+                                <div class="col col-sm-12">
+                                    <p:dataTable tableStyleClass="table-striped" id="dt-riego1" widgetVar="dtriego"
+                                                 var="riego"
+                                                 value="#{adminAreaCultivo.riegoResponseList}" size="small"
+                                                 reflow="true"
+                                                 paginator="true" rows="5"
+                                                 paginatorPosition="bottom">
+                                        <p:column exportHeaderValue="Planificado" headerText="Planificado">
+                                            <h:outputText
+                                                    value="${riego.fechaPlanificacion}"/>
+                                        </p:column>
+                                        <p:column exportHeaderValue="Real" headerText="Real">
+                                            <h:outputText
+                                                    value="${riego.fechaReal}"/>
+                                        </p:column>
+                                        <p:column exportable="false">
+                                            <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-riego-content"
+                                                             style="margin-left: 10px"
+                                                             oncomplete="PF('editRiegoDialog').show()"
+                                                             styleClass="edit-button rounded-button ui-button-warning"
+                                                             process="@this"
+                                                             actionListener="#{adminAreaCultivo.updateSelectedRiegoToEdit(riego)}">
+                                                <p:resetInput target=":dialogs:edit-riego-content"/>
+                                            </p:commandButton>
+                                            <p:commandButton icon="pi pi-trash"
+                                                             oncomplete="PF('deleteRiegoDialog').show()"
+                                                             style="margin-left: 10px"
+                                                             styleClass="edit-button rounded-button ui-button-danger"
+                                                             process="@this"
+                                                             actionListener="#{adminAreaCultivo.updateSelectedRiegoToDelete(riego)}">
+                                            </p:commandButton>
+                                        </p:column>
 
-                                </p:dataTable>
+                                    </p:dataTable>
+                                </div>
                             </div>
                         </div>
                     </p:outputPanel>

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Osniel
+  Date: 10/10/2024
+  Time: 14:50
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body>
+
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="title">
+            Administrar Agroquimico
+        </ui:define>
+
+        <ui:define name="content">
+            #{adminAgroquimicoBean.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Adicionar" icon="pi pi-plus"
+                                         update=":dialogs:add-agroquimico-content"
+                                         oncomplete="PF('addagroquimicoDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:add-agroquimico-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable tableStyleClass="table-striped" id="dt-agroquimico" widgetVar="dtagroquimico"
+                             var="agroquimico"
+                             value="#{adminAgroquimicoBean.agroquimicoResponseList}" size="small"
+                             reflow="true"
+                             rowKey="#{agroquimico.nombre}" paginator="true" rows="10"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="agroquimico-table-header">
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dtagroquimico').filter()" placeholder="Buscar"/>
+                    </span>
+                        </div>
+                    </f:facet>
+                    <p:column exportHeaderValue="ID" headerText="ID" sortOrder="asc" filterBy="#{agroquimico.id}">
+                        <h:outputText value="#{agroquimico.id}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Nombre" headerText="Nombre">
+                        <h:outputText value="#{agroquimico.nombre}"/>
+                    </p:column>
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-info-circle"
+                                         oncomplete="PF('infoagroquimicoDialog').show()"
+                                         styleClass="rounded-button ui-button-info" process="@this"
+                                         actionListener="#{adminAgroquimicoBean.updateSelectedAgroquimico(agroquimico)}"
+                                         update=":dialogs:info-agroquimico-content"
+                                         title="Informaci&oacute;n">
+                            <p:resetInput target=":dialogs:info-agroquimico-content"/>
+                        </p:commandButton>
+<!--                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-agroquimico-content"-->
+<!--                                         style="margin-left: 10px"-->
+<!--                                         oncomplete="PF('editagroquimicoDialog').show()"-->
+<!--                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"-->
+<!--                                         actionListener="#{adminAgroquimicoBean.updateSelected_Agroquimico_toEdit(agroquimico)}">-->
+<!--                            <p:resetInput target=":dialogs:edit-agroquimico-content"/>-->
+<!--                        </p:commandButton>-->
+                        <p:commandButton icon="pi pi-trash"
+                                         oncomplete="PF('deleteagroquimicoDialog').show()"
+                                         style="margin-left: 10px"
+                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"
+                                         actionListener="#{adminAgroquimicoBean.updateSelectedAgroquimicoToDelete(agroquimico)}">
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+            <h:form id="dialogs">
+
+                <!--Info Dialog-->
+                <p:dialog header="Informaci&oacute;n" showEffect="fade" modal="true"
+                          widgetVar="infoagroquimicoDialog"
+                          responsive="true">
+                    <p:outputPanel id="info-agroquimico-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="ID: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAgroquimicoBean.selectedAgroquimicoResponse.id}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Nombre: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAgroquimicoBean.selectedAgroquimicoResponse.nombre}"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infoagroquimicoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Info Dialog-->
+
+                <!--Add Dialog-->
+                <p:dialog header="A&ntilde;adir Agroquimico" showEffect="fade" modal="true"
+                          widgetVar="addagroquimicoDialog"
+                          responsive="true">
+                    <p:outputPanel id="add-agroquimico-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="nombre" value="Nombre"/><br/>
+                                <p:inputTextarea id="nombre" style="height: 30px;"
+                                                 value="#{adminAgroquimicoBean.nombre}"
+                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputTextarea>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnAddModal" actionListener="#{adminAgroquimicoBean.addAgroquimico()}"
+                                         update="add-agroquimico-content form:messages"
+                                         process="add-agroquimico-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addagroquimicoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Add Dialog-->
+
+                <!--Edit Dialog-->
+                <p:dialog header="Editar Agroquimico" showEffect="fade" modal="true"
+                          widgetVar="editagroquimicoDialog"
+                          responsive="true">
+                    <p:outputPanel id="edit-agroquimico-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="edit-id" value="Identificaci&oacute;n"/><br/>
+                                <p:inputText label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                             id="edit-id" value="#{adminAgroquimicoBean.selectedAgroquimicoResponse.id}"
+                                             placeholder="Identificaci&oacute;n" disabled="true"
+                                             mask="99999999999"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-descripcion" value="Nombre"/><br/>
+                                <p:inputTextarea id="edit-descripcion" style="height: 30px;"
+                                                 value="#{adminAgroquimicoBean.nombre}"
+                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
+                                    <f:validateLength maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputTextarea>
+                            </div>
+                        </div>
+                        <br/>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnEditModal" actionListener="#{adminAgroquimicoBean.editAgroquimico()}"
+                                         update="edit-agroquimico-content form:messages"
+                                         process="edit-agroquimico-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editagroquimicoDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Delete Dialog -->
+                <p:confirmDialog widgetVar="deleteagroquimicoDialog" showEffect="fade" width="300"
+                                 message="¿Desea eliminar la Agroquimico?"
+                                 header="Confirm" severity="info">
+                    <p:commandButton value="Si" icon="ui-icon-check"
+                                     actionListener="#{adminAgroquimicoBean.deleteAgroquimico()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deleteagroquimicoDialog').hide()"/>
+                </p:confirmDialog>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>

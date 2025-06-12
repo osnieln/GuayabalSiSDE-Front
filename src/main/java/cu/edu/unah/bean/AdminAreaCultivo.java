@@ -3,10 +3,7 @@ package cu.edu.unah.bean;
 import cu.edu.unah.entity.Area;
 import cu.edu.unah.entity.Cultivo;
 import cu.edu.unah.entity.Riego;
-import cu.edu.unah.rest.RestArea;
-import cu.edu.unah.rest.RestAreaCultivo;
-import cu.edu.unah.rest.RestCultivo;
-import cu.edu.unah.rest.RestRiego;
+import cu.edu.unah.rest.*;
 import cu.edu.unah.util.*;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.faces.application.FacesMessage;
@@ -16,6 +13,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.PrimeFaces;
 import org.primefaces.event.timeline.TimelineSelectEvent;
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.timeline.TimelineEvent;
 import org.primefaces.model.timeline.TimelineModel;
 
@@ -26,6 +24,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
 @Getter
@@ -39,6 +38,7 @@ public class AdminAreaCultivo implements Serializable {
     List<AreaResponse> areaResponsesList = new ArrayList<>();
     List<Cultivo> cultivoList = new ArrayList<>();
     List<RiegoResponse> riegoResponseList = new ArrayList<>();
+    DualListModel<String> agroquimicos = new DualListModel<>(new ArrayList<>(), new  ArrayList<>());
 
     private AreaCultivoResponse areaCultivo = new AreaCultivoResponse();
     private AreaCultivoResponse selectedAreaCultivo;
@@ -54,6 +54,7 @@ public class AdminAreaCultivo implements Serializable {
     RestArea restArea = new RestArea();
     RestCultivo restCultivo = new RestCultivo();
     RestRiego restRiego = new RestRiego();
+    RestAgroquimico restAgroquimico = new RestAgroquimico();
 
     Date fechaSiembra = new Date(System.currentTimeMillis());
     Date fechaRecogida = new Date(System.currentTimeMillis());
@@ -76,6 +77,8 @@ public class AdminAreaCultivo implements Serializable {
 
     public void initAddAreaCultivo() {
         riegoResponseList = new ArrayList<>();
+        List<String> agroquimicosSource = restAgroquimico.findAllAgroquimico().stream().map(AgroquimicoResponse::getNombre).toList();
+        agroquimicos = new DualListModel<>(agroquimicosSource, new ArrayList<>());
         riegoToEdit = false;
         PrimeFaces.current().ajax().update("form:messages", "dialogs:add-areaCultivo-content");
     }
@@ -122,6 +125,9 @@ public class AdminAreaCultivo implements Serializable {
         prodReal = areaCultivoResponse.getProduccionReal();
         this.riegoResponseList = restRiego.findByAreaCultivoPk(areaCultivoResponse.getAreaCultivoResponsePK());
         riegoToEdit = true;
+        List<String> agroquimicosSource = new ArrayList<>(restAgroquimico.findAllAgroquimico().stream().map(AgroquimicoResponse::getNombre).toList());
+        agroquimicosSource.removeAll(areaCultivoResponse.getAgroquimicos() == null ? new ArrayList<String>() : areaCultivoResponse.getAgroquimicos());
+        agroquimicos = new DualListModel<>(agroquimicosSource, areaCultivoResponse.getAgroquimicos());
         PrimeFaces.current().ajax().update("form:messages", "dialogs:edit-areaCultivo-content");
     }
 
@@ -162,6 +168,7 @@ public class AdminAreaCultivo implements Serializable {
                 .prodCultivosTemporales(prodTemporal)
                 .produccionReal(prodReal)
                 .planProd((long) planProduccion)
+                .agroquimicos(agroquimicos.getTarget())
                 .build();
 
         FacesContext context = FacesContext.getCurrentInstance();
@@ -239,6 +246,7 @@ public class AdminAreaCultivo implements Serializable {
                 .prodCultivosTemporales(prodTemporal)
                 .produccionReal(prodReal)
                 .planProd((long) planProduccion)
+                .agroquimicos(agroquimicos.getTarget())
                 .build();
 
         FacesContext context = FacesContext.getCurrentInstance();
