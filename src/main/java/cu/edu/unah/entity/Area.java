@@ -22,6 +22,8 @@ public class Area implements Serializable {
 
     String descripcion;
 
+    String capa;
+
     @Column(columnDefinition = "geometry")
     Polygon ubicacion;
 

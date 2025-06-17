@@ -31,21 +31,23 @@
                 <p:growl id="messages" showDetail="true"/>
 
                 <script src="https://maps.google.com/maps/api/js?key=AIzaSyCvCDkYieuUBmMWon_mfLAfjuaeuosuqow&amp;sensor=true"></script>
-                <p:gmap id="gmap" center="22.9985905,-82.1645741" zoom="16" type="HYBRID" style="width:100%;height:400px"
+                <p:gmap id="gmap" center="22.9985905,-82.1645741" zoom="16" type="HYBRID"
+                        style="width:100%;height:400px"
                         model="#{adminArea.polygonModel}">
                     <p:ajax event="overlaySelect" listener="#{adminArea.onPolygonSelect}" update="messages"/>
                 </p:gmap>
 
-<!--                <p:toolbar>-->
-<!--                    <p:toolbarGroup align="right">-->
-<!--                        <p:commandButton value="Adicionar" icon="pi pi-plus"-->
-<!--                                         update=":dialogs:add-area-content"-->
-<!--                                         oncomplete="PF('addareaDialog').show()"-->
-<!--                                         styleClass="ui-button-success" style="margin-right: .5rem">-->
-<!--                            <p:resetInput target=":dialogs:add-area-content"/>-->
-<!--                        </p:commandButton>-->
-<!--                    </p:toolbarGroup>-->
-<!--                </p:toolbar>-->
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Importar &Aacute;reas" icon="pi pi-plus"
+                                         actionListener="#{adminArea.getAreasToImport()}"
+                                         update=":dialogs:add-area-content"
+                                         oncomplete="PF('addareaDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:add-area-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
 
                 <p:dataTable tableStyleClass="table-striped" id="dt-area" widgetVar="dtarea" var="area"
                              value="#{adminArea.listArea}" size="small"
@@ -65,6 +67,9 @@
                     <p:column exportHeaderValue="Descripci&oacute;n" headerText="Descripci&oacute;n">
                         <h:outputText value="#{area.descripcion}"/>
                     </p:column>
+                    <p:column exportHeaderValue="Capa de importaci&oacute;n" headerText="Capa de importaci&oacute;n">
+                        <h:outputText value="#{area.capa}"/>
+                    </p:column>
                     <p:column exportable="false">
                         <p:commandButton icon="pi pi-info-circle"
                                          oncomplete="PF('infoareaDialog').show()"
@@ -81,12 +86,12 @@
                                          actionListener="#{adminArea.updateSelected_Area_toEdit(area)}">
                             <p:resetInput target=":dialogs:edit-area-content"/>
                         </p:commandButton>
-<!--                        <p:commandButton icon="pi pi-trash"-->
-<!--                                         oncomplete="PF('deleteAreaDialog').show()"-->
-<!--                                         style="margin-left: 10px"-->
-<!--                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"-->
-<!--                                         actionListener="#{adminArea.updateSelectedAreaToDelete(area)}">-->
-<!--                        </p:commandButton>-->
+                        <!--                        <p:commandButton icon="pi pi-trash"-->
+                        <!--                                         oncomplete="PF('deleteAreaDialog').show()"-->
+                        <!--                                         style="margin-left: 10px"-->
+                        <!--                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"-->
+                        <!--                                         actionListener="#{adminArea.updateSelectedAreaToDelete(area)}">-->
+                        <!--                        </p:commandButton>-->
                     </p:column>
 
                 </p:dataTable>
@@ -122,7 +127,17 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <p:gmap id="gmapInfo" center="#{adminArea.centerCoords}" zoom="16" type="HYBRID" style="width:400px;height:400px"
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Capa de importaci&oacute;n: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminArea.selectedArea.capa}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <p:gmap id="gmapInfo" center="#{adminArea.centerCoords}" zoom="16" type="HYBRID"
+                                        style="width:400px;height:400px"
                                         model="#{adminArea.polygonModelInfo}">
                                 </p:gmap>
                             </div>
@@ -137,29 +152,76 @@
                 <!--/Info Dialog-->
 
                 <!--Add Dialog-->
-                <p:dialog header="A&ntilde;adir Area" showEffect="fade" modal="true"
+                <p:dialog header="Importar &aacute;reas" showEffect="fade" modal="true"
                           widgetVar="addareaDialog"
                           responsive="true">
                     <p:outputPanel id="add-area-content" class="ui-fluid">
-                        <div class="row">
-                            <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
-                                <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
-                                <p:inputTextarea id="descripcion" style="height: 30px;"
-                                                 value="#{adminArea.descripcion}"/>
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-12">
+                                <p:outputLabel for="area" value="&Aacute;rea: "/>
+                            </div>
+                            <div class="col col-sm-12">
+                                <h:panelGroup styleClass="ui-inputgroup">
+                                    <p:selectOneMenu id="area" value="#{adminArea.selectedAreaToImport}">
+                                        <f:selectItem itemLabel="Seleccione un elemento" itemValue=""/>
+                                        <f:selectItems value="#{adminArea.areaImport}"/>
+                                    </p:selectOneMenu>
+                                    <p:commandButton actionListener="#{adminArea.getAreaInfo()}"
+                                                     process="add-area-content @this" icon="pi pi-refresh"
+                                                     title="Cargar datos"/>
+                                </h:panelGroup>
                             </div>
                         </div>
                         <br/>
+                        <div class="row" style="padding-left: 15px; padding-right: 15px">
+                            <div class="col col-sm-12">
+                                <p:outputPanel id="areaToImportPanel" rendered="#{adminArea.valid}">
+                                    <div class="row" style="padding-left: 15px; padding-right: 15px">
+                                        <div class="col col-sm-12">
+                                            <p:outputLabel for="area" value="&Aacute;reas a importar: "/>
+                                            <ui:repeat value="#{adminArea.legend}" var="legend">
+                                                <p:chip label="#{legend}"
+                                                        style="margin-left: 5px; background: #{adminArea.translateLegendColor(legend)}"/>
+                                            </ui:repeat>
+                                        </div>
+                                    </div>
+                                    <br/>
+                                    <div class="row" style="padding-left: 15px; padding-right: 15px">
+                                        <div class="col col-sm-12">
+                                            <center>
+                                                <p:gmap id="gmapInfoToImport" center="22.9985905,-82.1645741" zoom="16"
+                                                        type="HYBRID"
+                                                        style="height:400px"
+                                                        model="#{adminArea.polygonModelToImport}">
+                                                </p:gmap>
+                                            </center>
+                                        </div>
+                                    </div>
+                                </p:outputPanel>
+                            </div>
+                        </div>
                     </p:outputPanel>
 
                     <f:facet name="footer">
-                        <p:commandButton value="Guardar" icon="pi pi-check"
-                                         id="btnAddModal" actionListener="#{adminArea.addArea()}"
-                                         update="add-area-content form:messages"
+                        <p:commandButton value="Importar" icon="pi pi-file-import"
+                                         id="btnAddModal"
+                                         disabled="#{!adminArea.valid}"
+                                         update="add-area-content form:messages dialogs:importAreaDialog"
+                                         oncomplete="PF('importAreaDialog').show()"
                                          process="add-area-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addareaDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
                     </f:facet>
                 </p:dialog>
+
+                <p:confirmDialog id="importAreaDialog" widgetVar="importAreaDialog" showEffect="fade" width="500"
+                                 message="¿Seguro que desea importar las &aacute;reas correspondientes a la capa '#{adminArea.selectedAreaToImport}'?"
+                                 header="Confirmar importaci&oacute;n" severity="warn">
+                    <p:commandButton value="Si" icon="pi pi-check" actionListener="#{adminArea.addArea()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="pi pi-times"
+                                     onclick="PF('importAreaDialog').hide()"/>
+                </p:confirmDialog>
                 <!--/Add Dialog-->
 
                 <!--Edit Dialog-->
@@ -202,7 +264,8 @@
                 </p:dialog>
 
                 <!--Delete Dialog -->
-                <p:confirmDialog widgetVar="deleteAreaDialog" showEffect="fade" width="300" message="¿Desea eliminar la Area?"
+                <p:confirmDialog widgetVar="deleteAreaDialog" showEffect="fade" width="300"
+                                 message="¿Desea eliminar la Area?"
                                  header="Confirm" severity="info">
                     <p:commandButton value="Si" icon="ui-icon-check" actionListener="#{adminArea.deleteArea()}"
                                      process="@this"/>

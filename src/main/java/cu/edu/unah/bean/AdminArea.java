@@ -1,7 +1,8 @@
 package cu.edu.unah.bean;
 
-import cu.edu.unah.entity.Area;
 import cu.edu.unah.rest.RestArea;
+import cu.edu.unah.rest.RestAreaImport;
+import cu.edu.unah.util.AreaImportDTO;
 import cu.edu.unah.util.AreaResponse;
 import cu.edu.unah.util.ColorGenerator;
 import jakarta.annotation.PostConstruct;
@@ -16,8 +17,8 @@ import org.primefaces.event.map.OverlaySelectEvent;
 import org.primefaces.model.map.*;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Named
 @Getter
@@ -26,17 +27,25 @@ import java.util.List;
 public class AdminArea implements Serializable {
 
     private List<AreaResponse> listArea = new ArrayList<AreaResponse>();
+    private List<String> areaImport = new ArrayList<>();
+    private String selectedAreaToImport = "";
     private String descripcion = "";
 
     private AreaResponse area = new AreaResponse();
     private AreaResponse selectedArea;
     RestArea restArea = new RestArea();
+    RestAreaImport restAreaImport = new RestAreaImport();
     ColorGenerator colorGenerator = new ColorGenerator();
 
     String centerCoords = "";
 
     private MapModel<Long> polygonModel;
     private MapModel<Long> polygonModelInfo;
+    private MapModel<Long> polygonModelToImport;
+    List<String> legend = new ArrayList<>();
+    Map<String, String> legendColor = new HashMap<>();
+    boolean isValid = false;
+    List<AreaImportDTO> dataImport = new ArrayList<>();
 
     @PostConstruct
     public void initMap() {
@@ -60,7 +69,14 @@ public class AdminArea implements Serializable {
             polygon.setFillColor(colorGenerator.getLightColor());
             polygonModel.addOverlay(polygon);
         }
+        PrimeFaces.current().ajax().update("form:gmap");
+    }
 
+    public void getAreasToImport(){
+        areaImport = restAreaImport.listAreaImport();
+        List<String> capaImportedList = restArea.findDistinctCapa();
+        areaImport.removeAll(Arrays.asList("weather", "spatial_ref_sys"));
+        areaImport.removeAll(capaImportedList);
     }
 
     public void onPolygonSelect(OverlaySelectEvent<Long> event) {
@@ -76,6 +92,13 @@ public class AdminArea implements Serializable {
         listArea.clear();
         cleanVariables();
         listArea = restArea.findAllArea();
+        initMap();
+    }
+
+    public void clearImportDataVariables(){
+        dataImport = new ArrayList<>();
+        isValid = false;
+        areaImport = new ArrayList<>();
     }
 
     public void cleanVariables() {
@@ -112,19 +135,29 @@ public class AdminArea implements Serializable {
     }
 
     public void addArea() {
-        AreaResponse areaToAdd = AreaResponse.builder()
-                .descripcion(descripcion)
-                .ubicacion("")
-                .build();
+        AtomicInteger added = new AtomicInteger();
+        StringBuilder areasError = new StringBuilder();
+        dataImport.forEach(area -> {
+            AreaResponse areaToAdd = AreaResponse.builder()
+                    .descripcion(area.getDescription())
+                    .ubicacion(area.getGeometry())
+                    .capa(selectedAreaToImport)
+                    .build();
+            if (restArea.create(areaToAdd)) added.getAndIncrement();
+            else areasError.append(areaToAdd.getDescripcion()).append(", ");
+        });
+
         FacesContext context = FacesContext.getCurrentInstance();
 
-        if (restArea.create(areaToAdd)) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "AREA ADICIONADA CORRECTAMENTE", ""));
-            init();
-            PrimeFaces.current().ajax().update("form:messages", "form:dt-area");
+        if (added.get() == dataImport.size()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "TODAS LAS AREAS HAN SIDO ADICIONADAS CORRECTAMENTE", ""));
         } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL CREAR EL AREA", ""));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "AL MENOS UN AREA NO SE IMPORTÓ CORRECTAMENTE", "Áreas no importadas (posibilidad de duplicados): " + areasError.toString()));
         }
+        init();
+        clearImportDataVariables();
+        PrimeFaces.current().ajax().update("form:messages", "form:dt-area", "dialogs:btnAddModal");
+        PrimeFaces.current().executeScript("PF('importAreaDialog').hide()");
         PrimeFaces.current().executeScript("PF('addareaDialog').hide()");
     }
 
@@ -132,7 +165,7 @@ public class AdminArea implements Serializable {
         AreaResponse areaToEdit = AreaResponse.builder()
                 .id(selectedArea.getId())
                 .descripcion(descripcion)
-                .ubicacion("")
+                .ubicacion(selectedArea.getUbicacion())
                 .build();
 
         FacesContext context = FacesContext.getCurrentInstance();
@@ -156,5 +189,41 @@ public class AdminArea implements Serializable {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "ERROR AL ELIMINAR EL AREA", ""));
         }
         PrimeFaces.current().executeScript("PF('deleteAreaDialog').hide()");
+    }
+
+    public void getAreaInfo(){
+        isValid = false;
+        if(selectedAreaToImport!=null && !selectedAreaToImport.isEmpty()) {
+            isValid = true;
+            dataImport = restAreaImport.getAreaImport(selectedAreaToImport);
+            polygonModelToImport = new DefaultMapModel<>();
+            legend = new ArrayList<>();
+            long i = 0L;
+            for (AreaImportDTO areaImportDTO : dataImport) {
+                String[] points = areaImportDTO.getGeometry().replace("POLYGON((", "").replace("))", "").split(", ");
+
+                Polygon<Long> polygon = new Polygon<>();
+                polygon.setData(1L);
+                for (String point : points) {
+                    String[] coords = point.split(" ");
+                    LatLng latLng = new LatLng(Double.parseDouble(coords[1]), Double.parseDouble(coords[0]));
+                    polygon.getPaths().add(latLng);
+                }
+                polygon.setData(i++);
+                polygon.setStrokeOpacity(0.7);
+                polygon.setFillOpacity(0.7);
+                colorGenerator.generateRandomColorSet();
+                polygon.setStrokeColor(colorGenerator.getDarkColor());
+                polygon.setFillColor(colorGenerator.getLightColor());
+                legend.add(areaImportDTO.getDescription());
+                legendColor.put(areaImportDTO.getDescription(), colorGenerator.getLightColor());
+                polygonModelToImport.addOverlay(polygon);
+            }
+            PrimeFaces.current().ajax().update("form:messages", "dialogs:add-area-content", "dialogs:btnAddModal");
+        }
+    }
+
+    public String translateLegendColor(String legendLabel){
+        return legendColor.get(legendLabel);
     }
 }

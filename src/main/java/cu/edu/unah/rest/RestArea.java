@@ -35,6 +35,22 @@ public class RestArea {
         return list_Area;
     }
 
+    public List<String> findDistinctCapa() {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/findDistinctCapa")).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<String> capaList = null;
+        try {
+            capaList = JSONUtils.convertFromJsonToList(response.get().body(), new
+                    TypeReference<List<String>>() {});
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return capaList;
+    }
+
     //sending request retrieve the area based on the areaname
     public AreaResponse findById(Long id) {
         AreaResponse area = null;

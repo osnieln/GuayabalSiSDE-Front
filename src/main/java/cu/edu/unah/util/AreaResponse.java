@@ -19,15 +19,18 @@ public class AreaResponse {
 
     String ubicacion;
 
+    String capa;
+
     public static Area AreaResponseToArea(AreaResponse areaResponse){
         return Area.builder()
                 .id(areaResponse.getId())
                 .descripcion(areaResponse.getDescripcion())
                 .ubicacion((Polygon) GeometryUtil.wktToGeometry(areaResponse.ubicacion))
+                .capa(areaResponse.capa)
                 .build();
     }
 
     public static AreaResponse AreaToAreaResponse(Area area){
-        return new AreaResponse(area.getId(), area.getDescripcion(), GeometryUtil.geometryToWkt(area.getUbicacion()));
+        return new AreaResponse(area.getId(), area.getDescripcion(), GeometryUtil.geometryToWkt(area.getUbicacion()), area.getCapa());
     }
 }
