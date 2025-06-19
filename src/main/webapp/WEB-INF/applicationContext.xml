@@ -23,6 +23,9 @@
         <security:intercept-url pattern="/pages/AdminAgroquimico.xhtml" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/pages/AdminCultivo.xhtml" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/pages/AdminAreaCultivo.xhtml" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/pages/ReportePlanProduccion.xhtml" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/pages/ReporteCultPermanente.xhtml" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/pages/ReporteFechaRecogida.xhtml" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/pages/AdminArea.xhtml" access="hasRole('ROLE_ADMIN')"/>
 
 

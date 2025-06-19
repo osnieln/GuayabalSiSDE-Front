@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Nerzur
+  Date: 22/01/2021
+  Time: 01:35
+-->
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body>
+    <ui:composition template="template.xhtml">
+        <ui:define name="title">
+            Resumen Plan de producción
+        </ui:define>
+        <ui:define name="content">
+            <p:card>
+                <f:facet name="title">
+                    Resumen Plan de Producci&oacute;n
+                </f:facet>
+                <h:form>
+                <div class="row">
+                    <div class="col col-md-5">
+                        <p:outputLabel for="init" value="Plan de producción inicial"/>
+                        <p:inputNumber id="init" required="true" value="#{reportBean.init}" modifyValueOnWheel="false"/>
+                    </div>
+                    <div class="col col-md-5">
+                        <p:outputLabel for="end" value="Plan de producción final"/>
+                        <p:inputNumber id="end" required="true" value="#{reportBean.end}" modifyValueOnWheel="false"/>
+                    </div>
+                    <p:commandButton value="Enviar" ajax="false" icon="pi pi-search">
+                        <p:fileDownload value="#{reportBean.planProduccion}"/>
+                    </p:commandButton>
+                </div>
+                    <p:messages autoUpdate="true" showDetail="true" />
+                    <input type="hidden"
+                           name="${_csrf.parameterName}"
+                           value="${_csrf.token}"/>
+                </h:form>
+            </p:card>
+        </ui:define>
+
+    </ui:composition>
+</h:body>
+
+
+</html>
