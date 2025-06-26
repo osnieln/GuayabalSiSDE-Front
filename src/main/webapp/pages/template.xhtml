@@ -28,7 +28,7 @@
 </h:head>
 
 <h:body>
-    #{template_bean.init()}
+    #{templateBean.init()}
     <div class="container-scroller">
         <!-- partial:../../partials/_navbar.html -->
         <nav class="navbar col-lg-12 col-12 p-0 d-flex flex-row">
@@ -49,7 +49,7 @@
                     <li class="nav-item nav-profile dropdown">
                         <a class="nav-link" href="#" data-toggle="dropdown" id="profileDropdown">
                             <i class="pi pi-user"/>
-                            <span class="nav-profile-name">#{template_bean.currentUser()}</span>
+                            <span class="nav-profile-name">#{templateBean.username}</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right navbar-dropdown"
                              aria-labelledby="profileDropdown">
@@ -85,31 +85,7 @@
             <!-- partial:../../partials/_sidebar.html -->
             <nav class="sidebar sidebar-offcanvas" id="sidebar">
                 <ul class="nav">
-                    <li class="nav-item">
-                        <p:link href="/pages/AdminUsers.faces"
-                                rendered="#{template_bean.translateRole_Boolean(template_bean.role_admin)}">
-                            <i class="mdi mdi-home menu-icon"></i>
-                            <span class="menu-title">Administrar Usuarios</span>
-                        </p:link>
-                    </li>
-                    <li class="nav-item" style="#{template_bean.translateRole_visible(template_bean.role_admin)}">
-                        <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
-                           aria-controls="ui-basic">
-                            <i class="mdi mdi-circle-outline menu-icon"></i>
-                            <span class="menu-title">UI Elements</span>
-                            <i class="menu-arrow"></i>
-                        </a>
-                        <div class="collapse" id="ui-basic">
-                            <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"><a class="nav-link"
-                                                        href="../../pages/ui-features/buttons.html">Buttons</a></li>
-                                <li class="nav-item"><a class="nav-link"
-                                                        href="../../pages/ui-features/typography.html">Typography</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </li>
-                    <li class="nav-item">
+                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_admin)}">
                         <a class="nav-link" data-toggle="collapse" href="#auth" aria-expanded="false"
                            aria-controls="auth">
                             <i class="pi pi-cog"> </i>
@@ -125,7 +101,7 @@
                         </div>
                     </li>
 
-                    <li class="nav-item">
+                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador)}">
                         <a class="nav-link" data-toggle="collapse" href="#func" aria-expanded="false"
                            aria-controls="func">
                             <i class="pi pi-map"> </i>
@@ -134,22 +110,22 @@
                         </a>
                         <div class="collapse" id="func">
                             <ul class="nav flex-column sub-menu">
-                                <li class="nav-item"><a class="nav-link"
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director)}"><a class="nav-link"
                                                         href="#{request.contextPath}/pages/AdminArea.xhtml"> &Aacute;rea </a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link"
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director)}"><a class="nav-link"
                                                         href="#{request.contextPath}/pages/AdminTipoCultivo.xhtml"> Tipo de Cultivo </a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link"
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador)}"><a class="nav-link"
                                                         href="#{request.contextPath}/pages/AdminAgroquimico.xhtml"> Agroquimico </a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link"
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director)}"><a class="nav-link"
                                                         href="#{request.contextPath}/pages/AdminCultivo.xhtml"> Cultivo </a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link"
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador)}"><a class="nav-link"
                                                         href="#{request.contextPath}/pages/AdminProduccion.xhtml"> Producci&oacute;n </a>
                                 </li>
-                                <li class="nav-item"><a class="nav-link"
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador)}"><a class="nav-link"
                                                         href="#{request.contextPath}/pages/AdminAreaCultivo.xhtml"> Espacial </a>
                                 </li>
                             </ul>
@@ -158,7 +134,7 @@
 
                     <h:form id="linksForm">
 
-                        <li class="nav-item">
+                        <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
                             <a class="nav-link" data-toggle="collapse" href="#reports" aria-expanded="false"
                                aria-controls="reports">
                                 <i class="pi pi-chart-line"> </i>
@@ -167,18 +143,18 @@
                             </a>
                             <div class="collapse" id="reports">
                                 <ul class="nav flex-column sub-menu">
-                                    <li class="nav-item">
+                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
                                         <p:commandLink class="nav-link" value="Resumen de cultivos" ajax="false">
                                             <p:fileDownload value="#{reportBean.datosCultivos}"/>
                                         </p:commandLink>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link"
+                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
                                                             href="#{request.contextPath}/pages/ReportePlanProduccion.xhtml"> Reporte Plan de Producci&oacute;n </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link"
+                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
                                                             href="#{request.contextPath}/pages/ReporteCultPermanente.xhtml"> Reporte Cultivo Permanente </a>
                                     </li>
-                                    <li class="nav-item"><a class="nav-link"
+                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
                                                             href="#{request.contextPath}/pages/ReporteFechaRecogida.xhtml"> Reporte Fecha de Recogida </a>
                                     </li>
                                 </ul>

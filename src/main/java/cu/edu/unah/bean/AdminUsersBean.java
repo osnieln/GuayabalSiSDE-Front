@@ -152,8 +152,10 @@ public class AdminUsersBean implements Serializable{
             return;
         }
         String tempPassword = "";
+        boolean t = false;
         if(password.equals("")){
             tempPassword = selectedUser.getPassword();
+            t=true;
         }
         else tempPassword = password;
         Users userToEdit = Users.builder()
@@ -162,7 +164,7 @@ public class AdminUsersBean implements Serializable{
                 .descripcion(descripcion)
                 .email(email)
                 .enabled(enable)
-                .password(passwordEncoder.encode(tempPassword))
+                .password(t ? tempPassword : passwordEncoder.encode(tempPassword))
                 .nombre(nombre)
                 .build();
 

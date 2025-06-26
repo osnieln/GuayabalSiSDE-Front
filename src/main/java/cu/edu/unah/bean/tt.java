@@ -1,6 +1,5 @@
 package cu.edu.unah.bean;
 
-import cu.edu.unah.entity.Authorities;
 import cu.edu.unah.entity.Users;
 import cu.edu.unah.rest.RestAuthorities;
 import cu.edu.unah.rest.RestUsers;
@@ -17,7 +16,7 @@ import java.util.List;
 @SessionScoped
 @Named
 @Data
-public class Template_bean implements Serializable {
+public class tt implements Serializable {
 
     private static String username;
     private static List<String> roles = new ArrayList<String>();
@@ -62,8 +61,8 @@ public class Template_bean implements Serializable {
 
     public boolean translateRole_Boolean(boolean... r) {
         boolean t = false;
-        for (int i = 0; i < r.length; i++) {
-            t = t || r[i];
+        for (boolean b : r) {
+            t = t || b;
         }
         return t;
     }
@@ -95,7 +94,7 @@ public class Template_bean implements Serializable {
     }
 
     public static void setUsername(String username) {
-        Template_bean.username = username;
+        tt.username = username;
     }
 
     public static List<String> getRoles() {
@@ -103,7 +102,7 @@ public class Template_bean implements Serializable {
     }
 
     public static void setRoles(List<String> roles) {
-        Template_bean.roles = roles;
+        tt.roles = roles;
     }
 
     public Users getUser() {

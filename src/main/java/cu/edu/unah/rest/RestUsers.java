@@ -36,6 +36,22 @@ public class RestUsers {
         return list_users;
     }
 
+    public List<String> findAuthoritiesByUsername(String username) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAuthoritiesByUsername/"+username)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<String> listAuthorities = null;
+        try {
+            listAuthorities = JSONUtils.convertFromJsonToList(response.get().body(), new
+                    TypeReference<List<String>>() {});
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return listAuthorities;
+    }
+
     //sending request retrieve the user based on the username
     public Users findUserByUsername(String username) {
         Users user = null;

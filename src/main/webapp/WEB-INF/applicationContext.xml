@@ -14,19 +14,17 @@
         <security:intercept-url pattern="/login.xhtml" access="!isAuthenticated()"/>
         <security:intercept-url pattern="/pages/errorPages/**" access="permitAll()"/>
 
-        <security:intercept-url pattern="/pages/page1.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/AdminUsers.xhtml" access="hasRole('ROLE_ADMIN')"/>
         <security:intercept-url pattern="/pages/AdminUser.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/Area.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/AdminProduccion.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/AdminTipoCultivo.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/AdminAgroquimico.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/AdminCultivo.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/AdminAreaCultivo.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/ReportePlanProduccion.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/ReporteCultPermanente.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/ReporteFechaRecogida.xhtml" access="hasRole('ROLE_ADMIN')"/>
-        <security:intercept-url pattern="/pages/AdminArea.xhtml" access="hasRole('ROLE_ADMIN')"/>
+        <security:intercept-url pattern="/pages/Area.xhtml" access="hasRole('ROLE_DIRECTOR')"/>
+        <security:intercept-url pattern="/pages/AdminProduccion.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR')"/>
+        <security:intercept-url pattern="/pages/AdminTipoCultivo.xhtml" access="hasRole('ROLE_DIRECTOR')"/>
+        <security:intercept-url pattern="/pages/AdminAgroquimico.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR')"/>
+        <security:intercept-url pattern="/pages/AdminCultivo.xhtml" access="hasRole('ROLE_DIRECTOR')"/>
+        <security:intercept-url pattern="/pages/AdminAreaCultivo.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR')"/>
+        <security:intercept-url pattern="/pages/ReportePlanProduccion.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
+        <security:intercept-url pattern="/pages/ReporteCultPermanente.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
+        <security:intercept-url pattern="/pages/ReporteFechaRecogida.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
+        <security:intercept-url pattern="/pages/AdminArea.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
 
 
 <!--        -->
