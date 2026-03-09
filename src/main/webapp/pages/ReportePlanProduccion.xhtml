@@ -1,57 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Created by IntelliJ IDEA.
-  User: Nerzur
-  Date: 22/01/2021
-  Time: 01:35
--->
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
 
-<h:head>
-    <title>Title</title>
-</h:head>
+<h:head><title>Reporte Plan de Producción</title></h:head>
 
 <h:body>
     <ui:composition template="template.xhtml">
-        <ui:define name="title">
-            Resumen Plan de producción
-        </ui:define>
+        <ui:define name="title">Reporte Plan de Producci&oacute;n</ui:define>
         <ui:define name="content">
-            <p:card>
-                <f:facet name="title">
-                    Resumen Plan de Producci&oacute;n
-                </f:facet>
-                <h:form>
-                <div class="row">
-                    <div class="col col-md-5">
-                        <p:outputLabel for="init" value="Plan de producción inicial"/>
-                        <p:inputNumber id="init" required="true" value="#{reportBean.init}" modifyValueOnWheel="false"/>
-                    </div>
-                    <div class="col col-md-5">
-                        <p:outputLabel for="end" value="Plan de producción final"/>
-                        <p:inputNumber id="end" required="true" value="#{reportBean.end}" modifyValueOnWheel="false"/>
-                    </div>
-                    <p:commandButton value="Enviar" ajax="false" icon="pi pi-search">
-                        <p:fileDownload value="#{reportBean.planProduccion}"/>
-                    </p:commandButton>
-                </div>
-                    <p:messages autoUpdate="true" showDetail="true" />
-                    <input type="hidden"
-                           name="${_csrf.parameterName}"
-                           value="${_csrf.token}"/>
-                </h:form>
-            </p:card>
-        </ui:define>
 
+            <!-- Descripción del reporte -->
+            <div class="row" style="margin-bottom:20px;">
+                <div class="col-sm-12">
+                    <div style="background:#e8f4fd; border-left:4px solid #007bff; padding:12px 16px; border-radius:4px;">
+                        <strong><i class="pi pi-info-circle" style="color:#007bff;"/> Descripci&oacute;n:</strong>
+                        Genera un reporte en PDF con todos los cultivos cuyo plan de producci&oacute;n
+                        se encuentra dentro del rango especificado (valor m&iacute;nimo y m&aacute;ximo).
+                        Se incluyen datos del &aacute;rea, tipo de cultivo, fecha de siembra y producci&oacute;n real.
+                    </div>
+                </div>
+            </div>
+
+            <h:form>
+                <p:messages autoUpdate="true" showDetail="true"/>
+
+                <div class="row" style="margin-bottom:16px;">
+                    <div class="col-sm-5">
+                        <p:outputLabel for="init" value="Plan de producci&oacute;n m&iacute;nimo (t):"
+                                       style="font-weight:600; display:block; margin-bottom:5px;"/>
+                        <p:inputNumber id="init" required="true" value="#{reportBean.init}"
+                                       modifyValueOnWheel="false" style="width:100%;"
+                                       placeholder="Ej: 0"
+                                       requiredMessage="Debe ingresar el valor m&iacute;nimo."/>
+                        <small style="color:#6c757d;">Valor m&iacute;nimo del plan de producci&oacute;n en toneladas.</small>
+                    </div>
+                    <div class="col-sm-5">
+                        <p:outputLabel for="end" value="Plan de producci&oacute;n m&aacute;ximo (t):"
+                                       style="font-weight:600; display:block; margin-bottom:5px;"/>
+                        <p:inputNumber id="end" required="true" value="#{reportBean.end}"
+                                       modifyValueOnWheel="false" style="width:100%;"
+                                       placeholder="Ej: 1000"
+                                       requiredMessage="Debe ingresar el valor m&aacute;ximo."/>
+                        <small style="color:#6c757d;">Valor m&aacute;ximo del plan de producci&oacute;n en toneladas.</small>
+                    </div>
+                    <div class="col-sm-2" style="padding-top:28px;">
+                        <p:commandButton value="Generar Reporte" icon="pi pi-file-pdf"
+                                         ajax="false" styleClass="ui-button-danger"
+                                         style="width:100%;">
+                            <p:fileDownload value="#{reportBean.planProduccion}"/>
+                        </p:commandButton>
+                    </div>
+                </div>
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
     </ui:composition>
 </h:body>
-
-
 </html>

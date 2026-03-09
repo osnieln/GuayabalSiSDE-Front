@@ -1,54 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Created by IntelliJ IDEA.
-  User: Nerzur
-  Date: 22/01/2021
-  Time: 01:35
--->
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
 
-<h:head>
-    <title>Title</title>
-</h:head>
+<h:head><title>Reporte Cultivo Permanente</title></h:head>
 
 <h:body>
     <ui:composition template="template.xhtml">
-        <ui:define name="title">
-            Resumen Cultivo Permanente
-        </ui:define>
+        <ui:define name="title">Reporte Cultivo Permanente</ui:define>
         <ui:define name="content">
-            <p:card>
-                <f:facet name="title">
-                    Resumen Cultivo Permanente
-                </f:facet>
-                <h:form>
-                <div class="row">
-                    <div class="col col-md-5">
-                        <p:outputLabel for="init" value="Cultivo Permanente Mínimo"/>
-                        <p:inputNumber required="true" id="init" value="#{reportBean.init}" modifyValueOnWheel="false"/>
+
+            <!-- Descripción del reporte -->
+            <div class="row" style="margin-bottom:20px;">
+                <div class="col-sm-12">
+                    <div style="background:#e8f4fd; border-left:4px solid #007bff; padding:12px 16px; border-radius:4px;">
+                        <strong><i class="pi pi-info-circle" style="color:#007bff;"/> Descripci&oacute;n:</strong>
+                        Genera un reporte en PDF con los cultivos permanentes cuya producci&oacute;n
+                        real supera el umbral m&iacute;nimo indicado.
+                        El reporte incluye datos del &aacute;rea, tipo de cultivo, fecha de siembra,
+                        producci&oacute;n planificada y producci&oacute;n real.
                     </div>
-                    <p:commandButton value="Enviar" ajax="false" icon="pi pi-search">
-                        <p:fileDownload value="#{reportBean.prodCultivosPermanenteAfter}"/>
-                    </p:commandButton>
                 </div>
-                <p:messages autoUpdate="true" showDetail="true" />
+            </div>
 
-                    <input type="hidden"
-                           name="${_csrf.parameterName}"
-                           value="${_csrf.token}"/>
-                </h:form>
-            </p:card>
+            <h:form>
+                <p:messages autoUpdate="true" showDetail="true"/>
+
+                <div class="row" style="margin-bottom:16px; align-items:flex-end;">
+                    <div class="col-sm-5">
+                        <p:outputLabel for="init" value="Producci&oacute;n real m&iacute;nima (t):"
+                                       style="font-weight:600; display:block; margin-bottom:5px;"/>
+                        <p:inputNumber id="init" required="true" value="#{reportBean.init}"
+                                       modifyValueOnWheel="false" style="width:100%;"
+                                       placeholder="Ej: 50"
+                                       requiredMessage="Debe ingresar un valor m&iacute;nimo de producci&oacute;n."/>
+                        <small style="color:#6c757d;">
+                            Se incluir&aacute;n cultivos permanentes con producci&oacute;n real mayor o igual a este valor (en toneladas).
+                        </small>
+                    </div>
+                    <div class="col-sm-3" style="padding-top:28px;">
+                        <p:commandButton value="Generar Reporte" icon="pi pi-file-pdf"
+                                         ajax="false" styleClass="ui-button-danger"
+                                         style="width:100%;">
+                            <p:fileDownload value="#{reportBean.prodCultivosPermanenteAfter}"/>
+                        </p:commandButton>
+                    </div>
+                </div>
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </h:form>
+
         </ui:define>
-
     </ui:composition>
 </h:body>
-
-
 </html>

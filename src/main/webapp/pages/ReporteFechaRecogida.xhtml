@@ -1,53 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Created by IntelliJ IDEA.
-  User: Nerzur
-  Date: 22/01/2021
-  Time: 01:35
--->
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
 
-<h:head>
-    <title>Title</title>
-</h:head>
+<h:head><title>Reporte Fecha de Recogida</title></h:head>
 
 <h:body>
     <ui:composition template="template.xhtml">
-        <ui:define name="title">
-            Resumen Fecha de Recogida
-        </ui:define>
+        <ui:define name="title">Reporte Fecha de Recogida</ui:define>
         <ui:define name="content">
-            <p:card>
-                <f:facet name="title">
-                    Resumen Fecha de Recogida
-                </f:facet>
-                <h:form>
-                <div class="row">
-                    <div class="col col-md-5">
-                        <p:outputLabel for="basic" value="Fecha de recogida máxima"/>
-                        <p:datePicker required="true" id="basic" value="#{reportBean.fechaRecogida}" />
-                    </div>
-                    <p:commandButton value="Enviar" ajax="false" icon="pi pi-search">
-                        <p:fileDownload value="#{reportBean.fechaRecogidaBefore}"/>
-                    </p:commandButton>
-                </div>
-                <p:messages autoUpdate="true" showDetail="true" />
-                    <input type="hidden"
-                           name="${_csrf.parameterName}"
-                           value="${_csrf.token}"/>
-                </h:form>
-            </p:card>
-        </ui:define>
 
+            <!-- Descripción del reporte -->
+            <div class="row" style="margin-bottom:20px;">
+                <div class="col-sm-12">
+                    <div style="background:#e8f4fd; border-left:4px solid #007bff; padding:12px 16px; border-radius:4px;">
+                        <strong><i class="pi pi-info-circle" style="color:#007bff;"/> Descripci&oacute;n:</strong>
+                        Genera un reporte en PDF con todos los cultivos cuya fecha de recogida
+                        es anterior o igual a la fecha seleccionada.
+                        &Uacute;til para identificar cultivos listos para cosechar o con recogida pendiente.
+                        El reporte incluye &aacute;rea, tipo de cultivo, fecha de siembra y fecha de recogida.
+                    </div>
+                </div>
+            </div>
+
+            <h:form>
+                <p:messages autoUpdate="true" showDetail="true"/>
+
+                <div class="row" style="margin-bottom:16px; align-items:flex-end;">
+                    <div class="col-sm-4">
+                        <p:outputLabel for="fechaRecogida" value="Fecha de recogida m&aacute;xima:"
+                                       style="font-weight:600; display:block; margin-bottom:5px;"/>
+                        <p:datePicker id="fechaRecogida" required="true"
+                                      value="#{reportBean.fechaRecogida}"
+                                      pattern="dd/MM/yyyy"
+                                      showIcon="true"
+                                      placeholder="dd/mm/aaaa"
+                                      style="width:100%;"
+                                      requiredMessage="Debe seleccionar una fecha de recogida."/>
+                        <small style="color:#6c757d;">
+                            Se incluir&aacute;n cultivos con fecha de recogida hasta este d&iacute;a (inclusive).
+                        </small>
+                    </div>
+                    <div class="col-sm-3" style="padding-top:28px;">
+                        <p:commandButton value="Generar Reporte" icon="pi pi-file-pdf"
+                                         ajax="false" styleClass="ui-button-danger"
+                                         style="width:100%;">
+                            <p:fileDownload value="#{reportBean.fechaRecogidaBefore}"/>
+                        </p:commandButton>
+                    </div>
+                </div>
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
     </ui:composition>
 </h:body>
-
-
 </html>
