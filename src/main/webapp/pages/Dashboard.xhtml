@@ -13,40 +13,42 @@
         <ui:define name="title">Dashboard de Estadísticas</ui:define>
         <ui:define name="content">
 
-            <div class="row" style="margin-bottom: 20px;">
-                <div class="col-sm-3">
-                    <div class="card text-center" style="background:#28a745;color:white;padding:20px;">
-                        <h4>Total de Áreas</h4>
-                        <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.totalAreas : '-'}</h2>
+            <h:form id="dashboardForm">
+                <div id="statsPanel" class="row" style="margin-bottom: 20px;">
+                    <div class="col-sm-3">
+                        <div class="card text-center" style="background:#28a745;color:white;padding:20px;">
+                            <h4>Total de Áreas</h4>
+                            <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.totalAreas : '-'}</h2>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card text-center" style="background:#007bff;color:white;padding:20px;">
+                            <h4>Cultivos Activos</h4>
+                            <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.cultivosActivos : '-'}</h2>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card text-center" style="background:#fd7e14;color:white;padding:20px;">
+                            <h4>Riegos Próximos (7 días)</h4>
+                            <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.riegosProximosSemana : '-'}</h2>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card text-center" style="background:#6f42c1;color:white;padding:20px;">
+                            <h4>Producción del Mes</h4>
+                            <h2>
+                                <h:outputText value="#{dashboardBean.dashboard != null ? dashboardBean.dashboard.produccionMesActual : 0}">
+                                    <f:convertNumber maxFractionDigits="2" xmlns:f="jakarta.faces.convert"/>
+                                </h:outputText>
+                            </h2>
+                        </div>
                     </div>
                 </div>
-                <div class="col-sm-3">
-                    <div class="card text-center" style="background:#007bff;color:white;padding:20px;">
-                        <h4>Cultivos Activos</h4>
-                        <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.cultivosActivos : '-'}</h2>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="card text-center" style="background:#fd7e14;color:white;padding:20px;">
-                        <h4>Riegos Próximos (7 días)</h4>
-                        <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.riegosProximosSemana : '-'}</h2>
-                    </div>
-                </div>
-                <div class="col-sm-3">
-                    <div class="card text-center" style="background:#6f42c1;color:white;padding:20px;">
-                        <h4>Producción del Mes</h4>
-                        <h2>
-                            <h:outputText value="#{dashboardBean.dashboard != null ? dashboardBean.dashboard.produccionMesActual : 0}">
-                                <f:convertNumber maxFractionDigits="2" xmlns:f="jakarta.faces.convert"/>
-                            </h:outputText>
-                        </h2>
-                    </div>
-                </div>
-            </div>
 
-            <p:commandButton value="Actualizar" icon="pi pi-refresh"
-                             action="#{dashboardBean.cargarDashboard()}"
-                             update="@form" styleClass="ui-button-info"/>
+                <p:commandButton value="Actualizar" icon="pi pi-refresh"
+                                 action="#{dashboardBean.cargarDashboard()}"
+                                 update="dashboardForm" styleClass="ui-button-info"/>
+            </h:form>
 
         </ui:define>
     </ui:composition>
