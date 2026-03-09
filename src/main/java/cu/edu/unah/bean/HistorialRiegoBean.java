@@ -23,4 +23,30 @@ public class HistorialRiegoBean implements Serializable {
             historial = restRiego.findHistorialByArea(areaId);
         }
     }
+
+    public void limpiar() {
+        areaId = null;
+        historial = null;
+    }
+
+    public long getTotalRealizados() {
+        if (historial == null) return 0;
+        return historial.stream()
+                .filter(r -> r.getFechaReal() != null && !r.getFechaReal().isEmpty())
+                .count();
+    }
+
+    public long getTotalPendientes() {
+        if (historial == null) return 0;
+        return historial.stream()
+                .filter(r -> r.getFechaReal() == null || r.getFechaReal().isEmpty())
+                .count();
+    }
+
+    public long getTotalAdvertencias() {
+        if (historial == null) return 0;
+        return historial.stream()
+                .filter(r -> r.getAdvertencia() != null && !r.getAdvertencia().isEmpty())
+                .count();
+    }
 }
