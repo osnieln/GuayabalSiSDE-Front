@@ -22,7 +22,7 @@ public class AreaCultivoResponse implements Serializable {
     Double prodCultivosPermanente;
     Double prodCultivosTemporales;
     Double produccionReal;
-    boolean activo;
+    Boolean activo;
     List<String> agroquimicos;
 
     public static AreaCultivoResponse map(AreaCultivo areaCultivo){
