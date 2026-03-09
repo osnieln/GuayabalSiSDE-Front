@@ -45,9 +45,11 @@
                     </div>
                 </div>
 
-                <p:commandButton value="Actualizar" icon="pi pi-refresh"
-                                 action="#{dashboardBean.cargarDashboard()}"
-                                 update="dashboardForm" styleClass="ui-button-info"/>
+                <div style="margin-top:20px;">
+                    <p:commandButton value="Actualizar" icon="pi pi-refresh"
+                                     action="#{dashboardBean.cargarDashboard()}"
+                                     update="dashboardForm" styleClass="ui-button-info"/>
+                </div>
             </h:form>
 
         </ui:define>
