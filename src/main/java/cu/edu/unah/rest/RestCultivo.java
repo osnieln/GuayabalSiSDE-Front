@@ -161,4 +161,17 @@ public class RestCultivo {
         return false;
     }
 
+    public List<Cultivo> searchByDescripcion(String texto) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/search/"+texto)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<Cultivo> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<Cultivo>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
+    }
+
 }

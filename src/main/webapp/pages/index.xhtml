@@ -12,6 +12,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
@@ -26,6 +27,44 @@
         <ui:define name="content">
             <h3>¡Bienvenido/a al Sistema de Gestión de la Producción Agrícola en la Granja "El Guayabal" (SGPA).</h3>
             <br/>
+
+            <!-- Dashboard de estadísticas -->
+            <div class="row" style="margin-bottom:20px;">
+                <div class="col col-sm-3">
+                    <div style="background:#28a745;color:white;padding:15px;border-radius:5px;text-align:center;">
+                        <i class="pi pi-map" style="font-size:1.5em;"/>
+                        <br/><b>Total Áreas</b><br/>
+                        <span style="font-size:1.8em;">#{dashboardBean.dashboard != null ? dashboardBean.dashboard.totalAreas : '-'}</span>
+                    </div>
+                </div>
+                <div class="col col-sm-3">
+                    <div style="background:#007bff;color:white;padding:15px;border-radius:5px;text-align:center;">
+                        <i class="pi pi-chart-line" style="font-size:1.5em;"/>
+                        <br/><b>Cultivos Activos</b><br/>
+                        <span style="font-size:1.8em;">#{dashboardBean.dashboard != null ? dashboardBean.dashboard.cultivosActivos : '-'}</span>
+                    </div>
+                </div>
+                <div class="col col-sm-3">
+                    <div style="background:#fd7e14;color:white;padding:15px;border-radius:5px;text-align:center;">
+                        <i class="pi pi-bell" style="font-size:1.5em;"/>
+                        <br/><b>Riegos próx. 7 días</b><br/>
+                        <span style="font-size:1.8em;">#{dashboardBean.dashboard != null ? dashboardBean.dashboard.riegosProximosSemana : '-'}</span>
+                    </div>
+                </div>
+                <div class="col col-sm-3">
+                    <div style="background:#6f42c1;color:white;padding:15px;border-radius:5px;text-align:center;">
+                        <i class="pi pi-star" style="font-size:1.5em;"/>
+                        <br/><b>Producción del Mes</b><br/>
+                        <span style="font-size:1.8em;">
+                            <h:outputText value="#{dashboardBean.dashboard != null ? dashboardBean.dashboard.produccionMesActual : 0}">
+                                <f:convertNumber maxFractionDigits="1"/>
+                            </h:outputText>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <br/>
+
             <div class="row">
                 <div class="col col-sm-5">
                     <p align="justify">

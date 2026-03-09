@@ -132,6 +132,29 @@
                         </div>
                     </li>
 
+                    <!-- Análisis -->
+                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
+                        <a class="nav-link" data-toggle="collapse" href="#analisis" aria-expanded="false"
+                           aria-controls="analisis">
+                            <i class="pi pi-chart-bar"> </i>
+                            <span class="menu-title">&ensp;An&aacute;lisis</span>
+                            <i class="pi pi-chevron-right"/>
+                        </a>
+                        <div class="collapse" id="analisis">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"><a class="nav-link"
+                                    href="#{request.contextPath}/pages/Dashboard.xhtml"> Dashboard </a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link"
+                                    href="#{request.contextPath}/pages/Rendimiento.xhtml"> Rendimiento </a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link"
+                                    href="#{request.contextPath}/pages/HistorialRiego.xhtml"> Historial de Riegos </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
                     <h:form id="linksForm">
 
                         <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">

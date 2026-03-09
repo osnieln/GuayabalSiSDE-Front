@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import cu.edu.unah.util.AreaCultivoResponse;
 import cu.edu.unah.util.AreaCultivoResponsePK;
 import cu.edu.unah.util.JSONUtils;
+import cu.edu.unah.util.RendimientoResponse;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -139,6 +140,32 @@ public class RestAreaCultivo {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<AreaCultivoResponse> findByActivo(boolean activo) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/findByActivo/"+activo)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<AreaCultivoResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<AreaCultivoResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
+    }
+
+    public List<RendimientoResponse> getRendimiento() {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/rendimiento")).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<RendimientoResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<RendimientoResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
     }
 
 }

@@ -146,5 +146,31 @@ public class RestRiego {
         }
         return false;
     }
-    
+
+    public List<RiegoResponse> findRiegosProximos(int dias) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/proximos/"+dias)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<RiegoResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<RiegoResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
+    }
+
+    public List<RiegoResponse> findHistorialByArea(Long areaId) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/historial/area/"+areaId)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<RiegoResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<RiegoResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
+    }
+
 }

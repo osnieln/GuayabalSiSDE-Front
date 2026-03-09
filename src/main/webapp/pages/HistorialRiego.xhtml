@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="jakarta.faces.core">
+
+<h:head><title>Historial de Riegos</title></h:head>
+
+<h:body>
+    <ui:composition template="template.xhtml">
+        <ui:define name="title">Historial de Riegos por Área</ui:define>
+        <ui:define name="content">
+
+            <h:form id="searchForm">
+                <div class="row" style="margin-bottom: 15px;">
+                    <div class="col-sm-4">
+                        <p:outputLabel value="ID del Área:" for="areaIdInput"/>
+                        <p:inputNumber id="areaIdInput" value="#{historialRiegoBean.areaId}"
+                                       decimalPlaces="0" thousandSeparator=""
+                                       style="width:100%;"/>
+                    </div>
+                    <div class="col-sm-2" style="padding-top:25px;">
+                        <p:commandButton value="Buscar Historial" icon="pi pi-search"
+                                         action="#{historialRiegoBean.buscarHistorial()}"
+                                         update="historialTable" styleClass="ui-button-primary"/>
+                    </div>
+                </div>
+
+                <p:dataTable id="historialTable" value="#{historialRiegoBean.historial}" var="riego"
+                             paginator="true" rows="10"
+                             emptyMessage="No hay riegos realizados para esta área."
+                             rendered="#{historialRiegoBean.historial != null}">
+
+                    <p:column headerText="ID">
+                        <h:outputText value="#{riego.id}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Planificada">
+                        <h:outputText value="#{riego.fechaPlanificacion}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Real">
+                        <h:outputText value="#{riego.fechaReal}"/>
+                    </p:column>
+                    <p:column headerText="Área ID">
+                        <h:outputText value="#{riego.areaCultivoResponsePk.areaId}"/>
+                    </p:column>
+                    <p:column headerText="Cultivo ID">
+                        <h:outputText value="#{riego.areaCultivoResponsePk.cultivoId}"/>
+                    </p:column>
+                    <p:column headerText="Advertencia">
+                        <h:outputText value="#{riego.advertencia}" style="color:orange;font-weight:bold;"
+                                      rendered="#{not empty riego.advertencia}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>
