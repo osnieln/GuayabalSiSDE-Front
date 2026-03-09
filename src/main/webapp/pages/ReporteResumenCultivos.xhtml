@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head><title>Resumen de Cultivos</title></h:head>
+
+<h:body>
+    <ui:composition template="template.xhtml">
+        <ui:define name="title">Resumen de Cultivos</ui:define>
+        <ui:define name="content">
+
+            <!-- Descripción del reporte -->
+            <div class="row" style="margin-bottom:20px;">
+                <div class="col-sm-12">
+                    <div style="background:#e8f4fd; border-left:4px solid #007bff; padding:12px 16px; border-radius:4px;">
+                        <strong><i class="pi pi-info-circle" style="color:#007bff;"/> Descripci&oacute;n:</strong>
+                        Genera un reporte completo en PDF con el resumen general de todos los cultivos registrados
+                        en el sistema. Incluye informaci&oacute;n del &aacute;rea, tipo de cultivo, fecha de siembra,
+                        fecha de recogida, plan de producci&oacute;n y producci&oacute;n real de cada registro.
+                    </div>
+                </div>
+            </div>
+
+            <h:form>
+                <p:messages autoUpdate="true" showDetail="true"/>
+
+                <div class="row" style="margin-bottom:16px;">
+                    <div class="col-sm-12">
+                        <p:commandButton value="Generar Reporte Completo" icon="pi pi-file-pdf"
+                                         ajax="false" styleClass="ui-button-danger">
+                            <p:fileDownload value="#{reportBean.datosCultivos}"/>
+                        </p:commandButton>
+                        <small style="color:#6c757d; margin-left:12px;">
+                            No requiere filtros. Descarga el resumen de todos los cultivos.
+                        </small>
+                    </div>
+                </div>
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

@@ -169,10 +169,8 @@
                             </a>
                             <div class="collapse" id="reports">
                                 <ul class="nav flex-column sub-menu">
-                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
-                                        <p:commandLink class="nav-link" value="Resumen de cultivos" ajax="false">
-                                            <p:fileDownload value="#{reportBean.datosCultivos}"/>
-                                        </p:commandLink>
+                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                            href="#{request.contextPath}/pages/ReporteResumenCultivos.xhtml"> Resumen de Cultivos </a>
                                     </li>
                                     <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
                                                             href="#{request.contextPath}/pages/ReportePlanProduccion.xhtml"> Reporte Plan de Producci&oacute;n </a>
