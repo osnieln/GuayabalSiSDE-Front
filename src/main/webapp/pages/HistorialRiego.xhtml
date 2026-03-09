@@ -130,14 +130,14 @@
                 </p:dataTable>
 
                 <!-- Exportar CSV -->
-                <p:outputPanel rendered="#{historialRiegoBean.historial != null and not empty historialRiegoBean.historial}"
-                               style="margin-top:12px; display:block;">
-                    <p:dataExporter type="csv" target="historialTable"
-                                    fileName="historial_riego_area_#{historialRiegoBean.areaId}">
-                        <p:commandButton value="Exportar CSV" icon="pi pi-download"
-                                         styleClass="ui-button-secondary" ajax="false"/>
-                    </p:dataExporter>
-                </p:outputPanel>
+                <div style="margin-top:12px;">
+                    <p:commandButton value="Exportar CSV" icon="pi pi-download"
+                                     styleClass="ui-button-secondary" ajax="false"
+                                     rendered="#{historialRiegoBean.historial != null and not empty historialRiegoBean.historial}">
+                        <p:dataExporter type="csv" target="historialTable"
+                                        fileName="historial_riego_area_#{historialRiegoBean.areaId}"/>
+                    </p:commandButton>
+                </div>
 
             </h:form>
 
