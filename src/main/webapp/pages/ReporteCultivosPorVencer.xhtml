@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
+
+<h:head><title>Cultivos por Vencer</title></h:head>
+
+<h:body>
+    <ui:composition template="template.xhtml">
+        <ui:define name="title">Cultivos Pr&#243;ximos a Vencer</ui:define>
+        <ui:define name="content">
+
+            <div class="row" style="margin-bottom:20px;">
+                <div class="col-sm-12">
+                    <div style="background:#fff3e0; border-left:4px solid #ff6f00; padding:12px 16px; border-radius:4px;">
+                        <strong><i class="pi pi-calendar" style="color:#ff6f00;"/> Descripci&#243;n:</strong>
+                        Muestra los cultivos cuya fecha de recogida se encuentra dentro de los pr&#243;ximos
+                        d&#237;as indicados. Permite identificar qu&#233; cosechas son urgentes y cuantificar
+                        la producci&#243;n esperada a corto plazo.
+                    </div>
+                </div>
+            </div>
+
+            <h:form id="formVencer">
+                <p:messages id="msgs" autoUpdate="true" showDetail="true"/>
+
+                <div class="row" style="margin-bottom:16px; align-items:flex-end;">
+                    <div class="col-sm-3">
+                        <p:outputLabel for="dias" value="D&#237;as a partir de hoy:"
+                                       style="font-weight:600; display:block; margin-bottom:5px;"/>
+                        <p:inputNumber id="dias" value="#{reportBean.diasVencer}"
+                                       minValue="1" maxValue="365"
+                                       modifyValueOnWheel="false" style="width:100%;"
+                                       placeholder="Ej: 30"/>
+                        <small style="color:#6c757d;">
+                            Se mostrar&#225;n cultivos con fecha de recogida en los pr&#243;ximos N d&#237;as.
+                        </small>
+                    </div>
+                    <div class="col-sm-3" style="padding-top:28px;">
+                        <p:commandButton value="Ver en pantalla" icon="pi pi-eye"
+                                         styleClass="ui-button-warning" style="width:100%; margin-bottom:6px;"
+                                         action="#{reportPreviewBean.cargarCultivosPorVencer}"
+                                         update="formVencer"
+                                         process="@form">
+                            <f:setPropertyActionListener target="#{reportPreviewBean.diasVencer}"
+                                                         value="#{reportBean.diasVencer}"/>
+                        </p:commandButton>
+                        <p:commandButton value="Descargar PDF" icon="pi pi-file-pdf"
+                                         ajax="false" styleClass="ui-button-danger" style="width:100%;">
+                            <p:fileDownload value="#{reportBean.cultivosPorVencer}"/>
+                        </p:commandButton>
+                    </div>
+                    <div class="col-sm-2" style="padding-top:28px;">
+                        <p:commandButton value="Limpiar" icon="pi pi-times"
+                                         styleClass="ui-button-secondary" style="width:100%;"
+                                         action="#{reportPreviewBean.limpiarPreviewVencer}"
+                                         update="formVencer"/>
+                    </div>
+                </div>
+
+                <p:dataTable id="tablaVencer"
+                             value="#{reportPreviewBean.previewCultivosPorVencer}"
+                             var="row"
+                             rendered="#{not empty reportPreviewBean.previewCultivosPorVencer}"
+                             paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="10,15,25,50"
+                             emptyMessage="Sin resultados"
+                             styleClass="p-datatable-sm"
+                             style="margin-top:10px;">
+
+                    <f:facet name="header">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="pi pi-calendar" style="color:#ff6f00;"/> Cultivos por vencer</span>
+                            <span style="font-size:12px; color:#6c757d;">
+                                #{reportPreviewBean.previewCultivosPorVencer.size()} registro(s)
+                            </span>
+                        </div>
+                    </f:facet>
+
+                    <p:column headerText="&#193;rea" style="min-width:130px;">
+                        <h:outputText value="#{row['area']}"/>
+                    </p:column>
+                    <p:column headerText="Cultivo" style="min-width:130px;">
+                        <h:outputText value="#{row['cultivo']}"/>
+                    </p:column>
+                    <p:column headerText="F. Siembra" style="width:100px; text-align:center;">
+                        <h:outputText value="#{row['fechaSiembra']}"/>
+                    </p:column>
+                    <p:column headerText="F. Recogida" style="width:110px; text-align:center;">
+                        <h:outputText value="#{row['fechaRecogida']}"
+                                      style="font-weight:bold; color:#d84315;"/>
+                    </p:column>
+                    <p:column headerText="Plan (t)" style="width:80px; text-align:right;">
+                        <h:outputText value="#{row['planProd']}"/>
+                    </p:column>
+                    <p:column headerText="Prod. Real (t)" style="width:100px; text-align:right;">
+                        <h:outputText value="#{row['produccionReal']}"/>
+                    </p:column>
+                    <p:column headerText="Agroqu&#237;micos">
+                        <h:outputText value="#{row['agroquimicos']}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

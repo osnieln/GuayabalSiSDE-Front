@@ -27,29 +27,75 @@
                 </div>
             </div>
 
-            <h:form>
-                <p:messages autoUpdate="true" showDetail="true"/>
+            <h:form id="formPerm">
+                <p:messages id="msgs" autoUpdate="true" showDetail="true"/>
 
                 <div class="row" style="margin-bottom:16px; align-items:flex-end;">
-                    <div class="col-sm-5">
-                        <p:outputLabel for="init" value="Producci&oacute;n real m&iacute;nima (t):"
+                    <div class="col-sm-4">
+                        <p:outputLabel for="init" value="Producci&oacute;n permanente m&iacute;nima (t):"
                                        style="font-weight:600; display:block; margin-bottom:5px;"/>
                         <p:inputNumber id="init" required="true" value="#{reportBean.init}"
                                        modifyValueOnWheel="false" style="width:100%;"
                                        placeholder="Ej: 50"
-                                       requiredMessage="Debe ingresar un valor m&iacute;nimo de producci&oacute;n."/>
+                                       requiredMessage="Debe ingresar un valor m&iacute;nimo."/>
                         <small style="color:#6c757d;">
-                            Se incluir&aacute;n cultivos permanentes con producci&oacute;n real mayor o igual a este valor (en toneladas).
+                            Cultivos permanentes con producci&oacute;n mayor o igual a este valor.
                         </small>
                     </div>
-                    <div class="col-sm-3" style="padding-top:28px;">
-                        <p:commandButton value="Generar Reporte" icon="pi pi-file-pdf"
-                                         ajax="false" styleClass="ui-button-danger"
-                                         style="width:100%;">
+                    <div class="col-sm-5" style="padding-top:28px;">
+                        <p:commandButton value="Ver en pantalla" icon="pi pi-eye"
+                                         styleClass="ui-button-info" style="margin-right:6px;"
+                                         action="#{reportPreviewBean.cargarPorProdPermanente}"
+                                         update="formPerm" process="@form">
+                            <f:setPropertyActionListener target="#{reportPreviewBean.prodPermanenteMin}" value="#{reportBean.init}"/>
+                        </p:commandButton>
+                        <p:commandButton value="PDF" icon="pi pi-file-pdf"
+                                         ajax="false" styleClass="ui-button-danger" style="margin-right:6px;">
                             <p:fileDownload value="#{reportBean.prodCultivosPermanenteAfter}"/>
                         </p:commandButton>
+                        <p:commandButton value="Limpiar" icon="pi pi-times"
+                                         styleClass="ui-button-secondary"
+                                         action="#{reportPreviewBean.limpiarPreviewAreasCultivo}"
+                                         update="formPerm"/>
                     </div>
                 </div>
+
+                <p:dataTable id="tablaPerm"
+                             value="#{reportPreviewBean.previewAreasCultivo}"
+                             var="row"
+                             rendered="#{not empty reportPreviewBean.previewAreasCultivo}"
+                             paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="10,15,25"
+                             emptyMessage="Sin resultados"
+                             styleClass="p-datatable-sm"
+                             style="margin-top:10px;">
+                    <f:facet name="header">
+                        <span><i class="pi pi-table"/> Resultados — #{reportPreviewBean.previewAreasCultivo.size()} registro(s)</span>
+                    </f:facet>
+                    <p:column headerText="&#193;rea" sortBy="#{row['area']}">
+                        <h:outputText value="#{row['area']}"/>
+                    </p:column>
+                    <p:column headerText="Cultivo" sortBy="#{row['cultivo']}">
+                        <h:outputText value="#{row['cultivo']}"/>
+                    </p:column>
+                    <p:column headerText="F. Siembra" style="width:100px; text-align:center;">
+                        <h:outputText value="#{row['fechaSiembra']}"/>
+                    </p:column>
+                    <p:column headerText="Plan (t)" style="width:80px; text-align:right;" sortBy="#{row['planProd']}">
+                        <h:outputText value="#{row['planProd']}"/>
+                    </p:column>
+                    <p:column headerText="Real (t)" style="width:80px; text-align:right;" sortBy="#{row['produccionReal']}">
+                        <h:outputText value="#{row['produccionReal']}"/>
+                    </p:column>
+                    <p:column headerText="Perm. (t)" style="width:90px; text-align:right;" sortBy="#{row['prodCultivosPermanente']}">
+                        <h:outputText value="#{row['prodCultivosPermanente']}"
+                                      style="font-weight:bold; color:#2e7d32;"/>
+                    </p:column>
+                    <p:column headerText="Agroqu&#237;micos">
+                        <h:outputText value="#{row['agroquimicos']}"/>
+                    </p:column>
+                </p:dataTable>
 
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             </h:form>

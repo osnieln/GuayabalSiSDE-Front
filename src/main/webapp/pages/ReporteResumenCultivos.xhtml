@@ -26,20 +26,72 @@
                 </div>
             </div>
 
-            <h:form>
-                <p:messages autoUpdate="true" showDetail="true"/>
+            <h:form id="formResumen">
+                <p:messages id="msgs" autoUpdate="true" showDetail="true"/>
 
                 <div class="row" style="margin-bottom:16px;">
-                    <div class="col-sm-12">
-                        <p:commandButton value="Generar Reporte Completo" icon="pi pi-file-pdf"
-                                         ajax="false" styleClass="ui-button-danger">
+                    <div class="col-sm-auto">
+                        <p:commandButton value="Ver en pantalla" icon="pi pi-eye"
+                                         styleClass="ui-button-info" style="margin-right:8px;"
+                                         action="#{reportPreviewBean.cargarTodasAreasCultivo}"
+                                         update="formResumen"/>
+                        <p:commandButton value="Descargar PDF" icon="pi pi-file-pdf"
+                                         ajax="false" styleClass="ui-button-danger" style="margin-right:8px;">
                             <p:fileDownload value="#{reportBean.datosCultivos}"/>
                         </p:commandButton>
-                        <small style="color:#6c757d; margin-left:12px;">
-                            No requiere filtros. Descarga el resumen de todos los cultivos.
-                        </small>
+                        <p:commandButton value="Limpiar" icon="pi pi-times"
+                                         styleClass="ui-button-secondary"
+                                         action="#{reportPreviewBean.limpiarPreviewAreasCultivo}"
+                                         update="formResumen"/>
                     </div>
                 </div>
+
+                <p:dataTable id="tablaResumen"
+                             value="#{reportPreviewBean.previewAreasCultivo}"
+                             var="row"
+                             rendered="#{not empty reportPreviewBean.previewAreasCultivo}"
+                             paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="10,15,25,50"
+                             emptyMessage="Sin resultados"
+                             styleClass="p-datatable-sm"
+                             style="margin-top:10px;">
+                    <f:facet name="header">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="pi pi-table"/> Todas las &#225;reas de cultivo</span>
+                            <span style="font-size:12px; color:#6c757d;">
+                                #{reportPreviewBean.previewAreasCultivo.size()} registro(s)
+                            </span>
+                        </div>
+                    </f:facet>
+                    <p:column headerText="&#193;rea" style="min-width:120px;" sortBy="#{row['area']}">
+                        <h:outputText value="#{row['area']}"/>
+                    </p:column>
+                    <p:column headerText="Cultivo" style="min-width:120px;" sortBy="#{row['cultivo']}">
+                        <h:outputText value="#{row['cultivo']}"/>
+                    </p:column>
+                    <p:column headerText="F. Siembra" style="width:100px; text-align:center;">
+                        <h:outputText value="#{row['fechaSiembra']}"/>
+                    </p:column>
+                    <p:column headerText="F. Recogida" style="width:100px; text-align:center;">
+                        <h:outputText value="#{row['fechaRecogida']}"/>
+                    </p:column>
+                    <p:column headerText="Plan (t)" style="width:80px; text-align:right;" sortBy="#{row['planProd']}">
+                        <h:outputText value="#{row['planProd']}"/>
+                    </p:column>
+                    <p:column headerText="Real (t)" style="width:80px; text-align:right;" sortBy="#{row['produccionReal']}">
+                        <h:outputText value="#{row['produccionReal']}"/>
+                    </p:column>
+                    <p:column headerText="Perm. (t)" style="width:80px; text-align:right;">
+                        <h:outputText value="#{row['prodCultivosPermanente']}"/>
+                    </p:column>
+                    <p:column headerText="Temp. (t)" style="width:80px; text-align:right;">
+                        <h:outputText value="#{row['prodCultivosTemporales']}"/>
+                    </p:column>
+                    <p:column headerText="Agroqu&#237;micos">
+                        <h:outputText value="#{row['agroquimicos']}"/>
+                    </p:column>
+                </p:dataTable>
 
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
             </h:form>

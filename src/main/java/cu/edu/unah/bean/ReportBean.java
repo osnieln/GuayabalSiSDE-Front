@@ -24,6 +24,7 @@ public class ReportBean implements Serializable {
 
     private long init = 0L, end = 0L;
     Date fechaRecogida = new Date(System.currentTimeMillis());
+    private int diasVencer = 30;
 
     private StreamedContent downloadFile(String endpoint, String filename) {
         try {
@@ -72,11 +73,24 @@ public class ReportBean implements Serializable {
         return downloadFile("prodCultivosPermanenteAfter/" + init, "cultivos_prod_cultivo_permanente");
     }
 
+    public String getFechaRecogidaString() {
+        if (fechaRecogida == null) fechaRecogida = new Date(System.currentTimeMillis());
+        return new SimpleDateFormat("dd-MM-yyyy").format(fechaRecogida);
+    }
+
     public StreamedContent getFechaRecogidaBefore() {
         if(fechaRecogida == null)
             fechaRecogida = new Date(System.currentTimeMillis());
         SimpleDateFormat formateador = new SimpleDateFormat("dd-MM-yyyy");
         String date = formateador.format(fechaRecogida);
         return downloadFile("fechaRecogidaBefore/" + date, "cultivos_fecha_recogidaBefore");
+    }
+
+    public StreamedContent getCultivosPorVencer() {
+        return downloadFile("cultivosPorVencer/" + diasVencer, "cultivos_por_vencer");
+    }
+
+    public StreamedContent getAgroquimicosMasUsados() {
+        return downloadFile("agroquimicosMasUsados", "agroquimicos_mas_usados");
     }
 }
