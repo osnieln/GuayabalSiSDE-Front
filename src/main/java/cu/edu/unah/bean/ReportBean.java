@@ -61,7 +61,7 @@ public class ReportBean implements Serializable {
     }
 
     public StreamedContent getDatosCultivos() {
-        return downloadFile("cultivos", "resumen_cultivos");
+        return downloadFile("todasAreasCultivo", "resumen_areas_cultivo");
     }
 
     public StreamedContent getPlanProduccion() {
