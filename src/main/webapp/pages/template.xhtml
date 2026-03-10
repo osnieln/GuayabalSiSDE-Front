@@ -158,36 +158,30 @@
                         </div>
                     </li>
 
-                    <h:form id="linksForm">
-
-                        <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
-                            <a class="nav-link" data-toggle="collapse" href="#reports" aria-expanded="false"
-                               aria-controls="reports">
-                                <i class="pi pi-chart-line"> </i>
-                                <span class="menu-title">&ensp;Reportes</span>
-                                <i class="pi pi-chevron-right"/>
-                            </a>
-                            <div class="collapse" id="reports">
-                                <ul class="nav flex-column sub-menu">
-                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
-                                                            href="#{request.contextPath}/pages/ReporteResumenCultivos.xhtml"> Resumen de Cultivos </a>
-                                    </li>
-                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
-                                                            href="#{request.contextPath}/pages/ReportePlanProduccion.xhtml"> Reporte Plan de Producci&oacute;n </a>
-                                    </li>
-                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
-                                                            href="#{request.contextPath}/pages/ReporteCultPermanente.xhtml"> Reporte Cultivo Permanente </a>
-                                    </li>
-                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
-                                                            href="#{request.contextPath}/pages/ReporteFechaRecogida.xhtml"> Reporte Fecha de Recogida </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <input type="hidden"
-                               name="${_csrf.parameterName}"
-                               value="${_csrf.token}"/>
-                    </h:form>
+                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
+                        <a class="nav-link" data-toggle="collapse" href="#reports" aria-expanded="false"
+                           aria-controls="reports">
+                            <i class="pi pi-chart-line"> </i>
+                            <span class="menu-title">&ensp;Reportes</span>
+                            <i class="pi pi-chevron-right"/>
+                        </a>
+                        <div class="collapse" id="reports">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReporteResumenCultivos.xhtml"> Resumen de Cultivos </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReportePlanProduccion.xhtml"> Reporte Plan de Producci&oacute;n </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReporteCultPermanente.xhtml"> Reporte Cultivo Permanente </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReporteFechaRecogida.xhtml"> Reporte Fecha de Recogida </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
                 </ul>
             </nav>
