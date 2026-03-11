@@ -25,6 +25,8 @@
         <security:intercept-url pattern="/pages/ReportePlanProduccion.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
         <security:intercept-url pattern="/pages/ReporteCultPermanente.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
         <security:intercept-url pattern="/pages/ReporteFechaRecogida.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
+        <security:intercept-url pattern="/pages/ReporteCultivosPorVencer.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
+        <security:intercept-url pattern="/pages/ReporteAgroquimicos.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
         <security:intercept-url pattern="/pages/AdminArea.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
         <security:intercept-url pattern="/pages/Dashboard.xhtml" access="isAuthenticated()"/>
         <security:intercept-url pattern="/pages/HistorialRiego.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR','ROLE_TECNICO')"/>
