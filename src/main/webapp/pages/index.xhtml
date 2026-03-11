@@ -12,98 +12,91 @@
 <h:head>
     <title>Inicio — SGPA El Guayabal</title>
     <style>
-        .hero-banner {
-            background: linear-gradient(135deg, #1b5e20 0%, #388e3c 60%, #66bb6a 100%);
-            color: white;
-            border-radius: 8px;
-            padding: 36px 32px;
-            margin-bottom: 28px;
+        /* Hero */
+        .hero {
+            position: relative;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 32px;
+            min-height: 240px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
+            align-items: flex-end;
         }
-        .hero-banner h2 {
-            margin: 0 0 8px 0;
-            font-size: 1.7em;
-            font-weight: 700;
-        }
-        .hero-banner p {
-            margin: 0;
-            font-size: 1em;
-            opacity: 0.9;
-        }
-        .hero-banner img {
-            border-radius: 8px;
-            max-height: 160px;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-        .module-card {
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px 18px;
+        .hero img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
             height: 100%;
-            transition: box-shadow 0.2s, border-color 0.2s;
-            text-decoration: none;
-            color: inherit;
-            display: block;
+            object-fit: cover;
         }
-        .module-card:hover {
-            box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-            border-color: #388e3c;
-            text-decoration: none;
-            color: inherit;
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.72) 40%, rgba(0,0,0,0.15) 100%);
         }
-        .module-card .card-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 12px;
-            font-size: 1.4em;
+        .hero-text {
+            position: relative;
+            z-index: 1;
+            padding: 28px 30px;
+            color: white;
         }
-        .module-card h5 {
-            font-weight: 700;
+        .hero-text h2 {
+            font-size: 1.8em;
+            font-weight: 800;
             margin: 0 0 6px 0;
-            font-size: 1em;
-            color: #212529;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.4);
         }
-        .module-card p {
+        .hero-text p {
             margin: 0;
-            font-size: 0.85em;
-            color: #6c757d;
-            line-height: 1.4;
-        }
-        .section-title {
             font-size: 1em;
+            opacity: 0.88;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: #66bb6a;
+            color: white;
+            font-size: 0.75em;
             font-weight: 700;
-            color: #495057;
+            padding: 3px 10px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+            letter-spacing: 0.04em;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 14px;
-            padding-bottom: 6px;
-            border-bottom: 2px solid #e9ecef;
         }
-        .feature-list {
-            list-style: none;
-            padding: 0;
-            margin: 0;
+
+        /* Accesos */
+        .access-card {
+            border-radius: 8px;
+            padding: 22px 16px 18px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            transition: transform 0.15s, box-shadow 0.15s;
+            color: white;
+            font-weight: 600;
         }
-        .feature-list li {
-            padding: 7px 0;
-            border-bottom: 1px solid #f1f3f5;
-            font-size: 0.93em;
-            color: #495057;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+        .access-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+            text-decoration: none;
+            color: white;
         }
-        .feature-list li:last-child { border-bottom: none; }
-        .feature-list li i { color: #388e3c; }
+        .access-card i {
+            font-size: 2em;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .access-card span {
+            font-size: 0.92em;
+        }
+
+        .tagline {
+            text-align: center;
+            color: #9e9e9e;
+            font-style: italic;
+            font-size: 0.88em;
+            margin-top: 28px;
+        }
     </style>
 </h:head>
 
@@ -112,133 +105,50 @@
         <ui:define name="title">Inicio</ui:define>
         <ui:define name="content">
 
-            <!-- Hero Banner -->
-            <div class="hero-banner">
-                <div>
-                    <h2>&#127807; Sistema de Gesti&#243;n de Producci&#243;n Agr&#237;cola</h2>
-                    <p style="font-size:1.05em; margin-bottom:12px;">
-                        Granja Urbana de Producci&#243;n "El Guayabal" &#8212; SGPA
-                    </p>
-                    <p>
-                        Plataforma integral para la planificaci&#243;n, seguimiento y control
-                        de la producci&#243;n agr&#237;cola. Gestione cultivos, &aacute;reas, riego,
-                        agroquímicos y genere reportes estadi&#769;sticos desde un solo lugar.
-                    </p>
-                </div>
-                <img src="#{request.contextPath}/resources/images/guayabal.jpg" alt="El Guayabal"
-                     style="max-height:150px; border-radius:8px;"/>
-            </div>
-
-            <!-- Módulos principales -->
-            <div class="section-title">
-                <i class="pi pi-th-large" style="margin-right:6px;"/>
-                M&#243;dulos del Sistema
-            </div>
-
-            <div class="row" style="margin-bottom:28px;">
-
-                <div class="col-sm-3" style="margin-bottom:16px;">
-                    <a href="#{request.contextPath}/pages/AdminAreaCultivo.xhtml" class="module-card">
-                        <div class="card-icon" style="background:#e8f5e9;">
-                            <i class="pi pi-map" style="color:#2e7d32;"/>
-                        </div>
-                        <h5>&#193;reas de Cultivo</h5>
-                        <p>Registra y administra las &aacute;reas productivas, asignaci&oacute;n de cultivos y seguimiento de producci&oacute;n.</p>
-                    </a>
-                </div>
-
-                <div class="col-sm-3" style="margin-bottom:16px;">
-                    <a href="#{request.contextPath}/pages/AdminCultivo.xhtml" class="module-card">
-                        <div class="card-icon" style="background:#e3f2fd;">
-                            <i class="pi pi-chart-line" style="color:#1565c0;"/>
-                        </div>
-                        <h5>Cultivos</h5>
-                        <p>Administra los tipos de cultivos disponibles, sus caracter&#237;sticas y ciclos de producci&oacute;n.</p>
-                    </a>
-                </div>
-
-                <div class="col-sm-3" style="margin-bottom:16px;">
-                    <a href="#{request.contextPath}/pages/AdminAgroquimico.xhtml" class="module-card">
-                        <div class="card-icon" style="background:#fff8e1;">
-                            <i class="pi pi-filter" style="color:#f57f17;"/>
-                        </div>
-                        <h5>Agroqu&#237;micos</h5>
-                        <p>Controla los insumos agr&#237;colas utilizados en cada cultivo y su impacto en la producci&oacute;n.</p>
-                    </a>
-                </div>
-
-                <div class="col-sm-3" style="margin-bottom:16px;">
-                    <a href="#{request.contextPath}/pages/AdminRiego.xhtml" class="module-card">
-                        <div class="card-icon" style="background:#e1f5fe;">
-                            <i class="pi pi-cloud" style="color:#0277bd;"/>
-                        </div>
-                        <h5>Riego</h5>
-                        <p>Programa y registra los ciclos de riego por &aacute;rea, con historial completo de actividades.</p>
-                    </a>
-                </div>
-
-                <div class="col-sm-3" style="margin-bottom:16px;">
-                    <a href="#{request.contextPath}/pages/Dashboard.xhtml" class="module-card">
-                        <div class="card-icon" style="background:#f3e5f5;">
-                            <i class="pi pi-chart-bar" style="color:#6a1b9a;"/>
-                        </div>
-                        <h5>Resumen General</h5>
-                        <p>Vista consolidada con indicadores clave: &aacute;reas activas, cultivos, riegos y producci&oacute;n del mes.</p>
-                    </a>
-                </div>
-
-                <div class="col-sm-3" style="margin-bottom:16px;">
-                    <a href="#{request.contextPath}/pages/Rendimiento.xhtml" class="module-card">
-                        <div class="card-icon" style="background:#fce4ec;">
-                            <i class="pi pi-star" style="color:#ad1457;"/>
-                        </div>
-                        <h5>Rendimiento</h5>
-                        <p>Analiza el rendimiento productivo por &aacute;rea y cultivo, comparando plan vs. producci&oacute;n real.</p>
-                    </a>
-                </div>
-
-                <div class="col-sm-3" style="margin-bottom:16px;">
-                    <a href="#{request.contextPath}/pages/ReporteResumenCultivos.xhtml" class="module-card">
-                        <div class="card-icon" style="background:#e8f4fd;">
-                            <i class="pi pi-file-pdf" style="color:#c62828;"/>
-                        </div>
-                        <h5>Reportes PDF</h5>
-                        <p>Genera reportes estad&#237;sticos en PDF: resumen, plan de producci&oacute;n, cultivos por vencer y m&aacute;s.</p>
-                    </a>
-                </div>
-
-                <div class="col-sm-3" style="margin-bottom:16px;">
-                    <a href="#{request.contextPath}/pages/Perfil.xhtml" class="module-card">
-                        <div class="card-icon" style="background:#efebe9;">
-                            <i class="pi pi-user" style="color:#4e342e;"/>
-                        </div>
-                        <h5>Mi Perfil</h5>
-                        <p>Consulta y actualiza tus datos de usuario, rol y configuraci&oacute;n de acceso al sistema.</p>
-                    </a>
-                </div>
-
-            </div>
-
-            <!-- Capacidades del sistema -->
-            <div class="row">
-                <div class="col-sm-12">
-                    <div class="section-title">
-                        <i class="pi pi-info-circle" style="margin-right:6px;"/>
-                        &#191;Qu&#233; permite este sistema?
-                    </div>
-                    <ul class="feature-list">
-                        <li><i class="pi pi-check-circle"/><span>Planificar y hacer seguimiento de cultivos, siembras y cosechas.</span></li>
-                        <li><i class="pi pi-check-circle"/><span>Gestionar eficientemente los recursos y la asignaci&#243;n de &aacute;reas de cultivo.</span></li>
-                        <li><i class="pi pi-check-circle"/><span>Monitorear el crecimiento y estado de los cultivos en tiempo real.</span></li>
-                        <li><i class="pi pi-check-circle"/><span>Controlar el uso de agroquímicos y optimizar el abastecimiento de insumos.</span></li>
-                        <li><i class="pi pi-check-circle"/><span>Generar reportes estad&#237;sticos detallados para una toma de decisiones estrat&#233;gica.</span></li>
-                        <li><i class="pi pi-check-circle"/><span>Promover pr&#225;cticas agr&#237;colas sostenibles y fortalecer la capacidad productiva de la UDP.</span></li>
-                    </ul>
-                    <p style="margin-top:16px; color:#6c757d; font-size:0.9em; font-style:italic;">
-                        "Innovaci&#243;n tecnol&#243;gica al servicio del campo." &#8212; UDP El Guayabal
-                    </p>
+            <!-- Hero -->
+            <div class="hero">
+                <img src="#{request.contextPath}/resources/images/guayabal.jpg" alt="El Guayabal"/>
+                <div class="hero-overlay"/>
+                <div class="hero-text">
+                    <span class="hero-badge">&#127807; UDP El Guayabal</span>
+                    <h2>Sistema de Gesti&#243;n de Producci&#243;n Agr&#237;cola</h2>
+                    <p>Planificaci&#243;n, seguimiento y control de la producci&#243;n &#8212; todo en un solo lugar.</p>
                 </div>
             </div>
+
+            <!-- Accesos rápidos -->
+            <div class="row" style="margin-bottom:8px;">
+                <div class="col-sm-3" style="margin-bottom:16px;">
+                    <a href="#{request.contextPath}/pages/Dashboard.xhtml"
+                       class="access-card" style="background:linear-gradient(135deg,#43a047,#1b5e20);">
+                        <i class="pi pi-chart-bar"/>
+                        <span>Resumen General</span>
+                    </a>
+                </div>
+                <div class="col-sm-3" style="margin-bottom:16px;">
+                    <a href="#{request.contextPath}/pages/AdminAreaCultivo.xhtml"
+                       class="access-card" style="background:linear-gradient(135deg,#29b6f6,#01579b);">
+                        <i class="pi pi-map"/>
+                        <span>&#193;reas de Cultivo</span>
+                    </a>
+                </div>
+                <div class="col-sm-3" style="margin-bottom:16px;">
+                    <a href="#{request.contextPath}/pages/AdminAgroquimico.xhtml"
+                       class="access-card" style="background:linear-gradient(135deg,#ffa726,#e65100);">
+                        <i class="pi pi-filter"/>
+                        <span>Agroqu&#237;micos</span>
+                    </a>
+                </div>
+                <div class="col-sm-3" style="margin-bottom:16px;">
+                    <a href="#{request.contextPath}/pages/ReporteResumenCultivos.xhtml"
+                       class="access-card" style="background:linear-gradient(135deg,#ef5350,#b71c1c);">
+                        <i class="pi pi-file-pdf"/>
+                        <span>Reportes PDF</span>
+                    </a>
+                </div>
+            </div>
+
+            <p class="tagline">"Innovaci&#243;n tecnol&#243;gica al servicio del campo." &#8212; UDP El Guayabal</p>
 
         </ui:define>
     </ui:composition>
