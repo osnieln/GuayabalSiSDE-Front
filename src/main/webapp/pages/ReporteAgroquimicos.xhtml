@@ -14,7 +14,7 @@
         <ui:define name="title">Agroqu&#237;micos M&#225;s Utilizados</ui:define>
         <ui:define name="content">
 
-            <div class="row" style="margin-bottom:20px;">
+            <div class="row" style="margin-bottom:16px;">
                 <div class="col-sm-12">
                     <div style="background:#e8f5e9; border-left:4px solid #2e7d32; padding:12px 16px; border-radius:4px;">
                         <strong><i class="pi pi-chart-bar" style="color:#2e7d32;"/> Descripci&#243;n:</strong>
@@ -28,20 +28,19 @@
             <h:form id="formAgro">
                 <p:messages id="msgs" autoUpdate="true" showDetail="true"/>
 
+                <!-- Barra de botones -->
                 <div class="row" style="margin-bottom:16px;">
-                    <div class="col-sm-3">
+                    <div class="col-sm-12">
                         <p:commandButton value="Ver en pantalla" icon="pi pi-eye"
-                                         styleClass="ui-button-success" style="width:100%; margin-bottom:6px;"
+                                         styleClass="ui-button-info" style="margin-right:8px;"
                                          action="#{reportPreviewBean.cargarAgroquimicos}"
                                          update="formAgro"/>
                         <p:commandButton value="Descargar PDF" icon="pi pi-file-pdf"
-                                         ajax="false" styleClass="ui-button-danger" style="width:100%;">
+                                         ajax="false" styleClass="ui-button-danger" style="margin-right:8px;">
                             <p:fileDownload value="#{reportBean.agroquimicosMasUsados}"/>
                         </p:commandButton>
-                    </div>
-                    <div class="col-sm-2">
                         <p:commandButton value="Limpiar" icon="pi pi-times"
-                                         styleClass="ui-button-secondary" style="width:100%; margin-top:28px;"
+                                         styleClass="ui-button-secondary"
                                          action="#{reportPreviewBean.limpiarPreviewAgroquimicos}"
                                          update="formAgro"/>
                     </div>
@@ -58,7 +57,6 @@
                              styleClass="p-datatable-sm"
                              style="margin-top:10px;"
                              sortBy="#{row['totalCultivos']}" sortOrder="descending">
-
                     <f:facet name="header">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span><i class="pi pi-chart-bar" style="color:#2e7d32;"/> Agroqu&#237;micos por n&#250;mero de cultivos</span>
@@ -67,7 +65,6 @@
                             </span>
                         </div>
                     </f:facet>
-
                     <p:column headerText="#" style="width:50px; text-align:center;">
                         <h:outputText value="#{reportPreviewBean.previewAgroquimicos.indexOf(row) + 1}"/>
                     </p:column>

@@ -14,15 +14,13 @@
         <ui:define name="title">Reporte Cultivo Permanente</ui:define>
         <ui:define name="content">
 
-            <!-- Descripción del reporte -->
-            <div class="row" style="margin-bottom:20px;">
+            <div class="row" style="margin-bottom:16px;">
                 <div class="col-sm-12">
                     <div style="background:#e8f4fd; border-left:4px solid #007bff; padding:12px 16px; border-radius:4px;">
                         <strong><i class="pi pi-info-circle" style="color:#007bff;"/> Descripci&oacute;n:</strong>
                         Genera un reporte en PDF con los cultivos permanentes cuya producci&oacute;n
                         real supera el umbral m&iacute;nimo indicado.
-                        El reporte incluye datos del &aacute;rea, tipo de cultivo, fecha de siembra,
-                        producci&oacute;n planificada y producci&oacute;n real.
+                        Incluye &aacute;rea, tipo de cultivo, fecha de siembra, producci&oacute;n planificada y real.
                     </div>
                 </div>
             </div>
@@ -30,7 +28,8 @@
             <h:form id="formPerm">
                 <p:messages id="msgs" autoUpdate="true" showDetail="true"/>
 
-                <div class="row" style="margin-bottom:16px; align-items:flex-end;">
+                <!-- Filtros -->
+                <div class="row" style="margin-bottom:12px;">
                     <div class="col-sm-4">
                         <p:outputLabel for="init" value="Producci&oacute;n permanente m&iacute;nima (t):"
                                        style="font-weight:600; display:block; margin-bottom:5px;"/>
@@ -42,15 +41,19 @@
                             Cultivos permanentes con producci&oacute;n mayor o igual a este valor.
                         </small>
                     </div>
-                    <div class="col-sm-5" style="padding-top:28px;">
+                </div>
+
+                <!-- Barra de botones -->
+                <div class="row" style="margin-bottom:16px;">
+                    <div class="col-sm-12">
                         <p:commandButton value="Ver en pantalla" icon="pi pi-eye"
-                                         styleClass="ui-button-info" style="margin-right:6px;"
+                                         styleClass="ui-button-info" style="margin-right:8px;"
                                          action="#{reportPreviewBean.cargarPorProdPermanente}"
                                          update="formPerm" process="@form">
                             <f:setPropertyActionListener target="#{reportPreviewBean.prodPermanenteMin}" value="#{reportBean.init}"/>
                         </p:commandButton>
-                        <p:commandButton value="PDF" icon="pi pi-file-pdf"
-                                         ajax="false" styleClass="ui-button-danger" style="margin-right:6px;">
+                        <p:commandButton value="Descargar PDF" icon="pi pi-file-pdf"
+                                         ajax="false" styleClass="ui-button-danger" style="margin-right:8px;">
                             <p:fileDownload value="#{reportBean.prodCultivosPermanenteAfter}"/>
                         </p:commandButton>
                         <p:commandButton value="Limpiar" icon="pi pi-times"
@@ -71,7 +74,12 @@
                              styleClass="p-datatable-sm"
                              style="margin-top:10px;">
                     <f:facet name="header">
-                        <span><i class="pi pi-table"/> Resultados — #{reportPreviewBean.previewAreasCultivo.size()} registro(s)</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="pi pi-table"/> Resultados</span>
+                            <span style="font-size:12px; color:#6c757d;">
+                                #{reportPreviewBean.previewAreasCultivo.size()} registro(s)
+                            </span>
+                        </div>
                     </f:facet>
                     <p:column headerText="&#193;rea" sortBy="#{row['area']}">
                         <h:outputText value="#{row['area']}"/>

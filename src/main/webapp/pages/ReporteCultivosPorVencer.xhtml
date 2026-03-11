@@ -14,7 +14,7 @@
         <ui:define name="title">Cultivos Pr&#243;ximos a Vencer</ui:define>
         <ui:define name="content">
 
-            <div class="row" style="margin-bottom:20px;">
+            <div class="row" style="margin-bottom:16px;">
                 <div class="col-sm-12">
                     <div style="background:#fff3e0; border-left:4px solid #ff6f00; padding:12px 16px; border-radius:4px;">
                         <strong><i class="pi pi-calendar" style="color:#ff6f00;"/> Descripci&#243;n:</strong>
@@ -28,8 +28,9 @@
             <h:form id="formVencer">
                 <p:messages id="msgs" autoUpdate="true" showDetail="true"/>
 
-                <div class="row" style="margin-bottom:16px; align-items:flex-end;">
-                    <div class="col-sm-3">
+                <!-- Filtros -->
+                <div class="row" style="margin-bottom:12px;">
+                    <div class="col-sm-4">
                         <p:outputLabel for="dias" value="D&#237;as a partir de hoy:"
                                        style="font-weight:600; display:block; margin-bottom:5px;"/>
                         <p:inputNumber id="dias" value="#{reportBean.diasVencer}"
@@ -40,23 +41,24 @@
                             Se mostrar&#225;n cultivos con fecha de recogida en los pr&#243;ximos N d&#237;as.
                         </small>
                     </div>
-                    <div class="col-sm-3" style="padding-top:28px;">
+                </div>
+
+                <!-- Barra de botones -->
+                <div class="row" style="margin-bottom:16px;">
+                    <div class="col-sm-12">
                         <p:commandButton value="Ver en pantalla" icon="pi pi-eye"
-                                         styleClass="ui-button-warning" style="width:100%; margin-bottom:6px;"
+                                         styleClass="ui-button-info" style="margin-right:8px;"
                                          action="#{reportPreviewBean.cargarCultivosPorVencer}"
-                                         update="formVencer"
-                                         process="@form">
+                                         update="formVencer" process="@form">
                             <f:setPropertyActionListener target="#{reportPreviewBean.diasVencer}"
                                                          value="#{reportBean.diasVencer}"/>
                         </p:commandButton>
                         <p:commandButton value="Descargar PDF" icon="pi pi-file-pdf"
-                                         ajax="false" styleClass="ui-button-danger" style="width:100%;">
+                                         ajax="false" styleClass="ui-button-danger" style="margin-right:8px;">
                             <p:fileDownload value="#{reportBean.cultivosPorVencer}"/>
                         </p:commandButton>
-                    </div>
-                    <div class="col-sm-2" style="padding-top:28px;">
                         <p:commandButton value="Limpiar" icon="pi pi-times"
-                                         styleClass="ui-button-secondary" style="width:100%;"
+                                         styleClass="ui-button-secondary"
                                          action="#{reportPreviewBean.limpiarPreviewVencer}"
                                          update="formVencer"/>
                     </div>
@@ -72,7 +74,6 @@
                              emptyMessage="Sin resultados"
                              styleClass="p-datatable-sm"
                              style="margin-top:10px;">
-
                     <f:facet name="header">
                         <div style="display:flex; justify-content:space-between; align-items:center;">
                             <span><i class="pi pi-calendar" style="color:#ff6f00;"/> Cultivos por vencer</span>
@@ -81,7 +82,6 @@
                             </span>
                         </div>
                     </f:facet>
-
                     <p:column headerText="&#193;rea" style="min-width:130px;">
                         <h:outputText value="#{row['area']}"/>
                     </p:column>
