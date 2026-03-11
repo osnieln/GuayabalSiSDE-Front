@@ -11,96 +11,6 @@
 
 <h:head>
     <title>Inicio — SGPA El Guayabal</title>
-    <style>
-        /* Hero */
-        .hero {
-            position: relative;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-bottom: 32px;
-            min-height: 160px;
-            max-height: 180px;
-            display: flex;
-            align-items: flex-end;
-        }
-        .hero img {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.72) 40%, rgba(0,0,0,0.15) 100%);
-        }
-        .hero-text {
-            position: relative;
-            z-index: 1;
-            padding: 28px 30px;
-            color: white;
-        }
-        .hero-text h2 {
-            font-size: 1.8em;
-            font-weight: 800;
-            margin: 0 0 6px 0;
-            text-shadow: 0 2px 6px rgba(0,0,0,0.4);
-        }
-        .hero-text p {
-            margin: 0;
-            font-size: 1em;
-            opacity: 0.88;
-        }
-        .hero-badge {
-            display: inline-block;
-            background: #66bb6a;
-            color: white;
-            font-size: 0.75em;
-            font-weight: 700;
-            padding: 3px 10px;
-            border-radius: 20px;
-            margin-bottom: 10px;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        /* Accesos */
-        .access-card {
-            border-radius: 8px;
-            padding: 30px 16px 26px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            transition: transform 0.15s, box-shadow 0.15s;
-            color: #fff;
-            font-weight: 800;
-        }
-        .access-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.22);
-            text-decoration: none;
-            color: #fff;
-        }
-        .access-card i {
-            font-size: 2.4em;
-            display: block;
-            margin-bottom: 12px;
-        }
-        .access-card span {
-            font-size: 1.05em;
-            text-shadow: 0 1px 3px rgba(0,0,0,0.3);
-            letter-spacing: 0.01em;
-        }
-
-        .tagline {
-            text-align: center;
-            color: #9e9e9e;
-            font-style: italic;
-            font-size: 0.88em;
-            margin-top: 28px;
-        }
-    </style>
 </h:head>
 
 <h:body>
@@ -108,50 +18,76 @@
         <ui:define name="title">Inicio</ui:define>
         <ui:define name="content">
 
-            <!-- Hero -->
-            <div class="hero">
-                <img src="#{request.contextPath}/resources/images/guayabal.jpg" alt="El Guayabal"/>
-                <div class="hero-overlay"/>
-                <div class="hero-text">
-                    <span class="hero-badge">&#127807; UDP El Guayabal</span>
-                    <h2>Sistema de Gesti&#243;n de Producci&#243;n Agr&#237;cola</h2>
-                    <p>Planificaci&#243;n, seguimiento y control de la producci&#243;n &#8212; todo en un solo lugar.</p>
+            <!-- Hero: imagen con overlay y texto -->
+            <div style="position:relative; height:170px; border-radius:10px; overflow:hidden; margin-bottom:28px;">
+                <img src="#{request.contextPath}/resources/images/guayabal.jpg" alt="El Guayabal"
+                     style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover;"/>
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%;
+                            background:linear-gradient(to top, rgba(0,0,0,0.78) 50%, rgba(0,0,0,0.2) 100%);"/>
+                <div style="position:absolute; bottom:0; left:0; padding:22px 28px; color:white;">
+                    <div style="display:inline-block; background:#43a047; color:white; font-size:0.72em;
+                                font-weight:700; padding:3px 12px; border-radius:20px; margin-bottom:8px;
+                                text-transform:uppercase; letter-spacing:0.05em;">
+                        &#127807; UDP El Guayabal
+                    </div>
+                    <div style="font-size:1.5em; font-weight:800; line-height:1.2;
+                                text-shadow:0 2px 8px rgba(0,0,0,0.5);">
+                        Sistema de Gesti&#243;n de Producci&#243;n Agr&#237;cola
+                    </div>
+                    <div style="font-size:0.9em; margin-top:4px; opacity:0.9;">
+                        Planificaci&#243;n, seguimiento y control &#8212; todo en un solo lugar.
+                    </div>
                 </div>
             </div>
 
             <!-- Accesos rápidos -->
-            <div class="row" style="margin-bottom:8px;">
+            <div class="row">
+
                 <div class="col-sm-3" style="margin-bottom:16px;">
                     <a href="#{request.contextPath}/pages/Dashboard.xhtml"
-                       class="access-card" style="background:linear-gradient(135deg,#43a047,#1b5e20);">
-                        <i class="pi pi-chart-bar"/>
-                        <span>Resumen General</span>
+                       style="display:block; border-radius:8px; padding:32px 16px 28px; text-align:center;
+                              background:linear-gradient(135deg,#43a047,#1b5e20);
+                              color:#ffffff; text-decoration:none;">
+                        <i class="pi pi-chart-bar" style="font-size:2.6em; display:block; margin-bottom:12px; color:#ffffff;"/>
+                        <span style="font-size:1.1em; font-weight:800; color:#ffffff;">Resumen General</span>
                     </a>
                 </div>
+
                 <div class="col-sm-3" style="margin-bottom:16px;">
                     <a href="#{request.contextPath}/pages/AdminAreaCultivo.xhtml"
-                       class="access-card" style="background:linear-gradient(135deg,#29b6f6,#01579b);">
-                        <i class="pi pi-map"/>
-                        <span>&#193;reas de Cultivo</span>
+                       style="display:block; border-radius:8px; padding:32px 16px 28px; text-align:center;
+                              background:linear-gradient(135deg,#29b6f6,#01579b);
+                              color:#ffffff; text-decoration:none;">
+                        <i class="pi pi-map" style="font-size:2.6em; display:block; margin-bottom:12px; color:#ffffff;"/>
+                        <span style="font-size:1.1em; font-weight:800; color:#ffffff;">&#193;reas de Cultivo</span>
                     </a>
                 </div>
+
                 <div class="col-sm-3" style="margin-bottom:16px;">
                     <a href="#{request.contextPath}/pages/AdminAgroquimico.xhtml"
-                       class="access-card" style="background:linear-gradient(135deg,#ffa726,#e65100);">
-                        <i class="pi pi-filter"/>
-                        <span>Agroqu&#237;micos</span>
+                       style="display:block; border-radius:8px; padding:32px 16px 28px; text-align:center;
+                              background:linear-gradient(135deg,#ffa726,#e65100);
+                              color:#ffffff; text-decoration:none;">
+                        <i class="pi pi-filter" style="font-size:2.6em; display:block; margin-bottom:12px; color:#ffffff;"/>
+                        <span style="font-size:1.1em; font-weight:800; color:#ffffff;">Agroqu&#237;micos</span>
                     </a>
                 </div>
+
                 <div class="col-sm-3" style="margin-bottom:16px;">
                     <a href="#{request.contextPath}/pages/ReporteResumenCultivos.xhtml"
-                       class="access-card" style="background:linear-gradient(135deg,#ef5350,#b71c1c);">
-                        <i class="pi pi-file-pdf"/>
-                        <span>Reportes PDF</span>
+                       style="display:block; border-radius:8px; padding:32px 16px 28px; text-align:center;
+                              background:linear-gradient(135deg,#ef5350,#b71c1c);
+                              color:#ffffff; text-decoration:none;">
+                        <i class="pi pi-file-pdf" style="font-size:2.6em; display:block; margin-bottom:12px; color:#ffffff;"/>
+                        <span style="font-size:1.1em; font-weight:800; color:#ffffff;">Reportes PDF</span>
                     </a>
                 </div>
+
             </div>
 
-            <p class="tagline">"Innovaci&#243;n tecnol&#243;gica al servicio del campo." &#8212; UDP El Guayabal</p>
+            <p style="text-align:center; color:#9e9e9e; font-style:italic; font-size:0.88em; margin-top:20px;">
+                "Innovaci&#243;n tecnol&#243;gica al servicio del campo." &#8212; UDP El Guayabal
+            </p>
 
         </ui:define>
     </ui:composition>
