@@ -136,8 +136,10 @@
                                 <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
                                 <p:inputTextarea id="descripcion" style="height: 30px;"
                                                  value="#{adminProduccion.descripcion}"
-                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
-                                    <f:validateLength maximum="250"/>
+                                                 required="true"
+                                                 requiredMessage="La descripción de la producción es obligatoria."
+                                                 validatorMessage="La descripción solo puede contener letras, números y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputTextarea>
                             </div>
@@ -176,8 +178,10 @@
                                 <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
                                 <p:inputTextarea id="edit-descripcion" style="height: 30px;"
                                                  value="#{adminProduccion.descripcion}"
-                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
-                                    <f:validateLength maximum="250"/>
+                                                 required="true"
+                                                 requiredMessage="La descripción de la producción es obligatoria."
+                                                 validatorMessage="La descripción solo puede contener letras, números y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputTextarea>
                             </div>

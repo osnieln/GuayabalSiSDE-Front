@@ -159,8 +159,10 @@
                                 <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
                                 <p:inputTextarea id="descripcion" style="height: 30px;"
                                                  value="#{adminCultivo.descripcion}"
-                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
-                                    <f:validateLength maximum="250"/>
+                                                 required="true"
+                                                 requiredMessage="La descripción del cultivo es obligatoria."
+                                                 validatorMessage="La descripción solo puede contener letras, números y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputTextarea>
                             </div>
@@ -169,7 +171,10 @@
                         <div class="row">
                             <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="add-tipoCultivo" value="Tipo de Cultivo"/><br/>
-                                <p:selectOneMenu id="add-tipoCultivo" value="#{adminCultivo.tipoCultivoId}">
+                                <p:selectOneMenu id="add-tipoCultivo" value="#{adminCultivo.tipoCultivoId}"
+                                                 required="true"
+                                                 requiredMessage="Debe seleccionar un tipo de cultivo.">
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems itemLabel="${tc.nombre}" itemValue="${tc.id}" var="tc"
                                                    value="#{adminCultivo.tipoCultivoList}"/>
                                 </p:selectOneMenu>
@@ -178,7 +183,10 @@
                         <div class="row">
                             <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="add-produccion" value="Producci&oacute;n"/><br/>
-                                <p:selectOneMenu id="add-produccion" value="#{adminCultivo.produccionId}">
+                                <p:selectOneMenu id="add-produccion" value="#{adminCultivo.produccionId}"
+                                                 required="true"
+                                                 requiredMessage="Debe seleccionar una producción.">
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems itemLabel="${prod.descripcion}" itemValue="${prod.id}" var="prod"
                                                    value="#{adminCultivo.listProduccion}"/>
                                 </p:selectOneMenu>
@@ -217,8 +225,10 @@
                                 <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
                                 <p:inputTextarea id="edit-descripcion" style="height: 30px;"
                                                  value="#{adminCultivo.descripcion}"
-                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
-                                    <f:validateLength maximum="250"/>
+                                                 required="true"
+                                                 requiredMessage="La descripción del cultivo es obligatoria."
+                                                 validatorMessage="La descripción solo puede contener letras, números y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputTextarea>
                             </div>
@@ -226,7 +236,10 @@
                         <div class="row">
                             <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="edit-tipoCultivo" value="Tipo de Cultivo"/><br/>
-                                <p:selectOneMenu id="edit-tipoCultivo" value="#{adminCultivo.tipoCultivoId}">
+                                <p:selectOneMenu id="edit-tipoCultivo" value="#{adminCultivo.tipoCultivoId}"
+                                                 required="true"
+                                                 requiredMessage="Debe seleccionar un tipo de cultivo.">
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems itemLabel="${tc.nombre}" itemValue="${tc.id}" var="tc"
                                                    value="#{adminCultivo.tipoCultivoList}"/>
                                 </p:selectOneMenu>
@@ -235,7 +248,10 @@
                         <div class="row">
                             <div class="col col-sm-12" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="edit-produccion" value="Producci&oacute;n"/><br/>
-                                <p:selectOneMenu id="edit-produccion" value="#{adminCultivo.produccionId}">
+                                <p:selectOneMenu id="edit-produccion" value="#{adminCultivo.produccionId}"
+                                                 required="true"
+                                                 requiredMessage="Debe seleccionar una producción.">
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems itemLabel="${prod.descripcion}" itemValue="${prod.id}" var="prod"
                                                    value="#{adminCultivo.listProduccion}"/>
                                 </p:selectOneMenu>

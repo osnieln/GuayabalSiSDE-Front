@@ -136,8 +136,10 @@
                                 <p:outputLabel for="nombre" value="Nombre"/><br/>
                                 <p:inputTextarea id="nombre" style="height: 30px;"
                                                  value="#{adminAgroquimicoBean.nombre}"
-                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
-                                    <f:validateLength maximum="250"/>
+                                                 required="true"
+                                                 requiredMessage="El nombre del agroquímico es obligatorio."
+                                                 validatorMessage="El nombre solo puede contener letras, números y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputTextarea>
                             </div>

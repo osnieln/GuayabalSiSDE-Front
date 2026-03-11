@@ -114,12 +114,16 @@
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-areaId" value="ID del &Aacute;rea"/><br/>
                                 <p:inputNumber id="add-areaId" value="#{adminRiegoBean.areaId}"
+                                               required="true"
+                                               requiredMessage="El ID del área es obligatorio."
                                                decimalPlaces="0" thousandSeparator=""
                                                style="width:100%;" placeholder="Ej: 1"/>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-cultivoId" value="ID del Cultivo"/><br/>
                                 <p:inputNumber id="add-cultivoId" value="#{adminRiegoBean.cultivoId}"
+                                               required="true"
+                                               requiredMessage="El ID del cultivo es obligatorio."
                                                decimalPlaces="0" thousandSeparator=""
                                                style="width:100%;" placeholder="Ej: 1"/>
                             </div>
@@ -128,19 +132,32 @@
                             <div class="col col-sm-12">
                                 <p:outputLabel for="add-fechaSiembra" value="Fecha de Siembra (yyyy-MM-dd)"/><br/>
                                 <p:inputText id="add-fechaSiembra" value="#{adminRiegoBean.fechaSiembra}"
-                                             style="width:100%;" placeholder="yyyy-MM-dd"/>
+                                             required="true"
+                                             requiredMessage="La fecha de siembra es obligatoria."
+                                             validatorMessage="Formato inválido. Use: yyyy-MM-dd"
+                                             style="width:100%;" placeholder="yyyy-MM-dd">
+                                    <f:validateRegex pattern="\d{4}-\d{2}-\d{2}"/>
+                                </p:inputText>
                             </div>
                         </div>
                         <div class="row" style="margin-bottom:10px;">
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-fechaPlan" value="Fecha Planificada (yyyy-MM-dd)"/><br/>
                                 <p:inputText id="add-fechaPlan" value="#{adminRiegoBean.fechaPlanificacion}"
-                                             style="width:100%;" placeholder="yyyy-MM-dd"/>
+                                             required="true"
+                                             requiredMessage="La fecha planificada es obligatoria."
+                                             validatorMessage="Formato inválido. Use: yyyy-MM-dd"
+                                             style="width:100%;" placeholder="yyyy-MM-dd">
+                                    <f:validateRegex pattern="\d{4}-\d{2}-\d{2}"/>
+                                </p:inputText>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-fechaReal" value="Fecha Real (opcional)"/><br/>
                                 <p:inputText id="add-fechaReal" value="#{adminRiegoBean.fechaReal}"
-                                             style="width:100%;" placeholder="yyyy-MM-dd"/>
+                                             validatorMessage="Formato inválido. Use: yyyy-MM-dd (opcional)"
+                                             style="width:100%;" placeholder="yyyy-MM-dd">
+                                    <f:validateRegex pattern="(\d{4}-\d{2}-\d{2})?"/>
+                                </p:inputText>
                             </div>
                         </div>
                         <div class="row" style="margin-bottom:10px;">
@@ -179,12 +196,16 @@
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-areaId" value="ID del &Aacute;rea"/><br/>
                                 <p:inputNumber id="edit-areaId" value="#{adminRiegoBean.areaId}"
+                                               required="true"
+                                               requiredMessage="El ID del área es obligatorio."
                                                decimalPlaces="0" thousandSeparator=""
                                                style="width:100%;"/>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-cultivoId" value="ID del Cultivo"/><br/>
                                 <p:inputNumber id="edit-cultivoId" value="#{adminRiegoBean.cultivoId}"
+                                               required="true"
+                                               requiredMessage="El ID del cultivo es obligatorio."
                                                decimalPlaces="0" thousandSeparator=""
                                                style="width:100%;"/>
                             </div>
@@ -193,19 +214,32 @@
                             <div class="col col-sm-12">
                                 <p:outputLabel for="edit-fechaSiembra" value="Fecha de Siembra (yyyy-MM-dd)"/><br/>
                                 <p:inputText id="edit-fechaSiembra" value="#{adminRiegoBean.fechaSiembra}"
-                                             style="width:100%;"/>
+                                             required="true"
+                                             requiredMessage="La fecha de siembra es obligatoria."
+                                             validatorMessage="Formato inválido. Use: yyyy-MM-dd"
+                                             style="width:100%;">
+                                    <f:validateRegex pattern="\d{4}-\d{2}-\d{2}"/>
+                                </p:inputText>
                             </div>
                         </div>
                         <div class="row" style="margin-bottom:10px;">
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-fechaPlan" value="Fecha Planificada (yyyy-MM-dd)"/><br/>
                                 <p:inputText id="edit-fechaPlan" value="#{adminRiegoBean.fechaPlanificacion}"
-                                             style="width:100%;"/>
+                                             required="true"
+                                             requiredMessage="La fecha planificada es obligatoria."
+                                             validatorMessage="Formato inválido. Use: yyyy-MM-dd"
+                                             style="width:100%;">
+                                    <f:validateRegex pattern="\d{4}-\d{2}-\d{2}"/>
+                                </p:inputText>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-fechaReal" value="Fecha Real (opcional)"/><br/>
                                 <p:inputText id="edit-fechaReal" value="#{adminRiegoBean.fechaReal}"
-                                             style="width:100%;"/>
+                                             validatorMessage="Formato inválido. Use: yyyy-MM-dd (opcional)"
+                                             style="width:100%;">
+                                    <f:validateRegex pattern="(\d{4}-\d{2}-\d{2})?"/>
+                                </p:inputText>
                             </div>
                         </div>
                         <div class="row" style="margin-bottom:10px;">

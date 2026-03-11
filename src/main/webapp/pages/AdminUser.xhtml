@@ -186,15 +186,17 @@
                                 <p:inputMask label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
                                              id="id" value="#{adminUsersBean.identificacion}"
                                              placeholder="Identificaci&oacute;n" required="true"
+                                             requiredMessage="La identificaci&oacute;n es obligatoria."
                                              mask="99999999999"/>
                             </div>
                             <div class="col col-sm-5">
                                 <p:outputLabel for="input_nombre" value="Nombre"/><br/>
                                 <p:inputText label="Nombre" id="input_nombre"
-                                             validatorMessage="ERROR: Nombre no v&aacute;lido" autocomplete="false"
+                                             requiredMessage="El nombre es obligatorio."
+                                             validatorMessage="El nombre solo puede contener letras y espacios." autocomplete="false"
                                              required="true" class="form-control" placeholder="Nombre"
                                              value="#{adminUsersBean.nombre}">
-                                    <f:validateLength maximum="250"/>
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputText>
                             </div>
@@ -209,17 +211,19 @@
                             <div class="col col-sm-6">
                                 <p:outputLabel for="input_username" value="Nombre de usuario"/><br/>
                                 <p:inputText label="Usuario" id="input_username"
-                                             validatorMessage="ERROR: Usuario no v&aacute;lido" autocomplete="false"
+                                             requiredMessage="El nombre de usuario es obligatorio."
+                                             validatorMessage="Usuario inv&aacute;lido: solo min&uacute;sculas, n&uacute;meros y los caracteres _ . -" autocomplete="false"
                                              required="true" class="form-control" placeholder="Usuario"
                                              value="#{adminUsersBean.username}">
-                                    <f:validateLength maximum="45"/>
+                                    <f:validateLength minimum="3" maximum="45"/>
                                     <f:validateRegex pattern="[a-z]+[0-9]*[_.-]?[a-z0-9]+$"/>
                                 </p:inputText>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="input_email" value="E-mail"/><br/>
                                 <p:inputText label="Correo" id="input_email"
-                                             validatorMessage="ERROR: Correo no v&aacute;lido" autocomplete="false"
+                                             requiredMessage="El correo electr&oacute;nico es obligatorio."
+                                             validatorMessage="El correo electr&oacute;nico no tiene un formato v&aacute;lido." autocomplete="false"
                                              required="true" class="form-control" placeholder="Correo"
                                              value="#{adminUsersBean.email}">
                                     <f:validateLength maximum="250"/>
@@ -235,10 +239,11 @@
                                 <p:password label="Contrase&ntilde;a" id="input_password" name="inputsecret1"
                                             feedback="true"
                                             autocomplete="false" required="true" class="form-control"
+                                            requiredMessage="La contrase&ntilde;a es obligatoria."
                                             promptLabel="Contrase&ntilde;a" weakLabel="Débil"
                                             goodLabel="Buena" strongLabel="Fuerte"
                                             placeholder="Contrase&ntilde;a" value="#{adminUsersBean.password}">
-                                    <f:validateLength maximum="45"/>
+                                    <f:validateLength minimum="6" maximum="45"/>
                                 </p:password>
                             </div>
                             <div class="col col-sm-6">
@@ -246,11 +251,12 @@
                                 <p:password label="Repetir Contrase&ntilde;a" id="input_password1"
                                             feedback="true"
                                             name="inputsecret2" autocomplete="false" required="true"
+                                            requiredMessage="Debe repetir la contrase&ntilde;a."
                                             promptLabel="Repetir Contrase&ntilde;a" weakLabel="Débil"
                                             goodLabel="Buena" strongLabel="Fuerte"
                                             class="form-control" placeholder="Repetir Contrase&ntilde;a"
                                             value="#{adminUsersBean.password1}">
-                                    <f:validateLength maximum="45"/>
+                                    <f:validateLength minimum="6" maximum="45"/>
                                 </p:password>
                             </div>
                         </div>
@@ -301,15 +307,17 @@
                                 <p:inputMask label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
                                              id="edit-id" value="#{adminUsersBean.identificacion}"
                                              placeholder="Identificaci&oacute;n" required="true"
+                                             requiredMessage="La identificaci&oacute;n es obligatoria."
                                              mask="99999999999"/>
                             </div>
                             <div class="col col-sm-5">
                                 <p:outputLabel for="edit-input_nombre" value="Nombre"/><br/>
                                 <p:inputText label="Nombre" id="edit-input_nombre"
-                                             validatorMessage="ERROR: Nombre no v&aacute;lido" autocomplete="false"
+                                             requiredMessage="El nombre es obligatorio."
+                                             validatorMessage="El nombre solo puede contener letras y espacios." autocomplete="false"
                                              required="true" class="form-control" placeholder="Nombre"
                                              value="#{adminUsersBean.nombre}">
-                                    <f:validateLength maximum="250"/>
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputText>
                             </div>
@@ -324,17 +332,19 @@
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-input_username" value="Nombre de usuario"/><br/>
                                 <p:inputText label="Usuario" id="edit-input_username"
-                                             validatorMessage="ERROR: Usuario no v&aacute;lido" autocomplete="false"
+                                             requiredMessage="El nombre de usuario es obligatorio."
+                                             validatorMessage="Usuario inv&aacute;lido: solo min&uacute;sculas, n&uacute;meros y los caracteres _ . -" autocomplete="false"
                                              required="true" class="form-control" placeholder="Usuario"
                                              value="#{adminUsersBean.username}">
-                                    <f:validateLength maximum="45"/>
+                                    <f:validateLength minimum="3" maximum="45"/>
                                     <f:validateRegex pattern="[a-z]+[0-9]*[_.-]?[a-z0-9]+$"/>
                                 </p:inputText>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-input_email" value="E-mail"/><br/>
                                 <p:inputText label="Correo" id="edit-input_email"
-                                             validatorMessage="ERROR: Correo no v&aacute;lido" autocomplete="false"
+                                             requiredMessage="El correo electr&oacute;nico es obligatorio."
+                                             validatorMessage="El correo electr&oacute;nico no tiene un formato v&aacute;lido." autocomplete="false"
                                              required="true" class="form-control" placeholder="Correo"
                                              value="#{adminUsersBean.email}">
                                     <f:validateLength maximum="250"/>
@@ -351,10 +361,11 @@
                                             feedback="true"
                                             autocomplete="false"
                                             class="form-control"
-                                            promptLabel="Contrase&ntilde;a" weakLabel="Débil"
+                                            validatorMessage="La contrase&ntilde;a debe tener entre 6 y 45 caracteres."
+                                            promptLabel="Dejar en blanco para no cambiar" weakLabel="Débil"
                                             goodLabel="Buena" strongLabel="Fuerte"
-                                            placeholder="Contrase&ntilde;a" value="#{adminUsersBean.password}">
-                                    <f:validateLength maximum="45"/>
+                                            placeholder="Dejar en blanco para no cambiar" value="#{adminUsersBean.password}">
+                                    <f:validateLength minimum="0" maximum="45"/>
                                 </p:password>
                             </div>
                             <div class="col col-sm-6">
@@ -362,11 +373,11 @@
                                 <p:password label="Repetir Contrase&ntilde;a" id="edit-input_password1"
                                             feedback="true"
                                             name="inputsecret2" autocomplete="false"
-                                            promptLabel="Repetir Contrase&ntilde;a" weakLabel="Débil"
+                                            promptLabel="Repetir la nueva contrase&ntilde;a" weakLabel="Débil"
                                             goodLabel="Buena" strongLabel="Fuerte"
-                                            class="form-control" placeholder="Repetir Contrase&ntilde;a"
+                                            class="form-control" placeholder="Repetir la nueva contrase&ntilde;a"
                                             value="#{adminUsersBean.password1}">
-                                    <f:validateLength maximum="45"/>
+                                    <f:validateLength minimum="0" maximum="45"/>
                                 </p:password>
                             </div>
                         </div>

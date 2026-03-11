@@ -211,14 +211,20 @@
                         <div class="row" style="padding-left: 15px; padding-right: 15px">
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-area" value="&Aacute;rea: "/><br/>
-                                <p:selectOneMenu id="add-area" value="#{adminAreaCultivo.areaSelected}">
+                                <p:selectOneMenu id="add-area" value="#{adminAreaCultivo.areaSelected}"
+                                                 required="true"
+                                                 requiredMessage="Debe seleccionar un área.">
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems itemLabel="${area.descripcion}" itemValue="${area.id}" var="area"
                                                    value="#{adminAreaCultivo.areaResponsesList}"/>
                                 </p:selectOneMenu>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-cultivo" value="Cultivo: "/><br/>
-                                <p:selectOneMenu id="add-cultivo" value="#{adminAreaCultivo.cultivoSelected}">
+                                <p:selectOneMenu id="add-cultivo" value="#{adminAreaCultivo.cultivoSelected}"
+                                                 required="true"
+                                                 requiredMessage="Debe seleccionar un cultivo.">
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="" noSelectionOption="true"/>
                                     <f:selectItems itemLabel="${cul.descripcion}" itemValue="${cul.id}" var="cul"
                                                    value="#{adminAreaCultivo.cultivoList}"/>
                                 </p:selectOneMenu>
@@ -229,12 +235,16 @@
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-fechaSiembra" value="Fecha de Siembra: "/><br/>
                                 <p:datePicker id="add-fechaSiembra" value="#{adminAreaCultivo.fechaSiembra}"
-                                />
+                                              required="true"
+                                              requiredMessage="La fecha de siembra es obligatoria."
+                                              showIcon="true"/>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-fechaRecogida" value="Fecha de Recogida: "/><br/>
                                 <p:datePicker id="add-fechaRecogida" value="#{adminAreaCultivo.fechaRecogida}"
-                                />
+                                              required="true"
+                                              requiredMessage="La fecha de recogida es obligatoria."
+                                              showIcon="true"/>
                             </div>
                         </div>
                         <br/>
@@ -242,6 +252,8 @@
                             <div class="col col-sm-3">
                                 <p:outputLabel for="add-planProduccion" value="Plan de Producción: "/><br/>
                                 <p:inputNumber id="add-planProduccion" value="#{adminAreaCultivo.planProduccion}"
+                                               required="true"
+                                               requiredMessage="El plan de producción es obligatorio."
                                                minValue="0"
                                                modifyValueOnWheel="false"/>
                             </div>
@@ -347,7 +359,10 @@
                         <div class="row" style="padding-left: 15px; padding-right: 15px">
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-fechaPlanif" value="Fecha planificada: "/><br/>
-                                <p:datePicker id="add-fechaPlanif" value="#{adminAreaCultivo.fechaPlanificada}"/>
+                                <p:datePicker id="add-fechaPlanif" value="#{adminAreaCultivo.fechaPlanificada}"
+                                              required="true"
+                                              requiredMessage="La fecha planificada es obligatoria."
+                                              showIcon="true"/>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="add-fechaReal" value="Fecha Real: "/><br/>
@@ -374,7 +389,10 @@
                         <div class="row" style="padding-left: 15px; padding-right: 15px">
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-fechaPlanif" value="Fecha planificada: "/><br/>
-                                <p:datePicker id="edit-fechaPlanif" value="#{adminAreaCultivo.fechaPlanificada}"/>
+                                <p:datePicker id="edit-fechaPlanif" value="#{adminAreaCultivo.fechaPlanificada}"
+                                              required="true"
+                                              requiredMessage="La fecha planificada es obligatoria."
+                                              showIcon="true"/>
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-fechaReal" value="Fecha Real: "/><br/>
@@ -436,7 +454,10 @@
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-fechaRecogida" value="Fecha de Recogida: "/><br/>
-                                <p:datePicker id="edit-fechaRecogida" value="#{adminAreaCultivo.fechaRecogida}"/>
+                                <p:datePicker id="edit-fechaRecogida" value="#{adminAreaCultivo.fechaRecogida}"
+                                              required="true"
+                                              requiredMessage="La fecha de recogida es obligatoria."
+                                              showIcon="true"/>
                             </div>
                         </div>
                         <br/>
@@ -444,6 +465,8 @@
                             <div class="col col-sm-3">
                                 <p:outputLabel for="edit-planProduccion" value="Plan de Producción: "/><br/>
                                 <p:inputNumber id="edit-planProduccion" value="#{adminAreaCultivo.planProduccion}"
+                                               required="true"
+                                               requiredMessage="El plan de producción es obligatorio."
                                                modifyValueOnWheel="false"/>
                             </div>
                             <div class="col col-sm-3">
