@@ -43,6 +43,10 @@
 </h:head>
 
 <h:body>
+    <script type="text/javascript">
+        /* Save PrimeFaces jQuery reference before vendor scripts override window.$ */
+        var _pfjQuery = window.jQuery;
+    </script>
     #{templateBean.init()}
     <div class="container-scroller">
         <!-- partial:../../partials/_navbar.html -->
@@ -248,6 +252,15 @@
     <h:outputScript library="js" name="bootstrap.bundle.min.js"/>
     <h:outputScript library="js" name="fontawesome.js"/>
     <!--    <script src="/resources/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>-->
+    <script type="text/javascript">
+        /* Restore PrimeFaces jQuery as the global $ after vendor scripts load.
+           vendor.bundle.base.js contains its own jQuery which overrides $,
+           breaking PrimeFaces AJAX widget re-initialization. */
+        if (typeof _pfjQuery !== 'undefined' &amp;&amp; _pfjQuery) {
+            window.$ = _pfjQuery;
+            window.jQuery = _pfjQuery;
+        }
+    </script>
 </h:body>
 
 </html>

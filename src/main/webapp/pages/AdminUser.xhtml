@@ -183,11 +183,11 @@
                         <div class="row">
                             <div class="col col-sm-5">
                                 <p:outputLabel for="id" value="Identificaci&oacute;n"/><br/>
-                                <p:inputMask label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                <p:inputText label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
                                              id="id" value="#{adminUsersBean.identificacion}"
                                              placeholder="Identificaci&oacute;n" required="true"
                                              requiredMessage="La identificaci&oacute;n es obligatoria."
-                                             mask="99999999999"/>
+                                             class="form-control" maxlength="11"/>
                             </div>
                             <div class="col col-sm-5">
                                 <p:outputLabel for="input_nombre" value="Nombre"/><br/>
@@ -304,11 +304,11 @@
                         <div class="row">
                             <div class="col col-sm-5">
                                 <p:outputLabel for="edit-id" value="Identificaci&oacute;n"/><br/>
-                                <p:inputMask label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
+                                <p:inputText label="Identificaci&oacute;n" style="height: 35px; width: 100%;"
                                              id="edit-id" value="#{adminUsersBean.identificacion}"
                                              placeholder="Identificaci&oacute;n" required="true"
                                              requiredMessage="La identificaci&oacute;n es obligatoria."
-                                             mask="99999999999"/>
+                                             class="form-control" maxlength="11"/>
                             </div>
                             <div class="col col-sm-5">
                                 <p:outputLabel for="edit-input_nombre" value="Nombre"/><br/>
