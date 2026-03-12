@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.primefaces.model.DefaultStreamedContent;
 import org.primefaces.model.StreamedContent;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
@@ -36,26 +37,34 @@ public class ReportBean implements Serializable {
             // Verificar el código de respuesta
             int responseCode = connection.getResponseCode();
             if (responseCode != HttpURLConnection.HTTP_OK) {
-                FacesContext.getCurrentInstance().addMessage(null,
-                        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                                "Reporte no generado",
-                                "No se encontraron elementos con los criterios de búsqueda indicados."));
+                connection.disconnect();
+                FacesContext fc = FacesContext.getCurrentInstance();
+                if (fc != null) {
+                    fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                            "Reporte no generado",
+                            "No se encontraron datos para los criterios indicados (código " + responseCode + ")."));
+                }
                 return null;
             }
 
-            InputStream stream = connection.getInputStream();
+            byte[] bytes;
+            try (InputStream stream = connection.getInputStream()) {
+                bytes = stream.readAllBytes();
+            }
+            connection.disconnect();
 
             return DefaultStreamedContent.builder()
                     .name("reporte_" + filename + ".pdf")
                     .contentType("application/pdf")
-                    .stream(() -> stream)
+                    .stream(() -> new ByteArrayInputStream(bytes))
                     .build();
 
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Error al descargar el archivo",
-                            e.getMessage()));
+            FacesContext fc = FacesContext.getCurrentInstance();
+            if (fc != null) {
+                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Error al descargar el archivo", e.getMessage()));
+            }
             e.printStackTrace();
             return null;
         }

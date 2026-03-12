@@ -30,7 +30,6 @@ public class RestRiego {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        response.join();
         return list_Area;
     }
 
@@ -156,7 +155,6 @@ public class RestRiego {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        response.join();
         return list;
     }
 
@@ -169,7 +167,6 @@ public class RestRiego {
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
-        response.join();
         return list;
     }
 
