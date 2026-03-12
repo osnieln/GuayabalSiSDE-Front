@@ -1,8 +1,6 @@
 package cu.edu.unah.bean;
 
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.context.FacesContext;
-import jakarta.faces.event.PhaseId;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,54 +26,54 @@ public class ReportBean implements Serializable {
     private int diasVencer = 30;
 
     /**
-     * Descarga el PDF del backend. Solo abre conexión HTTP cuando PrimeFaces
-     * necesita el contenido real (INVOKE_APPLICATION), no durante el render.
+     * Crea un StreamedContent con Supplier lazy: PrimeFaces solo invoca el
+     * Supplier cuando necesita el contenido real (INVOKE_APPLICATION al hacer
+     * clic), no durante el render de la página.
+     * El Supplier SIEMPRE devuelve un InputStream no nulo.
      */
-    private StreamedContent fetchPdf(String endpoint, String filename) {
-        try {
-            URL url = new URL("http://localhost:8081/api/reportes/" + endpoint);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(60000);
-            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                byte[] bytes;
-                try (InputStream is = conn.getInputStream()) {
-                    bytes = is.readAllBytes();
-                }
-                conn.disconnect();
-                return DefaultStreamedContent.builder()
-                        .name("reporte_" + filename + ".pdf")
-                        .contentType("application/pdf")
-                        .stream(() -> new ByteArrayInputStream(bytes))
-                        .build();
-            }
-            conn.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new DefaultStreamedContent();
-    }
-
-    /** Devuelve contenido vacío durante el render; descarga real en otros fases. */
-    private StreamedContent phaseAware(String endpoint, String filename) {
-        FacesContext ctx = FacesContext.getCurrentInstance();
-        if (ctx == null || PhaseId.RENDER_RESPONSE.equals(ctx.getCurrentPhaseId())) {
-            return new DefaultStreamedContent();
-        }
-        return fetchPdf(endpoint, filename);
+    private StreamedContent lazyPdf(String endpoint, String filename) {
+        return DefaultStreamedContent.builder()
+                .name("reporte_" + filename + ".pdf")
+                .contentType("application/pdf")
+                .stream(() -> {
+                    try {
+                        URL url = new URL("http://localhost:8081/api/reportes/" + endpoint);
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setRequestMethod("GET");
+                        conn.setConnectTimeout(10000);
+                        conn.setReadTimeout(60000);
+                        int code = conn.getResponseCode();
+                        if (code == HttpURLConnection.HTTP_OK) {
+                            byte[] bytes;
+                            try (InputStream is = conn.getInputStream()) {
+                                bytes = is.readAllBytes();
+                            }
+                            conn.disconnect();
+                            return new ByteArrayInputStream(bytes);
+                        }
+                        System.err.println("[ReportBean] Backend devolvió HTTP " + code
+                                + " para: " + endpoint);
+                        conn.disconnect();
+                    } catch (Exception e) {
+                        System.err.println("[ReportBean] Error al descargar reporte '"
+                                + endpoint + "': " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                    return new ByteArrayInputStream(new byte[0]);
+                })
+                .build();
     }
 
     public StreamedContent getDatosCultivos() {
-        return phaseAware("todasAreasCultivo", "resumen_areas_cultivo");
+        return lazyPdf("todasAreasCultivo", "resumen_areas_cultivo");
     }
 
     public StreamedContent getPlanProduccion() {
-        return phaseAware("planProdBetween/" + init + "/" + end, "cultivos_por_plan_produccion");
+        return lazyPdf("planProdBetween/" + init + "/" + end, "cultivos_por_plan_produccion");
     }
 
     public StreamedContent getProdCultivosPermanenteAfter() {
-        return phaseAware("prodCultivosPermanenteAfter/" + init, "cultivos_prod_cultivo_permanente");
+        return lazyPdf("prodCultivosPermanenteAfter/" + init, "cultivos_prod_cultivo_permanente");
     }
 
     public String getFechaRecogidaString() {
@@ -86,14 +84,14 @@ public class ReportBean implements Serializable {
     public StreamedContent getFechaRecogidaBefore() {
         if (fechaRecogida == null) fechaRecogida = new Date(System.currentTimeMillis());
         String date = new SimpleDateFormat("dd-MM-yyyy").format(fechaRecogida);
-        return phaseAware("fechaRecogidaBefore/" + date, "cultivos_fecha_recogidaBefore");
+        return lazyPdf("fechaRecogidaBefore/" + date, "cultivos_fecha_recogidaBefore");
     }
 
     public StreamedContent getCultivosPorVencer() {
-        return phaseAware("cultivosPorVencer/" + diasVencer, "cultivos_por_vencer");
+        return lazyPdf("cultivosPorVencer/" + diasVencer, "cultivos_por_vencer");
     }
 
     public StreamedContent getAgroquimicosMasUsados() {
-        return phaseAware("agroquimicosMasUsados", "agroquimicos_mas_usados");
+        return lazyPdf("agroquimicosMasUsados", "agroquimicos_mas_usados");
     }
 }
