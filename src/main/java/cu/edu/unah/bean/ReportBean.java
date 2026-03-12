@@ -1,8 +1,6 @@
 package cu.edu.unah.bean;
 
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,59 +25,50 @@ public class ReportBean implements Serializable {
     Date fechaRecogida = new Date(System.currentTimeMillis());
     private int diasVencer = 30;
 
-    private StreamedContent downloadFile(String endpoint, String filename) {
-        try {
-            String apiUrl = "http://localhost:8081/api/reportes/" + endpoint;
-            URL url = new URL(apiUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-
-            // Verificar el código de respuesta
-            int responseCode = connection.getResponseCode();
-            if (responseCode != HttpURLConnection.HTTP_OK) {
-                connection.disconnect();
-                FacesContext fc = FacesContext.getCurrentInstance();
-                if (fc != null) {
-                    fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                            "Reporte no generado",
-                            "No se encontraron datos para los criterios indicados (código " + responseCode + ")."));
-                }
-                return null;
-            }
-
-            byte[] bytes;
-            try (InputStream stream = connection.getInputStream()) {
-                bytes = stream.readAllBytes();
-            }
-            connection.disconnect();
-
-            return DefaultStreamedContent.builder()
-                    .name("reporte_" + filename + ".pdf")
-                    .contentType("application/pdf")
-                    .stream(() -> new ByteArrayInputStream(bytes))
-                    .build();
-
-        } catch (Exception e) {
-            FacesContext fc = FacesContext.getCurrentInstance();
-            if (fc != null) {
-                fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Error al descargar el archivo", e.getMessage()));
-            }
-            e.printStackTrace();
-            return null;
-        }
+    /**
+     * Returns a lazy StreamedContent. The HTTP connection to the backend is opened
+     * inside the stream() Supplier, which PrimeFaces only calls during the actual
+     * file download GET request — not during page rendering.
+     */
+    private StreamedContent buildLazyContent(String endpoint, String filename) {
+        return DefaultStreamedContent.builder()
+                .name("reporte_" + filename + ".pdf")
+                .contentType("application/pdf")
+                .stream(() -> {
+                    try {
+                        URL url = new URL("http://localhost:8081/api/reportes/" + endpoint);
+                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                        connection.setRequestMethod("GET");
+                        connection.setConnectTimeout(10000);
+                        connection.setReadTimeout(60000);
+                        int responseCode = connection.getResponseCode();
+                        if (responseCode == HttpURLConnection.HTTP_OK) {
+                            try (InputStream stream = connection.getInputStream()) {
+                                byte[] bytes = stream.readAllBytes();
+                                return new ByteArrayInputStream(bytes);
+                            } finally {
+                                connection.disconnect();
+                            }
+                        }
+                        connection.disconnect();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    return new ByteArrayInputStream(new byte[0]);
+                })
+                .build();
     }
 
     public StreamedContent getDatosCultivos() {
-        return downloadFile("todasAreasCultivo", "resumen_areas_cultivo");
+        return buildLazyContent("todasAreasCultivo", "resumen_areas_cultivo");
     }
 
     public StreamedContent getPlanProduccion() {
-        return downloadFile("planProdBetween/" + init + "/" + end, "cultivos_por_plan_produccion");
+        return buildLazyContent("planProdBetween/" + init + "/" + end, "cultivos_por_plan_produccion");
     }
 
     public StreamedContent getProdCultivosPermanenteAfter() {
-        return downloadFile("prodCultivosPermanenteAfter/" + init, "cultivos_prod_cultivo_permanente");
+        return buildLazyContent("prodCultivosPermanenteAfter/" + init, "cultivos_prod_cultivo_permanente");
     }
 
     public String getFechaRecogidaString() {
@@ -88,18 +77,17 @@ public class ReportBean implements Serializable {
     }
 
     public StreamedContent getFechaRecogidaBefore() {
-        if(fechaRecogida == null)
+        if (fechaRecogida == null)
             fechaRecogida = new Date(System.currentTimeMillis());
-        SimpleDateFormat formateador = new SimpleDateFormat("dd-MM-yyyy");
-        String date = formateador.format(fechaRecogida);
-        return downloadFile("fechaRecogidaBefore/" + date, "cultivos_fecha_recogidaBefore");
+        String date = new SimpleDateFormat("dd-MM-yyyy").format(fechaRecogida);
+        return buildLazyContent("fechaRecogidaBefore/" + date, "cultivos_fecha_recogidaBefore");
     }
 
     public StreamedContent getCultivosPorVencer() {
-        return downloadFile("cultivosPorVencer/" + diasVencer, "cultivos_por_vencer");
+        return buildLazyContent("cultivosPorVencer/" + diasVencer, "cultivos_por_vencer");
     }
 
     public StreamedContent getAgroquimicosMasUsados() {
-        return downloadFile("agroquimicosMasUsados", "agroquimicos_mas_usados");
+        return buildLazyContent("agroquimicosMasUsados", "agroquimicos_mas_usados");
     }
 }
