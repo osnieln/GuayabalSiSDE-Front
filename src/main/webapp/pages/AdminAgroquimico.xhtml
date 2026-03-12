@@ -150,7 +150,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnAddModal" actionListener="#{adminAgroquimicoBean.addAgroquimico()}"
-                                         update="add-agroquimico-content form:messages"
+                                         update="add-agroquimico-content :form:messages"
                                          process="add-agroquimico-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addagroquimicoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -190,7 +190,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditModal" actionListener="#{adminAgroquimicoBean.editAgroquimico()}"
-                                         update="edit-agroquimico-content form:messages"
+                                         update="edit-agroquimico-content :form:messages"
                                          process="edit-agroquimico-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editagroquimicoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>

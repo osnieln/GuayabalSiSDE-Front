@@ -206,7 +206,7 @@
                         <p:commandButton value="Importar" icon="pi pi-file-import"
                                          id="btnAddModal"
                                          disabled="#{!adminArea.valid}"
-                                         update="add-area-content form:messages dialogs:importAreaDialog"
+                                         update="add-area-content :form:messages dialogs:importAreaDialog"
                                          oncomplete="PF('importAreaDialog').show()"
                                          process="add-area-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addareaDialog').hide()"
@@ -256,7 +256,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditModal" actionListener="#{adminArea.editArea()}"
-                                         update="edit-area-content form:messages"
+                                         update="edit-area-content :form:messages"
                                          process="edit-area-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editareaDialog').hide()"
                                          class="ui-button-secondary" type="button"/>

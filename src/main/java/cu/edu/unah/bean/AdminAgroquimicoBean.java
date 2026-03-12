@@ -30,9 +30,9 @@ public class AdminAgroquimicoBean implements Serializable{
 
 
     public void init(){
-        agroquimicoResponseList.clear();
         cleanVariables();
         agroquimicoResponseList = restAgroquimico.findAllAgroquimico();
+        if (agroquimicoResponseList == null) agroquimicoResponseList = new ArrayList<>();
     }
 
     public void cleanVariables(){

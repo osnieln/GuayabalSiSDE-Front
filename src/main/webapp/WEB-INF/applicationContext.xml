@@ -5,6 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <security:http auto-config="true">
+        <security:csrf disabled="true"/>
         <!--Rulers for common pages-->
         <security:intercept-url pattern="/pages/index.xhtml" access="isAuthenticated()"/>
         <security:intercept-url pattern="/pages/Perfil.xhtml" access="isAuthenticated()"/>

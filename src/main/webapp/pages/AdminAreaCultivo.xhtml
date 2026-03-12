@@ -189,7 +189,7 @@
                                                 eventStyle="box"
                                                 showCurrentTime="${true}">
                                         <p:ajax event="select" listener="#{adminAreaCultivo.onSelect}"
-                                                update="form:messages"/>
+                                                update=":form:messages"/>
                                     </p:timeline>
                                 </div>
                             </div>
@@ -343,7 +343,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnAddModal" actionListener="#{adminAreaCultivo.addAreaCultivo()}"
-                                         update="add-areaCultivo-content form:messages"
+                                         update="add-areaCultivo-content :form:messages"
                                          process="add-areaCultivo-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addareaCultivoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -374,7 +374,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnAddRiegoModal" actionListener="#{adminAreaCultivo.addRiego()}"
-                                         update="add-riego-content form:messages"
+                                         update="add-riego-content :form:messages"
                                          process="add-riego-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addRiegoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -404,7 +404,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditRiegoModal" actionListener="#{adminAreaCultivo.editRiego()}"
-                                         update="edit-riego-content form:messages"
+                                         update="edit-riego-content :form:messages"
                                          process="edit-riego-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editRiegoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -552,7 +552,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditModal" actionListener="#{adminAreaCultivo.editAreaCultivo()}"
-                                         update="edit-areaCultivo-content form:messages"
+                                         update="edit-areaCultivo-content :form:messages"
                                          process="edit-areaCultivo-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editareaCultivoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>

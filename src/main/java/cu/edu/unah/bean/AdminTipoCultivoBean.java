@@ -30,9 +30,9 @@ public class AdminTipoCultivoBean implements Serializable{
 
 
     public void init(){
-        listTipoCultivo.clear();
         cleanVariables();
         listTipoCultivo = restTipoCultivo.findAllTipoCultivo();
+        if (listTipoCultivo == null) listTipoCultivo = new ArrayList<>();
     }
 
     public void cleanVariables(){

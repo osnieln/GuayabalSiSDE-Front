@@ -150,7 +150,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnAddModal" actionListener="#{adminProduccion.addProduccion()}"
-                                         update="add-produccion-content form:messages"
+                                         update="add-produccion-content :form:messages"
                                          process="add-produccion-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addproduccionDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -192,7 +192,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditModal" actionListener="#{adminProduccion.editProduccion()}"
-                                         update="edit-produccion-content form:messages"
+                                         update="edit-produccion-content :form:messages"
                                          process="edit-produccion-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editproduccionDialog').hide()"
                                          class="ui-button-secondary" type="button"/>

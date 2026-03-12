@@ -197,7 +197,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnAddModal" actionListener="#{adminCultivo.addCultivo()}"
-                                         update="add-cultivo-content form:messages"
+                                         update="add-cultivo-content :form:messages"
                                          process="add-cultivo-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addcultivoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -263,7 +263,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditModal" actionListener="#{adminCultivo.editCultivo()}"
-                                         update="edit-cultivo-content form:messages"
+                                         update="edit-cultivo-content :form:messages"
                                          process="edit-cultivo-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editcultivoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>

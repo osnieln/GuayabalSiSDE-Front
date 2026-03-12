@@ -173,7 +173,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          actionListener="#{adminRiegoBean.addRiego()}"
-                                         update="add-riego-content form:messages"
+                                         update="add-riego-content :form:messages"
                                          process="add-riego-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" type="button"
                                          onclick="PF('addRiegoDialog').hide()"
@@ -255,7 +255,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          actionListener="#{adminRiegoBean.editRiego()}"
-                                         update="edit-riego-content form:messages"
+                                         update="edit-riego-content :form:messages"
                                          process="edit-riego-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" type="button"
                                          onclick="PF('editRiegoDialog').hide()"

@@ -150,7 +150,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnAddModal" actionListener="#{adminTipoCultivoBean.addTipoCultivo()}"
-                                         update="add-tipoCultivo-content form:messages"
+                                         update="add-tipoCultivo-content :form:messages"
                                          process="add-tipoCultivo-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addtipoCultivoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -192,7 +192,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditModal" actionListener="#{adminTipoCultivoBean.editTipoCultivo()}"
-                                         update="edit-tipoCultivo-content form:messages"
+                                         update="edit-tipoCultivo-content :form:messages"
                                          process="edit-tipoCultivo-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('edittipoCultivoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>

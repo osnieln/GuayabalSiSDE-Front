@@ -288,7 +288,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnAddModal" actionListener="#{adminUsersBean.addUsers()}"
-                                         update="add-users-content form:messages"
+                                         update="add-users-content :form:messages"
                                          process="add-users-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addusersDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -409,7 +409,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditModal" actionListener="#{adminUsersBean.editUsers()}"
-                                         update="edit-users-content form:messages"
+                                         update="edit-users-content :form:messages"
                                          process="edit-users-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editusersDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
