@@ -90,7 +90,7 @@ public class RestUsers {
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 return false;
             }
         } catch (InterruptedException e) {
@@ -112,7 +112,7 @@ public class RestUsers {
                 .PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 response.join();
                 return false;
             } else {
@@ -133,7 +133,7 @@ public class RestUsers {
         HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+username)).DELETE().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500) {
+            if(response.get().statusCode() >= 400) {
                 response.join();
                 return false;
             } else {

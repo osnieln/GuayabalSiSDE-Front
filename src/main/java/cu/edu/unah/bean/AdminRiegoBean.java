@@ -66,6 +66,22 @@ public class AdminRiegoBean implements Serializable {
 
     public void addRiego() {
         FacesContext context = FacesContext.getCurrentInstance();
+        if (areaId == null) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El ID del área es obligatorio.", ""));
+            return;
+        }
+        if (cultivoId == null) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El ID del cultivo es obligatorio.", ""));
+            return;
+        }
+        if (fechaSiembra == null || fechaSiembra.isBlank()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La fecha de siembra es obligatoria.", ""));
+            return;
+        }
+        if (fechaPlanificacion == null || fechaPlanificacion.isBlank()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La fecha planificada es obligatoria.", ""));
+            return;
+        }
         RiegoResponse nuevo = RiegoResponse.builder()
                 .areaCultivoResponsePk(AreaCultivoResponsePK.builder()
                         .areaId(areaId)
@@ -89,6 +105,22 @@ public class AdminRiegoBean implements Serializable {
 
     public void editRiego() {
         FacesContext context = FacesContext.getCurrentInstance();
+        if (areaId == null) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El ID del área es obligatorio.", ""));
+            return;
+        }
+        if (cultivoId == null) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El ID del cultivo es obligatorio.", ""));
+            return;
+        }
+        if (fechaSiembra == null || fechaSiembra.isBlank()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La fecha de siembra es obligatoria.", ""));
+            return;
+        }
+        if (fechaPlanificacion == null || fechaPlanificacion.isBlank()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "La fecha planificada es obligatoria.", ""));
+            return;
+        }
         RiegoResponse editado = RiegoResponse.builder()
                 .id(selectedRiego.getId())
                 .areaCultivoResponsePk(AreaCultivoResponsePK.builder()

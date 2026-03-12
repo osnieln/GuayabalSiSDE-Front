@@ -58,6 +58,10 @@ public class AdminTipoCultivoBean implements Serializable{
                 .build();
         FacesContext context = FacesContext.getCurrentInstance();
 
+        if (nombre == null || nombre.isBlank()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El nombre del tipo de cultivo es obligatorio.", ""));
+            return;
+        }
         if(restTipoCultivo.create(cultivoToAdd)){
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "TIPO DE CULTIVO ADICIONADO CORRECTAMENTE", ""));
             init();
@@ -75,6 +79,10 @@ public class AdminTipoCultivoBean implements Serializable{
                 .build();
 
         FacesContext context = FacesContext.getCurrentInstance();
+        if (nombre == null || nombre.isBlank()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El nombre del tipo de cultivo es obligatorio.", ""));
+            return;
+        }
         if(restTipoCultivo.update(cultivoToEdit)){
             init();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "TIPO DE CULTIVO EDITADO", ""));

@@ -58,6 +58,10 @@ public class AdminAgroquimicoBean implements Serializable{
                 .build();
         FacesContext context = FacesContext.getCurrentInstance();
 
+        if (nombre == null || nombre.isBlank()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El nombre del agroquímico es obligatorio.", ""));
+            return;
+        }
         if(restAgroquimico.create(agroquimicoResponseToAdd)){
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "AGROQUIMICO ADICIONADO CORRECTAMENTE", ""));
             init();
@@ -73,6 +77,10 @@ public class AdminAgroquimicoBean implements Serializable{
         agroquimicoResponseBd.setNombre(nombre);
 
         FacesContext context = FacesContext.getCurrentInstance();
+        if (nombre == null || nombre.isBlank()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El nombre del agroquímico es obligatorio.", ""));
+            return;
+        }
         if(restAgroquimico.update(agroquimicoResponseBd)){
             init();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "AGROQUIMICO EDITADO", ""));
