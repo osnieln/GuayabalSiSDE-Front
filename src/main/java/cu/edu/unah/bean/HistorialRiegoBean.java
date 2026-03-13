@@ -2,6 +2,7 @@ package cu.edu.unah.bean;
 
 import cu.edu.unah.rest.RestRiego;
 import cu.edu.unah.util.RiegoResponse;
+import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.ExternalContext;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -23,9 +24,20 @@ public class HistorialRiegoBean implements Serializable {
     private List<RiegoResponse> historial;
 
     public void buscarHistorial() {
-        if (areaId != null) {
-            RestRiego restRiego = new RestRiego();
-            historial = restRiego.findHistorialByArea(areaId);
+        FacesContext fc = FacesContext.getCurrentInstance();
+        if (areaId == null) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                    "Campo requerido", "Ingrese el ID del área para buscar."));
+            return;
+        }
+        RestRiego restRiego = new RestRiego();
+        historial = restRiego.findHistorialByArea(areaId);
+        if (historial == null) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error de conexión", "No se pudo contactar con el servidor."));
+        } else if (historial.isEmpty()) {
+            fc.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                    "Sin resultados", "No se encontraron riegos para el área " + areaId + "."));
         }
     }
 

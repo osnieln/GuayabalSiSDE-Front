@@ -15,26 +15,32 @@
         <ui:define name="content">
 
             <h:form id="searchForm">
+                <p:growl id="msgs" showDetail="true" life="4000"/>
+
                 <!-- Búsqueda -->
                 <div class="row" style="margin-bottom: 20px; align-items: flex-end;">
                     <div class="col-sm-4">
                         <p:outputLabel value="ID del Área:" for="areaIdInput"
                                        style="font-weight:600; margin-bottom:5px; display:block;"/>
-                        <p:inputNumber id="areaIdInput" value="#{historialRiegoBean.areaId}"
-                                       decimalPlaces="0" thousandSeparator=""
-                                       placeholder="Ingrese el ID del área"
-                                       style="width:100%;"/>
+                        <p:inputText id="areaIdInput" value="#{historialRiegoBean.areaId}"
+                                     placeholder="Ingrese el ID del área"
+                                     style="width:100%;">
+                            <f:convertLong/>
+                        </p:inputText>
+                        <p:message for="areaIdInput" style="font-size:0.8rem;"/>
                     </div>
                     <div class="col-sm-2" style="padding-top:5px;">
                         <p:commandButton value="Buscar" icon="pi pi-search"
                                          action="#{historialRiegoBean.buscarHistorial()}"
-                                         update="historialTable summaryPanel" styleClass="ui-button-primary"
+                                         update="msgs areaIdInput historialTable summaryPanel"
+                                         process="@form"
+                                         styleClass="ui-button-primary"
                                          style="margin-right:8px;"/>
                         <p:commandButton value="Limpiar" icon="pi pi-times"
                                          styleClass="ui-button-secondary"
                                          action="#{historialRiegoBean.limpiar()}"
-                                         update="areaIdInput historialTable summaryPanel"
-                                         process="@none"/>
+                                         update="msgs areaIdInput historialTable summaryPanel"
+                                         process="@this"/>
                     </div>
                 </div>
 
