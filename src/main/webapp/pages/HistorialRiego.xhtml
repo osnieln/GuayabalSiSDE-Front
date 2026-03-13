@@ -25,7 +25,7 @@
                         <p:inputText id="areaIdInput" value="#{historialRiegoBean.areaId}"
                                      placeholder="Ingrese el ID del área"
                                      style="width:100%;">
-                            <f:convertLong/>
+                            <f:converter converterId="jakarta.faces.Long"/>
                         </p:inputText>
                         <p:message for="areaIdInput" style="font-size:0.8rem;"/>
                     </div>
