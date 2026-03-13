@@ -49,10 +49,18 @@ public class ReportBean implements Serializable {
                                 bytes = is.readAllBytes();
                             }
                             conn.disconnect();
+                            System.err.println("[ReportBean] OK: " + bytes.length
+                                    + " bytes recibidos del endpoint: " + endpoint);
                             return new ByteArrayInputStream(bytes);
                         }
+                        // Leer cuerpo del error para diagnóstico
+                        String errorBody = "";
+                        try (InputStream err = conn.getErrorStream()) {
+                            if (err != null) errorBody = new String(err.readAllBytes());
+                        } catch (Exception ignored) {}
                         System.err.println("[ReportBean] Backend devolvió HTTP " + code
-                                + " para: " + endpoint);
+                                + " para: " + endpoint
+                                + (errorBody.isEmpty() ? "" : " → " + errorBody));
                         conn.disconnect();
                     } catch (Exception e) {
                         System.err.println("[ReportBean] Error al descargar reporte '"
