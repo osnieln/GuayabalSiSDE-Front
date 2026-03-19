@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+<ui:composition template="/pages/template.xhtml">
+
+    <ui:define name="title">Manual de Usuario</ui:define>
+
+    <ui:define name="content">
+        <div class="row mb-3">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h4 class="font-weight-bold" style="color: #009440;">
+                    <i class="pi pi-book" style="margin-right:8px;"/>
+                    Manual de Usuario — SGPA
+                </h4>
+                <a href="#{request.contextPath}/resources/docs/manual_usuario.pdf"
+                   target="_blank"
+                   download="Manual_Usuario_SGPA.pdf"
+                   class="btn btn-success"
+                   style="background-color:#009440; border-color:#009440;">
+                    <i class="pi pi-download" style="margin-right:6px;"/>
+                    Descargar PDF
+                </a>
+            </div>
+        </div>
+
+        <!-- Sección 1: Introducción -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">1. Introducción</h5>
+            </div>
+            <div class="card-body">
+                <p>El <strong>SGPA</strong> (Sistema de Gestión de la Producción Agrícola) es una aplicación web
+                   desarrollada para la granja "El Guayabal" que permite administrar de forma centralizada las
+                   áreas de cultivo, la producción, el riego, el uso de agroquímicos y la generación de reportes.</p>
+                <h6>Roles del sistema</h6>
+                <table class="table table-bordered table-sm">
+                    <thead class="thead-light">
+                        <tr><th>Rol</th><th>Permisos principales</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Administrador</strong></td><td>Gestión de usuarios del sistema</td></tr>
+                        <tr><td><strong>Director</strong></td><td>Acceso completo a funciones, análisis y reportes</td></tr>
+                        <tr><td><strong>Trabajador</strong></td><td>Registro de producción, riego y agroquímicos</td></tr>
+                        <tr><td><strong>Técnico</strong></td><td>Consulta de análisis y reportes</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sección 2: Acceso -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">2. Acceso al Sistema</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/login.png"
+                     alt="Pantalla de inicio de sesión"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <h6>Pasos para autenticarse:</h6>
+                <ol>
+                    <li>Ingresar el <strong>Usuario</strong> en el primer campo.</li>
+                    <li>Ingresar la <strong>Contraseña</strong> en el segundo campo.</li>
+                    <li>Presionar el botón <strong>Autenticar</strong>.</li>
+                </ol>
+                <div class="alert alert-warning">
+                    Si las credenciales son incorrectas, el sistema mostrará un mensaje de error.
+                    Contacte al administrador si no recuerda sus datos de acceso.
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 3: Dashboard -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">3. Panel Principal (Dashboard)</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/dashboard.png"
+                     alt="Panel principal"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Una vez autenticado, el sistema redirige al panel principal donde se presentan los accesos rápidos a las funciones más usadas.</p>
+                <table class="table table-bordered table-sm">
+                    <thead class="thead-light">
+                        <tr><th>Sección del menú</th><th>Contenido</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td><strong>Administración</strong></td><td>Gestión de usuarios</td></tr>
+                        <tr><td><strong>Funciones</strong></td><td>Áreas, cultivos, agroquímicos, producción, riego</td></tr>
+                        <tr><td><strong>Análisis</strong></td><td>Resumen general, rendimiento, historial de riegos</td></tr>
+                        <tr><td><strong>Reportes</strong></td><td>Generación de reportes en PDF</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sección 4: Áreas -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">4. Gestión de Áreas</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/areas.png"
+                     alt="Gestión de áreas"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Administra las áreas físicas de la granja (parcelas, lotes, sectores).</p>
+                <table class="table table-bordered table-sm">
+                    <thead class="thead-light"><tr><th>Acción</th><th>Descripción</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>+ Adicionar</strong></td><td>Registra una nueva área</td></tr>
+                        <tr><td><strong>Editar</strong></td><td>Modifica los datos del área seleccionada</td></tr>
+                        <tr><td><strong>Eliminar</strong></td><td>Elimina el área del sistema</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sección 5: Cultivos -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">5. Gestión de Cultivos</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/cultivos.png"
+                     alt="Gestión de cultivos"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Registra y administra los cultivos disponibles en la granja.</p>
+                <table class="table table-bordered table-sm">
+                    <thead class="thead-light"><tr><th>Acción</th><th>Descripción</th></tr></thead>
+                    <tbody>
+                        <tr><td><strong>+ Adicionar</strong></td><td>Registra un nuevo cultivo</td></tr>
+                        <tr><td><strong>Editar</strong></td><td>Modifica los datos del cultivo</td></tr>
+                        <tr><td><strong>Eliminar</strong></td><td>Elimina el cultivo del sistema</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Sección 6: Tipos de Cultivo -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">6. Gestión de Tipos de Cultivo</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/tipo_cultivo.png"
+                     alt="Tipos de cultivo"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Clasifica los cultivos por tipo (permanente, temporal, hortícola, etc.).</p>
+            </div>
+        </div>
+
+        <!-- Sección 7: Área-Cultivo -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">7. Gestión de Área-Cultivo</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/area_cultivo.png"
+                     alt="Área-Cultivo"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Asocia un cultivo a un área específica de la granja, estableciendo qué se siembra en cada zona y en qué período.</p>
+            </div>
+        </div>
+
+        <!-- Sección 8: Producción -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">8. Gestión de Producción</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/produccion.png"
+                     alt="Gestión de producción"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Registra las cantidades cosechadas por área de cultivo, incluyendo unidades y observaciones.</p>
+            </div>
+        </div>
+
+        <!-- Sección 9: Riego -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">9. Gestión de Riego</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/riego.png"
+                     alt="Gestión de riego"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Programa y registra los ciclos de riego aplicados a los cultivos de la granja.</p>
+            </div>
+        </div>
+
+        <!-- Sección 10: Historial de Riego -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">10. Historial de Riego</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/historial_riego.png"
+                     alt="Historial de riego"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Muestra el historial completo de riegos realizados con filtros por fecha y área.</p>
+                <div class="alert alert-info">
+                    <strong>Consejo:</strong> Use los filtros de fecha para generar resúmenes mensuales del riego por área.
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 11: Agroquímicos -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">11. Gestión de Agroquímicos</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/agroquimicos.png"
+                     alt="Agroquímicos"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Administra el inventario de agroquímicos (fertilizantes, pesticidas, herbicidas) disponibles en la granja.</p>
+                <div class="alert alert-warning">
+                    <strong>Advertencia:</strong> Verifique el stock disponible antes de programar aplicaciones.
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 12: Usuarios -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">12. Gestión de Usuarios</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/usuarios.png"
+                     alt="Gestión de usuarios"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Módulo exclusivo para administradores. Permite crear, editar y eliminar usuarios del sistema y asignar roles.</p>
+                <div class="alert alert-danger">
+                    <strong>Importante:</strong> Solo usuarios con rol <strong>Administrador</strong> tienen acceso a este módulo.
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección 13: Rendimiento -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">13. Rendimiento</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/rendimiento.png"
+                     alt="Rendimiento"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <p>Muestra indicadores del rendimiento productivo por cultivo y por área, con comparativas entre períodos.</p>
+            </div>
+        </div>
+
+        <!-- Sección 14: Reportes -->
+        <div class="card mb-3">
+            <div class="card-header" style="background-color:#f0f7f1; border-left: 4px solid #009440;">
+                <h5 class="mb-0" style="color:#009440;">14. Reportes</h5>
+            </div>
+            <div class="card-body">
+                <img src="#{request.contextPath}/resources/imagenes/reportes.png"
+                     alt="Reportes"
+                     class="img-fluid rounded mb-3"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+                <table class="table table-bordered table-sm mb-3">
+                    <thead class="thead-light"><tr><th>Reporte</th><th>Descripción</th></tr></thead>
+                    <tbody>
+                        <tr><td>Resumen de Cultivos</td><td>Estado general de todos los cultivos registrados</td></tr>
+                        <tr><td>Plan de Producción</td><td>Proyección y seguimiento del plan productivo</td></tr>
+                        <tr><td>Cultivo Permanente</td><td>Listado de cultivos de carácter permanente</td></tr>
+                        <tr><td>Fecha de Recogida</td><td>Cultivos ordenados por fecha de cosecha</td></tr>
+                        <tr><td>Cultivos por Vencer</td><td>Cultivos próximos a su fecha límite</td></tr>
+                        <tr><td>Agroquímicos Más Usados</td><td>Ranking de uso de agroquímicos por período</td></tr>
+                    </tbody>
+                </table>
+                <img src="#{request.contextPath}/resources/imagenes/ejemplo_visualicacion_en_pantalla_reporte.png"
+                     alt="Ejemplo de reporte"
+                     class="img-fluid rounded"
+                     style="max-height:320px; border:1px solid #ddd;"/>
+            </div>
+        </div>
+
+        <!-- Botón inferior de descarga -->
+        <div class="row mt-4 mb-2">
+            <div class="col-12 text-center">
+                <a href="#{request.contextPath}/resources/docs/manual_usuario.pdf"
+                   target="_blank"
+                   download="Manual_Usuario_SGPA.pdf"
+                   class="btn btn-lg btn-success"
+                   style="background-color:#009440; border-color:#009440;">
+                    <i class="pi pi-download" style="margin-right:8px;"/>
+                    Descargar Manual Completo en PDF
+                </a>
+            </div>
+        </div>
+
+    </ui:define>
+
+</ui:composition>
+</html>
