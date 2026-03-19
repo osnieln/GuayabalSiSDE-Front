@@ -47,9 +47,31 @@ Para ingresar al sistema, el usuario debe abrir el navegador web y acceder a la 
 
 ## 3. Panel principal (Dashboard)
 
-Una vez autenticado correctamente, el sistema redirige al **panel principal**, donde se presenta un resumen del estado actual de la granja.
+Una vez autenticado correctamente, el sistema redirige al **panel principal (INICIO)**, donde se presenta la identidad de la granja y los accesos rápidos a las funciones más usadas.
 
 ![Panel principal](imagenes/dashboard.png)
+
+### Menú lateral
+
+El menú de navegación se encuentra en el panel izquierdo y está organizado en cuatro secciones expandibles:
+
+| Sección | Contenido |
+|---------|-----------|
+| **Administración** | Gestión de áreas, cultivos, tipos de cultivo, agroquímicos y usuarios |
+| **Funciones** | Producción, riego y asociación área-cultivo |
+| **Análisis** | Rendimiento y estadísticas |
+| **Reportes** | Generación de reportes en PDF |
+
+### Accesos rápidos
+
+El panel central muestra cuatro botones de acceso directo:
+
+| Botón | Destino |
+|-------|---------|
+| Resumen General | Vista consolidada de la producción |
+| Áreas de Cultivo | Gestión de áreas |
+| Agroquímicos | Gestión de agroquímicos |
+| Reportes PDF | Módulo de reportes |
 
 ---
 
