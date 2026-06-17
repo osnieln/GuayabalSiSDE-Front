@@ -13,21 +13,29 @@
         <ui:define name="title">Dashboard de Estadísticas</ui:define>
         <ui:define name="content">
 
+            <style>
+                /* template.xhtml envuelve el contenido en .table-responsive (pensado para
+                   tablas anchas), cuyo overflow-x:auto fuerza overflow-y:auto por defecto
+                   en CSS y crea un contenedor con scroll propio que recorta/desalinea
+                   las tarjetas del dashboard. Se desactiva solo para esta página. */
+                .table-responsive { overflow: visible; }
+            </style>
+
             <h:form id="dashboardForm">
                 <div id="statsPanel" style="margin-bottom:20px;display:grid;grid-template-columns:repeat(3, 1fr);gap:20px;">
-                    <div style="box-sizing:border-box;width:100%;height:150px;background:#28a745;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+                    <div style="box-sizing:border-box;min-width:0;width:100%;height:150px;background:#28a745;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
                         <h4>Total de Áreas</h4>
                         <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.totalAreas : '-'}</h2>
                     </div>
-                    <div style="box-sizing:border-box;width:100%;height:150px;background:#007bff;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+                    <div style="box-sizing:border-box;min-width:0;width:100%;height:150px;background:#007bff;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
                         <h4>Cultivos Activos</h4>
                         <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.cultivosActivos : '-'}</h2>
                     </div>
-                    <div style="box-sizing:border-box;width:100%;height:150px;background:#fd7e14;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+                    <div style="box-sizing:border-box;min-width:0;width:100%;height:150px;background:#fd7e14;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
                         <h4>Riegos Próximos (7 días)</h4>
                         <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.riegosProximosSemana : '-'}</h2>
                     </div>
-                    <div style="box-sizing:border-box;width:100%;height:150px;background:#6f42c1;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
+                    <div style="box-sizing:border-box;min-width:0;width:100%;height:150px;background:#6f42c1;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;">
                         <h4>Producción del Mes</h4>
                         <h2>
                             <h:outputText value="#{dashboardBean.dashboard != null ? dashboardBean.dashboard.produccionMesActual : 0}">
@@ -36,7 +44,7 @@
                         </h2>
                     </div>
                     <a href="#{request.contextPath}/pages/Alertas.xhtml"
-                       style="box-sizing:border-box;width:100%;height:150px;background:#dc3545;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;text-decoration:none;">
+                       style="box-sizing:border-box;min-width:0;width:100%;height:150px;background:#dc3545;color:white;padding:20px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;text-decoration:none;">
                         <h4>Alertas Activas</h4>
                         <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.alertasActivas : '-'}</h2>
                     </a>
