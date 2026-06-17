@@ -14,43 +14,32 @@
         <ui:define name="content">
 
             <h:form id="dashboardForm">
-                <div id="statsPanel" class="row justify-content-center" style="margin-bottom: 20px;">
-                    <div class="col-sm-6 col-md-4 mb-3 d-flex">
-                        <div class="card text-center w-100 d-flex flex-column justify-content-center" style="background:#28a745;color:white;padding:20px;min-height:150px;">
-                            <h4>Total de Áreas</h4>
-                            <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.totalAreas : '-'}</h2>
-                        </div>
+                <div id="statsPanel" style="margin-bottom:20px;display:grid;grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));gap:20px;">
+                    <div class="text-center" style="background:#28a745;color:white;padding:20px;min-height:150px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box;">
+                        <h4>Total de Áreas</h4>
+                        <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.totalAreas : '-'}</h2>
                     </div>
-                    <div class="col-sm-6 col-md-4 mb-3 d-flex">
-                        <div class="card text-center w-100 d-flex flex-column justify-content-center" style="background:#007bff;color:white;padding:20px;min-height:150px;">
-                            <h4>Cultivos Activos</h4>
-                            <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.cultivosActivos : '-'}</h2>
-                        </div>
+                    <div class="text-center" style="background:#007bff;color:white;padding:20px;min-height:150px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box;">
+                        <h4>Cultivos Activos</h4>
+                        <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.cultivosActivos : '-'}</h2>
                     </div>
-                    <div class="col-sm-6 col-md-4 mb-3 d-flex">
-                        <div class="card text-center w-100 d-flex flex-column justify-content-center" style="background:#fd7e14;color:white;padding:20px;min-height:150px;">
-                            <h4>Riegos Próximos (7 días)</h4>
-                            <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.riegosProximosSemana : '-'}</h2>
-                        </div>
+                    <div class="text-center" style="background:#fd7e14;color:white;padding:20px;min-height:150px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box;">
+                        <h4>Riegos Próximos (7 días)</h4>
+                        <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.riegosProximosSemana : '-'}</h2>
                     </div>
-                    <div class="col-sm-6 col-md-4 mb-3 d-flex">
-                        <div class="card text-center w-100 d-flex flex-column justify-content-center" style="background:#6f42c1;color:white;padding:20px;min-height:150px;">
-                            <h4>Producción del Mes</h4>
-                            <h2>
-                                <h:outputText value="#{dashboardBean.dashboard != null ? dashboardBean.dashboard.produccionMesActual : 0}">
-                                    <f:convertNumber maxFractionDigits="2" xmlns:f="jakarta.faces.convert"/>
-                                </h:outputText>
-                            </h2>
-                        </div>
+                    <div class="text-center" style="background:#6f42c1;color:white;padding:20px;min-height:150px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box;">
+                        <h4>Producción del Mes</h4>
+                        <h2>
+                            <h:outputText value="#{dashboardBean.dashboard != null ? dashboardBean.dashboard.produccionMesActual : 0}">
+                                <f:convertNumber maxFractionDigits="2" xmlns:f="jakarta.faces.convert"/>
+                            </h:outputText>
+                        </h2>
                     </div>
-                    <div class="col-sm-6 col-md-4 mb-3 d-flex">
-                        <a href="#{request.contextPath}/pages/Alertas.xhtml" class="w-100" style="text-decoration:none;display:block;">
-                            <div class="card text-center h-100 d-flex flex-column justify-content-center" style="background:#dc3545;color:white;padding:20px;min-height:150px;">
-                                <h4>Alertas Activas</h4>
-                                <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.alertasActivas : '-'}</h2>
-                            </div>
-                        </a>
-                    </div>
+                    <a href="#{request.contextPath}/pages/Alertas.xhtml" class="text-center"
+                       style="background:#dc3545;color:white;padding:20px;min-height:150px;border-radius:4px;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box;text-decoration:none;">
+                        <h4>Alertas Activas</h4>
+                        <h2>#{dashboardBean.dashboard != null ? dashboardBean.dashboard.alertasActivas : '-'}</h2>
+                    </a>
                 </div>
 
                 <div style="margin-top:20px;">
