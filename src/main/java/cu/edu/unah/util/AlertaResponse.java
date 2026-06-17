@@ -9,11 +9,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DashboardResponse {
+public class AlertaResponse {
 
-    long totalAreas;
-    long cultivosActivos;
-    long riegosProximosSemana;
-    double produccionMesActual;
-    long alertasActivas;
+    String tipo;
+    String prioridad;
+    String mensaje;
+    String fechaReferencia;
+    AreaCultivoResponsePK areaCultivoResponsePk;
+    Long agroquimicoId;
 }

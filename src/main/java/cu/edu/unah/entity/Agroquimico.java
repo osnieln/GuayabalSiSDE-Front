@@ -27,6 +27,10 @@ public class Agroquimico implements Serializable {
     @Column(unique = true)
     private String nombre;
 
+    private Double stockActual;
+
+    private Double stockMinimo;
+
     // Relación ManyToMany con AreaCultivo
     @ManyToMany(mappedBy = "agroquimicos", fetch = FetchType.LAZY)
     private List<AreaCultivo> areaCultivos;
