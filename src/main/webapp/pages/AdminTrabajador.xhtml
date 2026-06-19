@@ -208,11 +208,12 @@
                             </div>
                             <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="identificacion" value="Identificaci&oacute;n"/><br/>
-                                <p:inputText id="identificacion" style="height: 35px;"
+                                <p:inputText id="identificacion" style="height: 35px;" maxlength="11"
                                              value="#{adminTrabajadorBean.identificacion}"
                                              required="true"
-                                             requiredMessage="La identificaci&oacute;n del trabajador es obligatoria.">
-                                    <f:validateLength minimum="2" maximum="45"/>
+                                             requiredMessage="La identificaci&oacute;n del trabajador es obligatoria."
+                                             validatorMessage="La identificaci&oacute;n debe tener exactamente 11 d&iacute;gitos.">
+                                    <f:validateRegex pattern="^[0-9]{11}$"/>
                                 </p:inputText>
                             </div>
                         </div>
@@ -221,7 +222,9 @@
                             <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="cargo" value="Cargo"/><br/>
                                 <p:inputText id="cargo" style="height: 35px;"
-                                             value="#{adminTrabajadorBean.cargo}"/>
+                                             value="#{adminTrabajadorBean.cargo}"
+                                             required="true"
+                                             requiredMessage="El cargo del trabajador es obligatorio."/>
                             </div>
                             <div class="col col-sm-5" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="telefono" value="Tel&eacute;fono"/><br/>
@@ -294,11 +297,12 @@
                             </div>
                             <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="edit-identificacion" value="Identificaci&oacute;n"/><br/>
-                                <p:inputText id="edit-identificacion" style="height: 35px;"
+                                <p:inputText id="edit-identificacion" style="height: 35px;" maxlength="11"
                                              value="#{adminTrabajadorBean.identificacion}"
                                              required="true"
-                                             requiredMessage="La identificaci&oacute;n del trabajador es obligatoria.">
-                                    <f:validateLength minimum="2" maximum="45"/>
+                                             requiredMessage="La identificaci&oacute;n del trabajador es obligatoria."
+                                             validatorMessage="La identificaci&oacute;n debe tener exactamente 11 d&iacute;gitos.">
+                                    <f:validateRegex pattern="^[0-9]{11}$"/>
                                 </p:inputText>
                             </div>
                         </div>
@@ -307,7 +311,9 @@
                             <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="edit-cargo" value="Cargo"/><br/>
                                 <p:inputText id="edit-cargo" style="height: 35px;"
-                                             value="#{adminTrabajadorBean.cargo}"/>
+                                             value="#{adminTrabajadorBean.cargo}"
+                                             required="true"
+                                             requiredMessage="El cargo del trabajador es obligatorio."/>
                             </div>
                             <div class="col col-sm-5" style="padding-left: 15px; padding-right: 15px">
                                 <p:outputLabel for="edit-telefono" value="Tel&eacute;fono"/><br/>
