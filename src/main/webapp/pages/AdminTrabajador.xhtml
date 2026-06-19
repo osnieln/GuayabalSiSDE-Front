@@ -238,8 +238,7 @@
                         <div class="row">
                             <div class="col col-sm-6">
                                 <p:outputLabel for="areas" value="&Aacute;reas asignadas:"/>
-                                <p:selectManyMenu filter="true" filterMatchMode="contains"
-                                                  showCheckbox="true" label="&Aacute;reas" id="areas"
+                                <p:selectManyMenu showCheckbox="true" label="&Aacute;reas" id="areas"
                                                   value="#{adminTrabajadorBean.areaIds}">
                                     <f:selectItems itemLabel="${area.descripcion}" itemValue="${area.id}" var="area"
                                                    value="#{adminTrabajadorBean.areaList}"/>
@@ -247,8 +246,7 @@
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="riegos" value="Riegos asignados:"/>
-                                <p:selectManyMenu filter="true" filterMatchMode="contains"
-                                                  showCheckbox="true" label="Riegos" id="riegos"
+                                <p:selectManyMenu showCheckbox="true" label="Riegos" id="riegos"
                                                   value="#{adminTrabajadorBean.riegoIds}">
                                     <f:selectItems itemLabel="${riego.fechaPlanificacion}" itemValue="${riego.id}" var="riego"
                                                    value="#{adminTrabajadorBean.riegoList}"/>
@@ -326,8 +324,7 @@
                         <div class="row">
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-areas" value="&Aacute;reas asignadas:"/>
-                                <p:selectManyMenu filter="true" filterMatchMode="contains"
-                                                  showCheckbox="true" label="&Aacute;reas" id="edit-areas"
+                                <p:selectManyMenu showCheckbox="true" label="&Aacute;reas" id="edit-areas"
                                                   value="#{adminTrabajadorBean.areaIds}">
                                     <f:selectItems itemLabel="${area.descripcion}" itemValue="${area.id}" var="area"
                                                    value="#{adminTrabajadorBean.areaList}"/>
@@ -335,8 +332,7 @@
                             </div>
                             <div class="col col-sm-6">
                                 <p:outputLabel for="edit-riegos" value="Riegos asignados:"/>
-                                <p:selectManyMenu filter="true" filterMatchMode="contains"
-                                                  showCheckbox="true" label="Riegos" id="edit-riegos"
+                                <p:selectManyMenu showCheckbox="true" label="Riegos" id="edit-riegos"
                                                   value="#{adminTrabajadorBean.riegoIds}">
                                     <f:selectItems itemLabel="${riego.fechaPlanificacion}" itemValue="${riego.id}" var="riego"
                                                    value="#{adminTrabajadorBean.riegoList}"/>
