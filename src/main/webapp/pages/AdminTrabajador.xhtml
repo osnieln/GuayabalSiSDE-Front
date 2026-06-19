@@ -365,7 +365,8 @@
                                  header="Confirm" severity="info">
                     <p:commandButton value="Si" icon="ui-icon-check" widgetVar="btnConfirmDeleteTrabajador"
                                      actionListener="#{adminTrabajadorBean.deleteTrabajador()}"
-                                     onclick="PF('btnConfirmDeleteTrabajador').disable()"
+                                     update="form:messages form:dt-trabajador"
+                                     onstart="PF('btnConfirmDeleteTrabajador').disable()"
                                      oncomplete="PF('btnConfirmDeleteTrabajador').enable()"
                                      process="@this"/>
                     <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
