@@ -23,6 +23,7 @@
         <security:intercept-url pattern="/pages/AdminAgroquimico.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR')"/>
         <security:intercept-url pattern="/pages/AdminAreaCultivo.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR')"/>
         <security:intercept-url pattern="/pages/AdminRiego.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR')"/>
+        <security:intercept-url pattern="/pages/ControlInventarioAgroquimico.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR')"/>
         <security:intercept-url pattern="/pages/Dashboard.xhtml" access="isAuthenticated()"/>
         <security:intercept-url pattern="/pages/HistorialRiego.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR', 'ROLE_TECNICO')"/>
         <security:intercept-url pattern="/pages/Rendimiento.xhtml" access="hasAnyRole('ROLE_DIRECTOR', 'ROLE_TRABAJADOR', 'ROLE_TECNICO')"/>

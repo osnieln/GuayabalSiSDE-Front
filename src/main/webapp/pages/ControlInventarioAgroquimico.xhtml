@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core">
+
+<h:head><title>Control de Inventario de Agroquimicos</title></h:head>
+
+<h:body>
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="title">Control de Inventario de Agroqu&iacute;micos</ui:define>
+
+        <ui:define name="content">
+            #{controlInventarioAgroquimicoBean.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Registrar Entrada" icon="pi pi-arrow-circle-down"
+                                         update=":dialogs:entrada-content"
+                                         oncomplete="PF('entradaDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:entrada-content"/>
+                        </p:commandButton>
+                        <p:commandButton value="Registrar Salida" icon="pi pi-arrow-circle-up"
+                                         update=":dialogs:salida-content"
+                                         oncomplete="PF('salidaDialog').show()"
+                                         styleClass="ui-button-warning">
+                            <p:resetInput target=":dialogs:salida-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <h4>Stock de Agroqu&iacute;micos</h4>
+                <p:dataTable tableStyleClass="table-striped" id="dt-stock" widgetVar="dtstock"
+                             var="agroquimico"
+                             value="#{controlInventarioAgroquimicoBean.agroquimicoResponseList}" size="small"
+                             reflow="true"
+                             rowKey="#{agroquimico.id}" paginator="true" rows="10"
+                             paginatorPosition="bottom"
+                             emptyMessage="No hay agroqu&iacute;micos registrados.">
+                    <p:column exportHeaderValue="Nombre" headerText="Nombre" sortBy="#{agroquimico.nombre}">
+                        <h:outputText value="#{agroquimico.nombre}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Stock Actual" headerText="Stock Actual" sortBy="#{agroquimico.stockActual}">
+                        <h:outputText value="#{agroquimico.stockActual}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Stock M&iacute;nimo" headerText="Stock M&iacute;nimo">
+                        <h:outputText value="#{agroquimico.stockMinimo}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Estado" headerText="Estado" style="text-align:center;">
+                        <h:outputText value="Bajo Stock"
+                                      rendered="#{agroquimico.stockActual != null and agroquimico.stockMinimo != null and agroquimico.stockActual le agroquimico.stockMinimo}"
+                                      style="background-color:#f8d7da;color:#721c24;padding:3px 10px;border-radius:12px;font-size:0.82rem;font-weight:600;"/>
+                        <h:outputText value="Normal"
+                                      rendered="#{agroquimico.stockActual == null or agroquimico.stockMinimo == null or agroquimico.stockActual gt agroquimico.stockMinimo}"
+                                      style="background-color:#d4edda;color:#155724;padding:3px 10px;border-radius:12px;font-size:0.82rem;font-weight:600;"/>
+                    </p:column>
+                </p:dataTable>
+
+                <h4 style="margin-top: 25px;">Historial de Consumo</h4>
+                <p:dataTable tableStyleClass="table-striped" id="dt-movimientos" widgetVar="dtmovimientos"
+                             var="movimiento"
+                             value="#{controlInventarioAgroquimicoBean.movimientoList}" size="small"
+                             reflow="true"
+                             rowKey="#{movimiento.id}" paginator="true" rows="10"
+                             paginatorPosition="bottom"
+                             emptyMessage="No hay movimientos registrados.">
+                    <f:facet name="header">
+                        <span class="ui-input-icon-left">
+                            <i class="pi pi-search"/>
+                            <p:inputText onkeyup="PF('dtmovimientos').filter()" placeholder="Buscar..."/>
+                        </span>
+                    </f:facet>
+                    <p:column exportHeaderValue="Fecha" headerText="Fecha" sortBy="#{movimiento.fecha}">
+                        <h:outputText value="#{movimiento.fecha}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Agroqu&iacute;mico" headerText="Agroqu&iacute;mico" sortBy="#{movimiento.agroquimicoNombre}">
+                        <h:outputText value="#{movimiento.agroquimicoNombre}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Tipo" headerText="Tipo" style="text-align:center;">
+                        <h:outputText value="Entrada" rendered="#{movimiento.tipo == 'ENTRADA'}"
+                                      style="background-color:#d4edda;color:#155724;padding:3px 10px;border-radius:12px;font-size:0.82rem;font-weight:600;"/>
+                        <h:outputText value="Salida" rendered="#{movimiento.tipo == 'SALIDA'}"
+                                      style="background-color:#fff3cd;color:#856404;padding:3px 10px;border-radius:12px;font-size:0.82rem;font-weight:600;"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Cantidad" headerText="Cantidad" sortBy="#{movimiento.cantidad}">
+                        <h:outputText value="#{movimiento.cantidad}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Trabajador" headerText="Trabajador">
+                        <h:outputText value="#{not empty movimiento.trabajadorNombre ? movimiento.trabajadorNombre : '—'}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Observaciones" headerText="Observaciones">
+                        <h:outputText value="#{not empty movimiento.observaciones ? movimiento.observaciones : '—'}"/>
+                    </p:column>
+                    <p:column exportable="false" style="width:60px; text-align:center;">
+                        <p:commandButton icon="pi pi-trash"
+                                         oncomplete="PF('deleteMovimientoDialog').show()"
+                                         styleClass="rounded-button ui-button-danger" process="@this"
+                                         actionListener="#{controlInventarioAgroquimicoBean.updateSelectedMovimientoToDelete(movimiento)}"
+                                         title="Eliminar"/>
+                    </p:column>
+                </p:dataTable>
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </h:form>
+
+            <h:form id="dialogs">
+
+                <!--Entrada Dialog-->
+                <p:dialog header="Registrar Entrada" showEffect="fade" modal="true"
+                          widgetVar="entradaDialog" responsive="true" style="width:480px;">
+                    <p:outputPanel id="entrada-content" class="ui-fluid">
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col col-sm-12">
+                                <p:outputLabel for="entrada-agroquimico" value="Agroqu&iacute;mico"/><br/>
+                                <p:selectOneMenu id="entrada-agroquimico" value="#{controlInventarioAgroquimicoBean.agroquimicoId}"
+                                                 required="true" requiredMessage="Debe seleccionar un agroquímico.">
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems itemLabel="${a.nombre}" itemValue="${a.id}" var="a"
+                                                   value="#{controlInventarioAgroquimicoBean.agroquimicoResponseList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="entrada-cantidad" value="Cantidad"/><br/>
+                                <p:inputNumber id="entrada-cantidad" value="#{controlInventarioAgroquimicoBean.cantidad}"
+                                               required="true" requiredMessage="La cantidad es obligatoria."
+                                               decimalPlaces="2" minValue="0.01"/>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="entrada-fecha" value="Fecha"/><br/>
+                                <p:datePicker id="entrada-fecha" value="#{controlInventarioAgroquimicoBean.fecha}"
+                                              required="true" requiredMessage="La fecha es obligatoria." showIcon="true"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col col-sm-12">
+                                <p:outputLabel for="entrada-trabajador" value="Trabajador (opcional)"/><br/>
+                                <p:selectOneMenu id="entrada-trabajador" value="#{controlInventarioAgroquimicoBean.trabajadorId}">
+                                    <f:selectItem itemLabel="-- Ninguno --" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems itemLabel="${t.nombre}" itemValue="${t.id}" var="t"
+                                                   value="#{controlInventarioAgroquimicoBean.trabajadorList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col col-sm-12">
+                                <p:outputLabel for="entrada-observaciones" value="Observaciones (opcional)"/><br/>
+                                <p:inputTextarea id="entrada-observaciones" style="height: 60px;"
+                                                 value="#{controlInventarioAgroquimicoBean.observaciones}">
+                                    <f:validateLength maximum="250"/>
+                                </p:inputTextarea>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         actionListener="#{controlInventarioAgroquimicoBean.registrarEntrada()}"
+                                         update="entrada-content :form:messages"
+                                         process="entrada-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" type="button"
+                                         onclick="PF('entradaDialog').hide()" styleClass="ui-button-secondary"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Entrada Dialog-->
+
+                <!--Salida Dialog-->
+                <p:dialog header="Registrar Salida" showEffect="fade" modal="true"
+                          widgetVar="salidaDialog" responsive="true" style="width:480px;">
+                    <p:outputPanel id="salida-content" class="ui-fluid">
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col col-sm-12">
+                                <p:outputLabel for="salida-agroquimico" value="Agroqu&iacute;mico"/><br/>
+                                <p:selectOneMenu id="salida-agroquimico" value="#{controlInventarioAgroquimicoBean.agroquimicoId}"
+                                                 required="true" requiredMessage="Debe seleccionar un agroquímico.">
+                                    <f:selectItem itemLabel="-- Seleccione --" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems itemLabel="${a.nombre}" itemValue="${a.id}" var="a"
+                                                   value="#{controlInventarioAgroquimicoBean.agroquimicoResponseList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="salida-cantidad" value="Cantidad"/><br/>
+                                <p:inputNumber id="salida-cantidad" value="#{controlInventarioAgroquimicoBean.cantidad}"
+                                               required="true" requiredMessage="La cantidad es obligatoria."
+                                               decimalPlaces="2" minValue="0.01"/>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="salida-fecha" value="Fecha"/><br/>
+                                <p:datePicker id="salida-fecha" value="#{controlInventarioAgroquimicoBean.fecha}"
+                                              required="true" requiredMessage="La fecha es obligatoria." showIcon="true"/>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col col-sm-12">
+                                <p:outputLabel for="salida-trabajador" value="Trabajador (opcional)"/><br/>
+                                <p:selectOneMenu id="salida-trabajador" value="#{controlInventarioAgroquimicoBean.trabajadorId}">
+                                    <f:selectItem itemLabel="-- Ninguno --" itemValue="" noSelectionOption="true"/>
+                                    <f:selectItems itemLabel="${t.nombre}" itemValue="${t.id}" var="t"
+                                                   value="#{controlInventarioAgroquimicoBean.trabajadorList}"/>
+                                </p:selectOneMenu>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col col-sm-12">
+                                <p:outputLabel for="salida-observaciones" value="Observaciones (opcional)"/><br/>
+                                <p:inputTextarea id="salida-observaciones" style="height: 60px;"
+                                                 value="#{controlInventarioAgroquimicoBean.observaciones}">
+                                    <f:validateLength maximum="250"/>
+                                </p:inputTextarea>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         actionListener="#{controlInventarioAgroquimicoBean.registrarSalida()}"
+                                         update="salida-content :form:messages"
+                                         process="salida-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" type="button"
+                                         onclick="PF('salidaDialog').hide()" styleClass="ui-button-secondary"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Salida Dialog-->
+
+                <!--Delete Dialog-->
+                <p:confirmDialog widgetVar="deleteMovimientoDialog" showEffect="fade" width="300"
+                                 message="&iquest;Desea eliminar este movimiento? El stock del agroqu&iacute;mico se ajustar&aacute; en consecuencia."
+                                 header="Confirmar" severity="warn">
+                    <p:commandButton value="S&iacute;" icon="pi pi-check"
+                                     actionListener="#{controlInventarioAgroquimicoBean.deleteMovimiento()}"
+                                     process="@this" styleClass="ui-button-danger"/>
+                    <p:commandButton value="No" type="button" icon="pi pi-times"
+                                     styleClass="ui-button-secondary"
+                                     onclick="PF('deleteMovimientoDialog').hide()"/>
+                </p:confirmDialog>
+                <!--/Delete Dialog-->
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>
