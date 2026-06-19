@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="jakarta.faces.facelets" xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui" xmlns:f="jakarta.faces.core">
+
+<h:head>
+    <title>Title</title>
+</h:head>
+
+<h:body>
+
+    <ui:composition template="template.xhtml">
+
+        <ui:define name="title">
+            Administrar Trabajadores
+        </ui:define>
+
+        <ui:define name="content">
+            #{adminTrabajadorBean.init()}
+            <h:form id="form">
+                <p:growl id="messages" showDetail="true"/>
+
+                <p:toolbar>
+                    <p:toolbarGroup align="right">
+                        <p:commandButton value="Adicionar" icon="pi pi-plus"
+                                         update=":dialogs:add-trabajador-content"
+                                         oncomplete="PF('addtrabajadorDialog').show()"
+                                         styleClass="ui-button-success" style="margin-right: .5rem">
+                            <p:resetInput target=":dialogs:add-trabajador-content"/>
+                        </p:commandButton>
+                    </p:toolbarGroup>
+                </p:toolbar>
+
+                <p:dataTable tableStyleClass="table-striped" id="dt-trabajador" widgetVar="dttrabajador"
+                             var="trabajador"
+                             value="#{adminTrabajadorBean.listTrabajador}" size="small"
+                             reflow="true"
+                             rowKey="#{trabajador.identificacion}" paginator="true" rows="10"
+                             paginatorPosition="bottom">
+                    <f:facet name="header">
+                        <div class="trabajador-table-header">
+                        <span class="filter-container ui-input-icon-left"> <i class="pi pi-search"></i>
+                        <p:inputText id="globalFilter" onkeyup="PF('dttrabajador').filter()" placeholder="Buscar"/>
+                    </span>
+                        </div>
+                    </f:facet>
+                    <p:column exportHeaderValue="ID" headerText="ID" sortOrder="asc" filterBy="#{trabajador.id}">
+                        <h:outputText value="#{trabajador.id}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Nombre" headerText="Nombre">
+                        <h:outputText value="#{trabajador.nombre}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Identificaci&oacute;n" headerText="Identificaci&oacute;n">
+                        <h:outputText value="#{trabajador.identificacion}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Cargo" headerText="Cargo">
+                        <h:outputText value="#{trabajador.cargo}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Tel&eacute;fono" headerText="Tel&eacute;fono">
+                        <h:outputText value="#{trabajador.telefono}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="&Aacute;reas" headerText="&Aacute;reas">
+                        <h:outputText value="#{adminTrabajadorBean.getAreaDescripciones(trabajador)}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Estado" headerText="Estado">
+                        <h:outputText value="#{trabajador.activo ? 'Activo' : 'Inactivo'}"/>
+                    </p:column>
+                    <p:column exportable="false">
+                        <p:commandButton icon="pi pi-info-circle"
+                                         oncomplete="PF('infotrabajadorDialog').show()"
+                                         styleClass="rounded-button ui-button-info" process="@this"
+                                         actionListener="#{adminTrabajadorBean.updateSelectedTrabajador(trabajador)}"
+                                         update=":dialogs:info-trabajador-content"
+                                         title="Informaci&oacute;n">
+                            <p:resetInput target=":dialogs:info-trabajador-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-trabajador-content"
+                                         style="margin-left: 10px"
+                                         oncomplete="PF('edittrabajadorDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"
+                                         actionListener="#{adminTrabajadorBean.updateSelected_Trabajador_toEdit(trabajador)}">
+                            <p:resetInput target=":dialogs:edit-trabajador-content"/>
+                        </p:commandButton>
+                        <p:commandButton icon="pi pi-trash"
+                                         oncomplete="PF('deletetrabajadorDialog').show()"
+                                         style="margin-left: 10px"
+                                         styleClass="edit-button rounded-button ui-button-danger" process="@this"
+                                         actionListener="#{adminTrabajadorBean.updateSelectedTrabajadorToDelete(trabajador)}">
+                        </p:commandButton>
+                    </p:column>
+
+                </p:dataTable>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+            <h:form id="dialogs">
+
+                <!--Info Dialog-->
+                <p:dialog header="Informaci&oacute;n" showEffect="fade" modal="true"
+                          widgetVar="infotrabajadorDialog"
+                          responsive="true">
+                    <p:outputPanel id="info-trabajador-content" class="ui-fluid">
+                        <p:outputPanel>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="ID: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTrabajadorBean.selectedTrabajadorResponse.id}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Nombre: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTrabajadorBean.selectedTrabajadorResponse.nombre}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Identificaci&oacute;n: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTrabajadorBean.selectedTrabajadorResponse.identificacion}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Cargo: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTrabajadorBean.selectedTrabajadorResponse.cargo}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Tel&eacute;fono: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTrabajadorBean.selectedTrabajadorResponse.telefono}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="&Aacute;reas asignadas: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTrabajadorBean.getAreaDescripciones(adminTrabajadorBean.selectedTrabajadorResponse)}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Riegos asignados: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTrabajadorBean.getRiegoDescripciones(adminTrabajadorBean.selectedTrabajadorResponse)}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Estado: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminTrabajadorBean.selectedTrabajadorResponse.activo ? 'Activo' : 'Inactivo'}"/>
+                                </div>
+                            </div>
+                        </p:outputPanel>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('infotrabajadorDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Info Dialog-->
+
+                <!--Add Dialog-->
+                <p:dialog header="A&ntilde;adir Trabajador" showEffect="fade" modal="true"
+                          widgetVar="addtrabajadorDialog"
+                          responsive="true">
+                    <p:outputPanel id="add-trabajador-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="nombre" value="Nombre"/><br/>
+                                <p:inputText id="nombre" style="height: 35px;"
+                                             value="#{adminTrabajadorBean.nombre}"
+                                             required="true"
+                                             requiredMessage="El nombre del trabajador es obligatorio."
+                                             validatorMessage="El nombre solo puede contener letras y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputText>
+                            </div>
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="identificacion" value="Identificaci&oacute;n"/><br/>
+                                <p:inputText id="identificacion" style="height: 35px;"
+                                             value="#{adminTrabajadorBean.identificacion}"
+                                             required="true"
+                                             requiredMessage="La identificaci&oacute;n del trabajador es obligatoria.">
+                                    <f:validateLength minimum="2" maximum="45"/>
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="cargo" value="Cargo"/><br/>
+                                <p:inputText id="cargo" style="height: 35px;"
+                                             value="#{adminTrabajadorBean.cargo}"/>
+                            </div>
+                            <div class="col col-sm-5" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="telefono" value="Tel&eacute;fono"/><br/>
+                                <p:inputText id="telefono" style="height: 35px;"
+                                             value="#{adminTrabajadorBean.telefono}"/>
+                            </div>
+                            <div class="col col-sm-1">
+                                <p:outputLabel for="estado" value="Activo"/><br/>
+                                <p:toggleSwitch id="estado" value="#{adminTrabajadorBean.activo}" onIcon="pi pi-check"
+                                                offIcon="pi pi-times"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="areas" value="&Aacute;reas asignadas:"/>
+                                <p:selectManyMenu filter="true" filterMatchMode="contains"
+                                                  showCheckbox="true" label="&Aacute;reas" id="areas"
+                                                  value="#{adminTrabajadorBean.areaIds}">
+                                    <f:selectItems itemLabel="${area.descripcion}" itemValue="${area.id}" var="area"
+                                                   value="#{adminTrabajadorBean.areaList}"/>
+                                </p:selectManyMenu>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="riegos" value="Riegos asignados:"/>
+                                <p:selectManyMenu filter="true" filterMatchMode="contains"
+                                                  showCheckbox="true" label="Riegos" id="riegos"
+                                                  value="#{adminTrabajadorBean.riegoIds}">
+                                    <f:selectItems itemLabel="${riego.fechaPlanificacion}" itemValue="${riego.id}" var="riego"
+                                                   value="#{adminTrabajadorBean.riegoList}"/>
+                                </p:selectManyMenu>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnAddModal" actionListener="#{adminTrabajadorBean.addTrabajador()}"
+                                         update="add-trabajador-content :form:messages"
+                                         process="add-trabajador-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addtrabajadorDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+                <!--/Add Dialog-->
+
+                <!--Edit Dialog-->
+                <p:dialog header="Editar Trabajador" showEffect="fade" modal="true"
+                          widgetVar="edittrabajadorDialog"
+                          responsive="true">
+                    <p:outputPanel id="edit-trabajador-content" class="ui-fluid">
+                        <div class="row">
+                            <div class="col col-sm-5">
+                                <p:outputLabel for="edit-id" value="ID"/><br/>
+                                <p:inputText label="ID" style="height: 35px; width: 100%;"
+                                             id="edit-id" value="#{adminTrabajadorBean.selectedTrabajadorResponse.id}"
+                                             disabled="true"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-nombre" value="Nombre"/><br/>
+                                <p:inputText id="edit-nombre" style="height: 35px;"
+                                             value="#{adminTrabajadorBean.nombre}"
+                                             required="true"
+                                             requiredMessage="El nombre del trabajador es obligatorio."
+                                             validatorMessage="El nombre solo puede contener letras y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
+                                    <f:validateRegex pattern="[a-zA-Z áéíóúüñÁÉÍÓÚÜÑ]+$"/>
+                                </p:inputText>
+                            </div>
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-identificacion" value="Identificaci&oacute;n"/><br/>
+                                <p:inputText id="edit-identificacion" style="height: 35px;"
+                                             value="#{adminTrabajadorBean.identificacion}"
+                                             required="true"
+                                             requiredMessage="La identificaci&oacute;n del trabajador es obligatoria.">
+                                    <f:validateLength minimum="2" maximum="45"/>
+                                </p:inputText>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-cargo" value="Cargo"/><br/>
+                                <p:inputText id="edit-cargo" style="height: 35px;"
+                                             value="#{adminTrabajadorBean.cargo}"/>
+                            </div>
+                            <div class="col col-sm-5" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-telefono" value="Tel&eacute;fono"/><br/>
+                                <p:inputText id="edit-telefono" style="height: 35px;"
+                                             value="#{adminTrabajadorBean.telefono}"/>
+                            </div>
+                            <div class="col col-sm-1">
+                                <p:outputLabel for="edit-estado" value="Activo"/><br/>
+                                <p:toggleSwitch id="edit-estado" value="#{adminTrabajadorBean.activo}" onIcon="pi pi-check"
+                                                offIcon="pi pi-times"/>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-areas" value="&Aacute;reas asignadas:"/>
+                                <p:selectManyMenu filter="true" filterMatchMode="contains"
+                                                  showCheckbox="true" label="&Aacute;reas" id="edit-areas"
+                                                  value="#{adminTrabajadorBean.areaIds}">
+                                    <f:selectItems itemLabel="${area.descripcion}" itemValue="${area.id}" var="area"
+                                                   value="#{adminTrabajadorBean.areaList}"/>
+                                </p:selectManyMenu>
+                            </div>
+                            <div class="col col-sm-6">
+                                <p:outputLabel for="edit-riegos" value="Riegos asignados:"/>
+                                <p:selectManyMenu filter="true" filterMatchMode="contains"
+                                                  showCheckbox="true" label="Riegos" id="edit-riegos"
+                                                  value="#{adminTrabajadorBean.riegoIds}">
+                                    <f:selectItems itemLabel="${riego.fechaPlanificacion}" itemValue="${riego.id}" var="riego"
+                                                   value="#{adminTrabajadorBean.riegoList}"/>
+                                </p:selectManyMenu>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <f:facet name="footer">
+                        <p:commandButton value="Guardar" icon="pi pi-check"
+                                         id="btnEditModal" actionListener="#{adminTrabajadorBean.editTrabajador()}"
+                                         update="edit-trabajador-content :form:messages"
+                                         process="edit-trabajador-content @this"/>
+                        <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('edittrabajadorDialog').hide()"
+                                         class="ui-button-secondary" type="button"/>
+                    </f:facet>
+                </p:dialog>
+
+                <!--Delete Dialog -->
+                <p:confirmDialog widgetVar="deletetrabajadorDialog" showEffect="fade" width="300"
+                                 message="¿Desea eliminar el Trabajador?"
+                                 header="Confirm" severity="info">
+                    <p:commandButton value="Si" icon="ui-icon-check"
+                                     actionListener="#{adminTrabajadorBean.deleteTrabajador()}"
+                                     process="@this"/>
+                    <p:commandButton value="No" type="button" styleClass="ui-button-secondary" icon="ui-icon-times"
+                                     onclick="PF('deletetrabajadorDialog').hide()"/>
+                </p:confirmDialog>
+                <input type="hidden"
+                       name="${_csrf.parameterName}"
+                       value="${_csrf.token}"/>
+            </h:form>
+
+        </ui:define>
+
+    </ui:composition>
+
+</h:body>
+
+</html>
