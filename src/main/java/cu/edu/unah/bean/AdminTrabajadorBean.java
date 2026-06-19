@@ -62,7 +62,7 @@ public class AdminTrabajadorBean implements Serializable {
     }
 
     public String getAreaDescripciones(TrabajadorResponse trabajadorResponse) {
-        if (trabajadorResponse.getAreaIds() == null || trabajadorResponse.getAreaIds().isEmpty()) return "-";
+        if (trabajadorResponse == null || trabajadorResponse.getAreaIds() == null || trabajadorResponse.getAreaIds().isEmpty()) return "-";
         List<String> nombres = new ArrayList<>();
         trabajadorResponse.getAreaIds().forEach(id -> areaList.stream()
                 .filter(a -> a.getId().equals(id)).findFirst()
@@ -71,7 +71,7 @@ public class AdminTrabajadorBean implements Serializable {
     }
 
     public String getRiegoDescripciones(TrabajadorResponse trabajadorResponse) {
-        if (trabajadorResponse.getRiegoIds() == null || trabajadorResponse.getRiegoIds().isEmpty()) return "-";
+        if (trabajadorResponse == null || trabajadorResponse.getRiegoIds() == null || trabajadorResponse.getRiegoIds().isEmpty()) return "-";
         List<String> fechas = new ArrayList<>();
         trabajadorResponse.getRiegoIds().forEach(id -> riegoList.stream()
                 .filter(r -> r.getId().equals(id)).findFirst()
