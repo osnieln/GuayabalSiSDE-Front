@@ -4,7 +4,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="jakarta.faces.convert">
 
 <h:head><title>Dashboard</title></h:head>
 
@@ -39,7 +40,7 @@
                         <h4>Producción del Mes</h4>
                         <h2>
                             <h:outputText value="#{dashboardBean.dashboard != null ? dashboardBean.dashboard.produccionMesActual : 0}">
-                                <f:convertNumber maxFractionDigits="2" xmlns:f="jakarta.faces.convert"/>
+                                <f:convertNumber maxFractionDigits="2"/>
                             </h:outputText>
                         </h2>
                     </div>
