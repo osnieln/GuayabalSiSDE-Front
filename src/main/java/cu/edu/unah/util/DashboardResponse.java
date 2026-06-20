@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,4 +18,7 @@ public class DashboardResponse {
     long riegosProximosSemana;
     double produccionMesActual;
     long alertasActivas;
+    List<ProduccionMensualResponse> produccionMensual;
+    List<RiegoMensualResponse> riegosMensual;
+    List<CultivoDistribucionResponse> distribucionCultivos;
 }

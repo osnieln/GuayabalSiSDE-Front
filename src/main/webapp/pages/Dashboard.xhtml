@@ -56,6 +56,22 @@
                                      action="#{dashboardBean.cargarDashboard()}"
                                      update="dashboardForm" styleClass="ui-button-info"/>
                 </div>
+
+                <div style="margin-top:25px;display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+                    <div>
+                        <h4>Producci&oacute;n Mensual</h4>
+                        <p:chart type="bar" model="#{dashboardBean.produccionMensualModel}" style="height:300px"/>
+                    </div>
+                    <div>
+                        <h4>Riegos Planificados vs Ejecutados</h4>
+                        <p:chart type="bar" model="#{dashboardBean.riegosMensualModel}" style="height:300px"/>
+                    </div>
+                </div>
+
+                <div style="margin-top:25px;max-width:420px;margin-left:auto;margin-right:auto;">
+                    <h4 style="text-align:center;">Distribuci&oacute;n de Cultivos</h4>
+                    <p:chart type="pie" model="#{dashboardBean.distribucionCultivosModel}" style="height:320px"/>
+                </div>
             </h:form>
 
         </ui:define>
