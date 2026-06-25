@@ -1,0 +1,76 @@
+/* Override login-half-bg to use the real farm photo */
+.auth .login-half-bg {
+    background: url("../images/guayabal.jpg") center center;
+    background-size: cover;
+    position: relative;
+}
+
+/* Dark gradient overlay on the photo for text legibility */
+.auth .login-half-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(0,0,0,0.60) 0%, rgba(0,0,0,0.35) 100%);
+}
+
+/* Text block overlaid on the photo */
+.login-bg-text {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    text-align: center;
+    padding: 2rem;
+}
+
+.login-bg-text h1 {
+    font-size: 3.2rem;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.6);
+    margin-bottom: 1rem;
+}
+
+.login-bg-text p {
+    font-size: 1.1rem;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    max-width: 360px;
+    line-height: 1.7;
+    margin: 0 auto;
+}
+
+/* Card entrance animation */
+@keyframes cardFadeIn {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.auth .auth-form-light {
+    animation: cardFadeIn 0.45s ease forwards;
+}
+
+/* Password toggle button inside input-group */
+.password-toggle-btn {
+    background: transparent;
+    border: 1px solid #ced4da;
+    border-left: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0 .75rem;
+    border-radius: 0 4px 4px 0;
+    line-height: 1;
+    transition: color 0.15s ease;
+}
+
+.password-toggle-btn:focus {
+    outline: none;
+    box-shadow: none;
+}
+
+.password-toggle-btn:hover {
+    color: #4d83ff;
+}
+
+.password-toggle-btn .mdi {
+    font-size: 1.25rem;
+    vertical-align: middle;
+}
