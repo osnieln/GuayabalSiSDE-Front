@@ -115,7 +115,7 @@ public class PlanificacionCosechaBean implements Serializable {
     private String determinarColor(AreaCultivoResponse ac, LocalDate hoy) {
         if (ac.getProduccionReal() != null && ac.getProduccionReal() > 0) return "harvest-done";
         LocalDateTime fecha = parseDate(ac.getFechaRecogida());
-        if (fecha != null && fecha.toLocalDate().isBefore(hoy) && ac.isActivo()) return "harvest-overdue";
+        if (fecha != null && fecha.toLocalDate().isBefore(hoy) && Boolean.TRUE.equals(ac.getActivo())) return "harvest-overdue";
         return "harvest-planned";
     }
 
