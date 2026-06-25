@@ -10,9 +10,12 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class RestAreaCultivo {
 
@@ -156,18 +159,21 @@ public class RestAreaCultivo {
     }
 
     public List<AreaCultivoResponse> findByFechaRecogidaBetween(String desde, String hasta) {
-        HttpRequest req = HttpRequest.newBuilder(
-                URI.create(serviceURL + "/calendario/" + desde + "/" + hasta)).GET().build();
+        HttpRequest req = HttpRequest.newBuilder()
+                .uri(URI.create(serviceURL + "/calendario/" + desde + "/" + hasta))
+                .timeout(Duration.ofSeconds(5))
+                .GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
-        List<AreaCultivoResponse> list = null;
         try {
-            list = JSONUtils.convertFromJsonToList(response.get().body(),
+            HttpResponse<String> resp = response.get(5, TimeUnit.SECONDS);
+            if (resp.statusCode() >= 400) return null;
+            return JSONUtils.convertFromJsonToList(resp.body(),
                     new TypeReference<List<AreaCultivoResponse>>() {});
-        } catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            response.cancel(true);
             e.printStackTrace();
+            return null;
         }
-        response.join();
-        return list;
     }
 
     public List<RendimientoResponse> getRendimiento() {
