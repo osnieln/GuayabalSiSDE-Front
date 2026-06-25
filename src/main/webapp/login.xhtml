@@ -19,27 +19,21 @@
 <h:body>
    <div class="container-scroller">
       <div class="container-fluid page-body-wrapper full-page-wrapper">
-         <div class="content-wrapper d-flex auth auth-img-bg px-0">
-            <div class="row w-100 mx-0">
+         <div class="content-wrapper d-flex auth login-full-bg">
+            <div class="row w-100 mx-0 justify-content-center align-items-center">
 
-               <!-- Columna izquierda: foto de la finca, oculta en movil -->
-               <div class="col-lg-6 login-half-bg d-none d-lg-flex align-items-center justify-content-center">
-                  <div class="login-bg-text">
-                     <h1>SGPA</h1>
-                     <p>Sistema de gesti&oacute;n de la producci&oacute;n agr&iacute;cola en la granja &#8220;El Guayabal&#8221;</p>
-                  </div>
-               </div>
+               <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+                  <div class="auth-form-light text-left py-5 px-4 px-sm-5">
 
-               <!-- Columna derecha: formulario -->
-               <div class="col-lg-6 d-flex align-items-center justify-content-center">
-                  <div class="auth-form-light text-left py-5 px-4 px-sm-5" style="width:100%;max-width:460px;border-radius:8px;">
-
-                     <div class="brand-logo text-center mb-2">
+                     <div class="brand-logo text-center mb-3">
                         <img src="#{request.contextPath}/resources/images/logo1.svg" alt="SGPA"/>
                      </div>
 
-                     <h4 class="mb-1">Bienvenido</h4>
-                     <h6 class="font-weight-light text-muted mb-4">Inicia sesi&oacute;n para continuar.</h6>
+                     <h2 class="login-card-title text-center">SGPA</h2>
+                     <p class="login-card-subtitle text-center">
+                        Sistema de gesti&oacute;n de la producci&oacute;n agr&iacute;cola<br/>
+                        en la granja &#8220;El Guayabal&#8221;
+                     </p>
 
                      <c:if test="${SPRING_SECURITY_LAST_EXCEPTION != null}">
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
