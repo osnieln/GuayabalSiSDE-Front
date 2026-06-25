@@ -2,9 +2,10 @@ package cu.edu.unah.bean;
 
 import cu.edu.unah.rest.RestAreaCultivo;
 import cu.edu.unah.util.AreaCultivoResponse;
-import jakarta.enterprise.context.SessionScoped;
+import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
@@ -26,7 +27,7 @@ import java.util.List;
 @Named
 @Getter
 @Setter
-@SessionScoped
+@ViewScoped
 public class PlanificacionCosechaBean implements Serializable {
 
     private static final DateTimeFormatter FMT_DDMMYYYY = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -42,6 +43,7 @@ public class PlanificacionCosechaBean implements Serializable {
 
     private RestAreaCultivo restAreaCultivo = new RestAreaCultivo();
 
+    @PostConstruct
     public void init() {
         buildModel();
     }
@@ -56,31 +58,35 @@ public class PlanificacionCosechaBean implements Serializable {
         String desde = hoy.minusMonths(3).format(FMT_DDMMYYYY);
         String hasta = hoy.plusMonths(9).format(FMT_DDMMYYYY);
 
-        List<AreaCultivoResponse> lista = restAreaCultivo.findByFechaRecogidaBetween(desde, hasta);
-        if (lista == null) return;
+        try {
+            List<AreaCultivoResponse> lista = restAreaCultivo.findByFechaRecogidaBetween(desde, hasta);
+            if (lista == null) return;
 
-        for (AreaCultivoResponse ac : lista) {
-            if (ac.getFechaRecogida() == null || ac.getFechaRecogida().isEmpty()) continue;
-            LocalDateTime fecha = parseDate(ac.getFechaRecogida());
-            if (fecha == null) continue;
+            for (AreaCultivoResponse ac : lista) {
+                if (ac.getFechaRecogida() == null || ac.getFechaRecogida().isEmpty()) continue;
+                LocalDateTime fecha = parseDate(ac.getFechaRecogida());
+                if (fecha == null) continue;
 
-            String titulo = "Área " + ac.getAreaCultivoResponsePK().getAreaId()
-                    + " — Cultivo " + ac.getAreaCultivoResponsePK().getCultivoId();
-            String styleClass = determinarColor(ac, hoy);
+                String titulo = "Área " + ac.getAreaCultivoResponsePK().getAreaId()
+                        + " — Cultivo " + ac.getAreaCultivoResponsePK().getCultivoId();
+                String styleClass = determinarColor(ac, hoy);
 
-            if ("harvest-done".equals(styleClass)) completadas++;
-            else if ("harvest-overdue".equals(styleClass)) vencidas++;
-            else pendientes++;
+                if ("harvest-done".equals(styleClass)) completadas++;
+                else if ("harvest-overdue".equals(styleClass)) vencidas++;
+                else pendientes++;
 
-            DefaultScheduleEvent<?> event = DefaultScheduleEvent.builder()
-                    .title(titulo)
-                    .startDate(fecha)
-                    .endDate(fecha.plusHours(1))
-                    .data(ac)
-                    .styleClass(styleClass)
-                    .allDay(true)
-                    .build();
-            model.addEvent(event);
+                DefaultScheduleEvent<?> event = DefaultScheduleEvent.builder()
+                        .title(titulo)
+                        .startDate(fecha)
+                        .endDate(fecha.plusHours(1))
+                        .data(ac)
+                        .styleClass(styleClass)
+                        .allDay(true)
+                        .build();
+                model.addEvent(event);
+            }
+        } catch (Exception e) {
+            // backend unavailable — show empty calendar
         }
     }
 
@@ -103,12 +109,13 @@ public class PlanificacionCosechaBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Cosecha registrada",
                             "La producción real fue guardada correctamente."));
-            PrimeFaces.current().ajax().update("cosechaForm", "statsPanel");
+            PrimeFaces.current().ajax().update("cosechaForm:growl", "cosechaForm:statsPanel", "cosechaForm:cosechaSchedule");
             PrimeFaces.current().executeScript("PF('eventDlg').hide()");
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
                             "No se pudo guardar la producción real."));
+            PrimeFaces.current().ajax().update("cosechaForm:growl");
         }
     }
 
