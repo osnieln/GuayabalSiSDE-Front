@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="jakarta.faces.core">
+
+<h:head><title>Planificación de Cosecha</title></h:head>
+
+<h:body>
+<ui:composition template="template.xhtml">
+    <ui:define name="title">Planificación de Cosecha</ui:define>
+    <ui:define name="content">
+
+        <h:outputText value="#{planificacionCosechaBean.init()}" rendered="true" style="display:none"/>
+
+        <p:growl id="growl" showDetail="true"/>
+
+        <!-- Tarjetas resumen -->
+        <div id="statsPanel" class="row mb-4">
+            <div class="col-md-4">
+                <div class="card text-white bg-primary mb-3">
+                    <div class="card-body py-3 d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1">Cosechas Planificadas</h6>
+                            <h2 class="mb-0"><h:outputText value="#{planificacionCosechaBean.pendientes}"/></h2>
+                        </div>
+                        <i class="mdi mdi-calendar-clock" style="font-size:2.5rem;opacity:0.7"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-success mb-3">
+                    <div class="card-body py-3 d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1">Cosechas Completadas</h6>
+                            <h2 class="mb-0"><h:outputText value="#{planificacionCosechaBean.completadas}"/></h2>
+                        </div>
+                        <i class="mdi mdi-calendar-check" style="font-size:2.5rem;opacity:0.7"/>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card text-white bg-danger mb-3">
+                    <div class="card-body py-3 d-flex align-items-center justify-content-between">
+                        <div>
+                            <h6 class="card-title mb-1">Cosechas Vencidas</h6>
+                            <h2 class="mb-0"><h:outputText value="#{planificacionCosechaBean.vencidas}"/></h2>
+                        </div>
+                        <i class="mdi mdi-calendar-remove" style="font-size:2.5rem;opacity:0.7"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Leyenda -->
+        <div class="mb-3 d-flex" style="gap:1.5rem;align-items:center;flex-wrap:wrap;">
+            <span><span style="display:inline-block;width:14px;height:14px;background:#007bff;border-radius:3px;margin-right:5px;"></span>Planificada</span>
+            <span><span style="display:inline-block;width:14px;height:14px;background:#28a745;border-radius:3px;margin-right:5px;"></span>Completada</span>
+            <span><span style="display:inline-block;width:14px;height:14px;background:#dc3545;border-radius:3px;margin-right:5px;"></span>Vencida sin cosecha</span>
+        </div>
+
+        <!-- Calendario -->
+        <h:form id="cosechaForm">
+            <p:schedule id="cosechaSchedule"
+                        model="#{planificacionCosechaBean.model}"
+                        locale="es"
+                        initialView="dayGridMonth"
+                        responsive="true"
+                        style="height:620px;">
+                <p:ajax event="eventSelect"
+                        listener="#{planificacionCosechaBean.onEventSelect}"
+                        update="eventDialog"
+                        oncomplete="PF('eventDlg').show()"/>
+            </p:schedule>
+
+            <!-- Diálogo de detalle y registro de cosecha real -->
+            <p:dialog id="eventDialog" widgetVar="eventDlg"
+                      header="Detalle de Cosecha"
+                      modal="true" resizable="false"
+                      style="width:460px;">
+
+                <p:outputPanel rendered="#{planificacionCosechaBean.selectedAreaCultivo != null}">
+                    <div class="p-fluid">
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Área ID</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.areaCultivoResponsePK.areaId}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Cultivo ID</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.areaCultivoResponsePK.cultivoId}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Fecha Siembra</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.areaCultivoResponsePK.fechaSiembra}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Fecha Cosecha Planificada</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.fechaRecogida}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Plan de Producción</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.planProd}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Producción Real Actual</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.produccionReal}"/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="form-group">
+                            <p:outputLabel for="inputProdReal" value="Registrar Producción Real:" styleClass="font-weight-bold"/>
+                            <p:inputNumber id="inputProdReal"
+                                          value="#{planificacionCosechaBean.nuevaProduccionReal}"
+                                          minValue="0"
+                                          style="width:100%"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Guardar"
+                                     icon="pi pi-save"
+                                     action="#{planificacionCosechaBean.registrarCosechaReal()}"
+                                     update="cosechaForm growl statsPanel"
+                                     styleClass="ui-button-success"/>
+                    <p:commandButton value="Cancelar"
+                                     icon="pi pi-times"
+                                     onclick="PF('eventDlg').hide()"
+                                     type="button"
+                                     styleClass="ui-button-secondary ml-2"/>
+                </f:facet>
+            </p:dialog>
+        </h:form>
+
+        <!-- Colores de eventos del calendario -->
+        <h:outputStylesheet>
+            .harvest-done { --fc-event-bg-color: #28a745; --fc-event-border-color: #1e7e34; }
+            .harvest-overdue { --fc-event-bg-color: #dc3545; --fc-event-border-color: #bd2130; }
+            .harvest-planned { --fc-event-bg-color: #007bff; --fc-event-border-color: #0062cc; }
+        </h:outputStylesheet>
+
+    </ui:define>
+</ui:composition>
+</h:body>
+</html>

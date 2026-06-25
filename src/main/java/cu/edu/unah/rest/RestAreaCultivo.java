@@ -155,6 +155,21 @@ public class RestAreaCultivo {
         return list;
     }
 
+    public List<AreaCultivoResponse> findByFechaRecogidaBetween(String desde, String hasta) {
+        HttpRequest req = HttpRequest.newBuilder(
+                URI.create(serviceURL + "/calendario/" + desde + "/" + hasta)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<AreaCultivoResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(),
+                    new TypeReference<List<AreaCultivoResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
+    }
+
     public List<RendimientoResponse> getRendimiento() {
         HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/rendimiento")).GET().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
