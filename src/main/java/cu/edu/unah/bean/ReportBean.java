@@ -172,18 +172,45 @@ public class ReportBean implements Serializable {
             conn.setConnectTimeout(10000);
             conn.setReadTimeout(30000);
             int code = conn.getResponseCode();
-            conn.disconnect();
             if (code == HttpURLConnection.HTTP_OK) {
+                conn.disconnect();
                 ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
                         "Correo enviado", "Reporte enviado a " + emailDestinatario));
             } else {
+                String errorMsg = leerMensajeError(conn, code);
+                conn.disconnect();
                 ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Error al enviar", "El servidor devolvió código " + code + "."));
+                        "Error al enviar", errorMsg));
             }
         } catch (Exception e) {
             ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "Error al enviar", "No se pudo conectar con el servidor: " + e.getMessage()));
         }
+    }
+
+    private String leerMensajeError(HttpURLConnection conn, int code) {
+        try {
+            java.io.InputStream err = conn.getErrorStream();
+            if (err == null) err = conn.getInputStream();
+            if (err != null) {
+                String body = new String(err.readAllBytes(), StandardCharsets.UTF_8);
+                String extraido = extraerMensajeJson(body);
+                if (extraido != null && !extraido.isBlank()) return extraido;
+            }
+        } catch (Exception ignored) {}
+        return "El servidor devolvió código " + code + ".";
+    }
+
+    private String extraerMensajeJson(String json) {
+        if (json == null) return null;
+        java.util.regex.Matcher m = java.util.regex.Pattern
+                .compile("\"mensaje\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"")
+                .matcher(json);
+        if (m.find()) return m.group(1).replace("\\n", "\n").replace("\\\"", "\"");
+        m = java.util.regex.Pattern
+                .compile("\"errorDescription\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"")
+                .matcher(json);
+        return m.find() ? m.group(1).replace("\\n", "\n").replace("\\\"", "\"") : null;
     }
 
     public void enviarCorreoTodasAreasCultivo() {
