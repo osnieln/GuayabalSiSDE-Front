@@ -10,17 +10,13 @@ import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.PrimeFaces;
-import org.primefaces.event.SelectEvent;
-import org.primefaces.model.DefaultScheduleEvent;
-import org.primefaces.model.DefaultScheduleModel;
-import org.primefaces.model.ScheduleEvent;
-import org.primefaces.model.ScheduleModel;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -33,8 +29,7 @@ public class PlanificacionCosechaBean implements Serializable {
     private static final DateTimeFormatter FMT_DDMMYYYY = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     private static final DateTimeFormatter FMT_YYYYMMDD = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    private ScheduleModel model;
-    private ScheduleEvent<?> selectedEvent;
+    private List<AreaCultivoResponse> listaEventos = new ArrayList<>();
     private AreaCultivoResponse selectedAreaCultivo;
     private double nuevaProduccionReal;
     private int pendientes;
@@ -45,11 +40,11 @@ public class PlanificacionCosechaBean implements Serializable {
 
     @PostConstruct
     public void init() {
-        buildModel();
+        cargarDatos();
     }
 
-    public void buildModel() {
-        model = new DefaultScheduleModel();
+    public void cargarDatos() {
+        listaEventos = new ArrayList<>();
         pendientes = 0;
         completadas = 0;
         vencidas = 0;
@@ -64,37 +59,20 @@ public class PlanificacionCosechaBean implements Serializable {
 
             for (AreaCultivoResponse ac : lista) {
                 if (ac.getFechaRecogida() == null || ac.getFechaRecogida().isEmpty()) continue;
-                LocalDateTime fecha = parseDate(ac.getFechaRecogida());
-                if (fecha == null) continue;
-
-                String titulo = "Área " + ac.getAreaCultivoResponsePK().getAreaId()
-                        + " — Cultivo " + ac.getAreaCultivoResponsePK().getCultivoId();
-                String styleClass = determinarColor(ac, hoy);
-
+                String styleClass = determinarColor(ac);
                 if ("harvest-done".equals(styleClass)) completadas++;
                 else if ("harvest-overdue".equals(styleClass)) vencidas++;
                 else pendientes++;
-
-                DefaultScheduleEvent<?> event = DefaultScheduleEvent.builder()
-                        .title(titulo)
-                        .startDate(fecha)
-                        .endDate(fecha.plusHours(1))
-                        .data(ac)
-                        .styleClass(styleClass)
-                        .allDay(true)
-                        .build();
-                model.addEvent(event);
+                listaEventos.add(ac);
             }
         } catch (Exception e) {
-            // backend unavailable — show empty calendar
+            // backend no disponible
         }
     }
 
-    public void onEventSelect(SelectEvent<ScheduleEvent<?>> selectEvent) {
-        selectedEvent = selectEvent.getObject();
-        selectedAreaCultivo = (AreaCultivoResponse) selectedEvent.getData();
-        nuevaProduccionReal = selectedAreaCultivo.getProduccionReal() != null
-                ? selectedAreaCultivo.getProduccionReal() : 0.0;
+    public void seleccionarItem(AreaCultivoResponse item) {
+        selectedAreaCultivo = item;
+        nuevaProduccionReal = item.getProduccionReal() != null ? item.getProduccionReal() : 0.0;
     }
 
     public void registrarCosechaReal() {
@@ -105,11 +83,11 @@ public class PlanificacionCosechaBean implements Serializable {
         selectedAreaCultivo.setProduccionReal(nuevaProduccionReal);
         boolean ok = restAreaCultivo.update(selectedAreaCultivo);
         if (ok) {
-            buildModel();
+            cargarDatos();
             FacesContext.getCurrentInstance().addMessage(null,
                     new FacesMessage(FacesMessage.SEVERITY_INFO, "Cosecha registrada",
                             "La producción real fue guardada correctamente."));
-            PrimeFaces.current().ajax().update("cosechaForm:growl", "cosechaForm:statsPanel", "cosechaForm:cosechaSchedule");
+            PrimeFaces.current().ajax().update("cosechaForm:growl", "cosechaForm:statsPanel", "cosechaForm:cosechaTable");
             PrimeFaces.current().executeScript("PF('eventDlg').hide()");
         } else {
             FacesContext.getCurrentInstance().addMessage(null,
@@ -119,11 +97,20 @@ public class PlanificacionCosechaBean implements Serializable {
         }
     }
 
-    private String determinarColor(AreaCultivoResponse ac, LocalDate hoy) {
+    public String determinarColor(AreaCultivoResponse ac) {
         if (ac.getProduccionReal() != null && ac.getProduccionReal() > 0) return "harvest-done";
         LocalDateTime fecha = parseDate(ac.getFechaRecogida());
+        LocalDate hoy = LocalDate.now();
         if (fecha != null && fecha.toLocalDate().isBefore(hoy) && Boolean.TRUE.equals(ac.getActivo())) return "harvest-overdue";
         return "harvest-planned";
+    }
+
+    public String estadoLabel(AreaCultivoResponse ac) {
+        return switch (determinarColor(ac)) {
+            case "harvest-done"    -> "Completada";
+            case "harvest-overdue" -> "Vencida";
+            default                -> "Planificada";
+        };
     }
 
     private LocalDateTime parseDate(String dateStr) {

@@ -57,22 +57,51 @@
 
             <!-- Leyenda -->
             <div class="mb-3 d-flex" style="gap:1.5rem;align-items:center;flex-wrap:wrap;">
-                <span><span style="display:inline-block;width:14px;height:14px;background:#007bff;border-radius:3px;margin-right:5px;"></span>Planificada</span>
-                <span><span style="display:inline-block;width:14px;height:14px;background:#28a745;border-radius:3px;margin-right:5px;"></span>Completada</span>
-                <span><span style="display:inline-block;width:14px;height:14px;background:#dc3545;border-radius:3px;margin-right:5px;"></span>Vencida sin cosecha</span>
+                <span><span style="display:inline-block;width:14px;height:14px;background:rgba(0,123,255,0.4);border-radius:3px;margin-right:5px;"></span>Planificada</span>
+                <span><span style="display:inline-block;width:14px;height:14px;background:rgba(40,167,69,0.4);border-radius:3px;margin-right:5px;"></span>Completada</span>
+                <span><span style="display:inline-block;width:14px;height:14px;background:rgba(220,53,69,0.4);border-radius:3px;margin-right:5px;"></span>Vencida sin cosecha</span>
             </div>
 
-            <p:schedule id="cosechaSchedule"
-                        model="#{planificacionCosechaBean.model}"
-                        locale="es"
-                        initialView="dayGridMonth"
-                        responsive="true"
-                        style="height:620px;">
-                <p:ajax event="eventSelect"
-                        listener="#{planificacionCosechaBean.onEventSelect}"
-                        update="eventDialog"
-                        oncomplete="PF('eventDlg').show()"/>
-            </p:schedule>
+            <!-- Tabla de cosechas -->
+            <p:dataTable id="cosechaTable"
+                         value="#{planificacionCosechaBean.listaEventos}"
+                         var="item"
+                         rowStyleClass="#{planificacionCosechaBean.determinarColor(item)}"
+                         paginator="true"
+                         rows="15"
+                         emptyMessage="No hay cosechas en el rango de fechas."
+                         styleClass="table">
+
+                <p:column header="Estado" style="width:110px">
+                    <h:outputText value="#{planificacionCosechaBean.estadoLabel(item)}"/>
+                </p:column>
+                <p:column header="Área" sortBy="#{item.areaCultivoResponsePK.areaId}">
+                    <h:outputText value="#{item.areaCultivoResponsePK.areaId}"/>
+                </p:column>
+                <p:column header="Cultivo" sortBy="#{item.areaCultivoResponsePK.cultivoId}">
+                    <h:outputText value="#{item.areaCultivoResponsePK.cultivoId}"/>
+                </p:column>
+                <p:column header="F. Siembra">
+                    <h:outputText value="#{item.areaCultivoResponsePK.fechaSiembra}"/>
+                </p:column>
+                <p:column header="F. Cosecha" sortBy="#{item.fechaRecogida}">
+                    <h:outputText value="#{item.fechaRecogida}"/>
+                </p:column>
+                <p:column header="Plan Prod.">
+                    <h:outputText value="#{item.planProd}"/>
+                </p:column>
+                <p:column header="Prod. Real">
+                    <h:outputText value="#{item.produccionReal}"/>
+                </p:column>
+                <p:column style="width:60px">
+                    <p:commandButton icon="pi pi-pencil"
+                                     process="@this"
+                                     update="cosechaForm:eventDialog"
+                                     oncomplete="PF('eventDlg').show()"
+                                     action="#{planificacionCosechaBean.seleccionarItem(item)}"
+                                     title="Registrar cosecha real"/>
+                </p:column>
+            </p:dataTable>
 
             <!-- Diálogo de detalle y registro de cosecha real -->
             <p:dialog id="eventDialog" widgetVar="eventDlg"
@@ -144,11 +173,10 @@
 
         </h:form>
 
-        <!-- Colores de eventos del calendario -->
         <h:outputStylesheet>
-            .harvest-done { --fc-event-bg-color: #28a745; --fc-event-border-color: #1e7e34; }
-            .harvest-overdue { --fc-event-bg-color: #dc3545; --fc-event-border-color: #bd2130; }
-            .harvest-planned { --fc-event-bg-color: #007bff; --fc-event-border-color: #0062cc; }
+            .harvest-done td    { background-color: rgba(40,167,69,0.12) !important; }
+            .harvest-overdue td { background-color: rgba(220,53,69,0.12) !important; }
+            .harvest-planned td { background-color: rgba(0,123,255,0.12) !important; }
         </h:outputStylesheet>
 
     </ui:define>
