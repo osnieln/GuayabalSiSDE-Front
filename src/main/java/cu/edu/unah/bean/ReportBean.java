@@ -1,8 +1,6 @@
 package cu.edu.unah.bean;
 
 import jakarta.enterprise.context.SessionScoped;
-import jakarta.faces.application.FacesMessage;
-import jakarta.faces.context.FacesContext;
 import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +12,6 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,7 +24,6 @@ public class ReportBean implements Serializable {
     private long init = 0L, end = 0L;
     Date fechaRecogida = new Date(System.currentTimeMillis());
     private int diasVencer = 30;
-    private String emailDestinatario;
 
     // ── PDF ──────────────────────────────────────────────────────────────────
 
@@ -156,86 +151,4 @@ public class ReportBean implements Serializable {
         return lazyExcel("agroquimicosMasUsados", "agroquimicos_mas_usados");
     }
 
-    // ── Correo ────────────────────────────────────────────────────────────────
-
-    private void enviarCorreo(String endpoint, FacesContext ctx) {
-        if (emailDestinatario == null || emailDestinatario.isBlank()) {
-            ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                    "Correo requerido", "Ingrese el correo del destinatario."));
-            return;
-        }
-        try {
-            String enc = URLEncoder.encode(emailDestinatario.trim(), StandardCharsets.UTF_8);
-            URL url = new URL("http://localhost:8081/api/reportes/email/" + endpoint + "?destinatario=" + enc);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setConnectTimeout(10000);
-            conn.setReadTimeout(30000);
-            int code = conn.getResponseCode();
-            if (code == HttpURLConnection.HTTP_OK) {
-                conn.disconnect();
-                ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                        "Correo enviado", "Reporte enviado a " + emailDestinatario));
-            } else {
-                String errorMsg = leerMensajeError(conn, code);
-                conn.disconnect();
-                ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Error al enviar", errorMsg));
-            }
-        } catch (Exception e) {
-            ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error al enviar", "No se pudo conectar con el servidor: " + e.getMessage()));
-        }
-    }
-
-    private String leerMensajeError(HttpURLConnection conn, int code) {
-        try {
-            java.io.InputStream err = conn.getErrorStream();
-            if (err == null) err = conn.getInputStream();
-            if (err != null) {
-                String body = new String(err.readAllBytes(), StandardCharsets.UTF_8);
-                String extraido = extraerMensajeJson(body);
-                if (extraido != null && !extraido.isBlank()) return extraido;
-            }
-        } catch (Exception ignored) {}
-        return "El servidor devolvió código " + code + ".";
-    }
-
-    private String extraerMensajeJson(String json) {
-        if (json == null) return null;
-        java.util.regex.Matcher m = java.util.regex.Pattern
-                .compile("\"mensaje\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"")
-                .matcher(json);
-        if (m.find()) return m.group(1).replace("\\n", "\n").replace("\\\"", "\"");
-        m = java.util.regex.Pattern
-                .compile("\"errorDescription\"\\s*:\\s*\"((?:[^\"\\\\]|\\\\.)*)\"")
-                .matcher(json);
-        return m.find() ? m.group(1).replace("\\n", "\n").replace("\\\"", "\"") : null;
-    }
-
-    public void enviarCorreoTodasAreasCultivo() {
-        enviarCorreo("todasAreasCultivo", FacesContext.getCurrentInstance());
-    }
-
-    public void enviarCorreoPlanProduccion() {
-        enviarCorreo("planProdBetween/" + init + "/" + end, FacesContext.getCurrentInstance());
-    }
-
-    public void enviarCorreoProdCultivosPermanenteAfter() {
-        enviarCorreo("prodCultivosPermanenteAfter/" + init, FacesContext.getCurrentInstance());
-    }
-
-    public void enviarCorreoFechaRecogidaBefore() {
-        if (fechaRecogida == null) fechaRecogida = new Date(System.currentTimeMillis());
-        String date = new SimpleDateFormat("dd-MM-yyyy").format(fechaRecogida);
-        enviarCorreo("fechaRecogidaBefore/" + date, FacesContext.getCurrentInstance());
-    }
-
-    public void enviarCorreoCultivosPorVencer() {
-        enviarCorreo("cultivosPorVencer/" + diasVencer, FacesContext.getCurrentInstance());
-    }
-
-    public void enviarCorreoAgroquimicosMasUsados() {
-        enviarCorreo("agroquimicosMasUsados", FacesContext.getCurrentInstance());
-    }
 }

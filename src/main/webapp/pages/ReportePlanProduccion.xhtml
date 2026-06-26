@@ -69,25 +69,22 @@
                     </div>
                 </div>
 
-                <!-- Exportar Excel / Enviar correo -->
-                <div class="row" style="margin-bottom:16px; padding:10px 12px; background:#f0f7f0; border:1px solid #c3e6cb; border-radius:4px;">
-                    <div class="col-sm-5">
-                        <p:outputLabel for="emailDest" value="Correo del destinatario:"
-                                       style="font-weight:600; display:block; margin-bottom:4px;"/>
-                        <p:inputText id="emailDest" value="#{reportBean.emailDestinatario}"
-                                     placeholder="ejemplo@correo.com" style="width:100%;"/>
-                    </div>
-                    <div class="col-sm-7" style="display:flex; align-items:flex-end; gap:8px; padding-top:22px;">
-                        <p:commandButton value="Descargar Excel" icon="pi pi-file-excel"
-                                         ajax="false" styleClass="ui-button-success">
-                            <p:fileDownload value="#{reportBean.excelPlanProduccion}"/>
-                        </p:commandButton>
-                        <p:commandButton value="Enviar correo" icon="pi pi-envelope"
-                                         styleClass="ui-button-info"
-                                         action="#{reportBean.enviarCorreoPlanProduccion}"
-                                         update="formPlan:msgs"
-                                         process="@form"/>
-                    </div>
+                <!-- Exportar Excel / Enviar por Gmail -->
+                <div class="mb-3 d-flex flex-wrap align-items-center"
+                     style="gap:8px; padding:10px 12px; background:#f0f7f0; border:1px solid #c3e6cb; border-radius:4px;">
+                    <p:commandButton value="Descargar Excel" icon="pi pi-file-excel"
+                                     ajax="false" styleClass="ui-button-success">
+                        <p:fileDownload value="#{reportBean.excelPlanProduccion}"/>
+                    </p:commandButton>
+                    <p:commandButton value="Enviar por Gmail" icon="pi pi-envelope"
+                                     styleClass="ui-button-info"
+                                     ajax="false"
+                                     onclick="window.open('https://mail.google.com/mail/?view=cm&amp;fs=1&amp;su=Reporte+Plan+de+Producci%C3%B3n&amp;body=Adjunte+el+archivo+Excel+descargado.', '_blank')">
+                        <p:fileDownload value="#{reportBean.excelPlanProduccion}"/>
+                    </p:commandButton>
+                    <small style="color:#6c757d; align-self:center;">
+                        <i class="pi pi-info-circle"/> El Excel se descarga autom&#225;ticamente. Adj&#250;ntelo en Gmail antes de enviar.
+                    </small>
                 </div>
 
                 <p:dataTable id="tablaPlan"
