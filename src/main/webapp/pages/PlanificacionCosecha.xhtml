@@ -72,25 +72,25 @@
                          emptyMessage="No hay cosechas en el rango de fechas."
                          styleClass="table">
 
-                <p:column header="Estado" style="width:110px">
+                <p:column headerText="Estado" style="width:110px">
                     <h:outputText value="#{planificacionCosechaBean.estadoLabel(item)}"/>
                 </p:column>
-                <p:column header="Área" sortBy="#{item.areaCultivoResponsePK.areaId}">
+                <p:column headerText="Área" sortBy="#{item.areaCultivoResponsePK.areaId}">
                     <h:outputText value="#{item.areaCultivoResponsePK.areaId}"/>
                 </p:column>
-                <p:column header="Cultivo" sortBy="#{item.areaCultivoResponsePK.cultivoId}">
+                <p:column headerText="Cultivo" sortBy="#{item.areaCultivoResponsePK.cultivoId}">
                     <h:outputText value="#{item.areaCultivoResponsePK.cultivoId}"/>
                 </p:column>
-                <p:column header="F. Siembra">
+                <p:column headerText="F. Siembra">
                     <h:outputText value="#{item.areaCultivoResponsePK.fechaSiembra}"/>
                 </p:column>
-                <p:column header="F. Cosecha" sortBy="#{item.fechaRecogida}">
+                <p:column headerText="F. Cosecha" sortBy="#{item.fechaRecogida}">
                     <h:outputText value="#{item.fechaRecogida}"/>
                 </p:column>
-                <p:column header="Plan Prod.">
+                <p:column headerText="Plan Prod.">
                     <h:outputText value="#{item.planProd}"/>
                 </p:column>
-                <p:column header="Prod. Real">
+                <p:column headerText="Prod. Real">
                     <h:outputText value="#{item.produccionReal}"/>
                 </p:column>
                 <p:column style="width:60px">
