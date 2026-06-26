@@ -10,8 +10,16 @@ import jakarta.inject.Named;
 import lombok.Getter;
 import lombok.Setter;
 import org.primefaces.PrimeFaces;
+import org.primefaces.model.DefaultStreamedContent;
+import org.primefaces.model.StreamedContent;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -35,6 +43,7 @@ public class PlanificacionCosechaBean implements Serializable {
     private int pendientes;
     private int completadas;
     private int vencidas;
+    private String emailDestinatario;
 
     private RestAreaCultivo restAreaCultivo = new RestAreaCultivo();
 
@@ -123,6 +132,77 @@ public class PlanificacionCosechaBean implements Serializable {
             } catch (DateTimeParseException e2) {
                 return null;
             }
+        }
+    }
+
+    // ── Excel y Correo ────────────────────────────────────────────────────────
+
+    private String buildCalendarioUrl() {
+        LocalDate hoy = LocalDate.now();
+        String desde = hoy.minusMonths(3).format(FMT_DDMMYYYY);
+        String hasta = hoy.plusMonths(9).format(FMT_DDMMYYYY);
+        return desde + "/" + hasta;
+    }
+
+    public StreamedContent getExcelCosecha() {
+        String rango = buildCalendarioUrl();
+        return DefaultStreamedContent.builder()
+                .name("planificacion_cosecha.xlsx")
+                .contentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                .stream(() -> {
+                    try {
+                        URL url = new URL("http://localhost:8081/areaCultivo/excel/calendario/" + rango);
+                        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                        conn.setRequestMethod("GET");
+                        conn.setConnectTimeout(10000);
+                        conn.setReadTimeout(60000);
+                        if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                            byte[] bytes;
+                            try (InputStream is = conn.getInputStream()) {
+                                bytes = is.readAllBytes();
+                            }
+                            conn.disconnect();
+                            return new ByteArrayInputStream(bytes);
+                        }
+                        conn.disconnect();
+                    } catch (Exception e) {
+                        System.err.println("[PlanificacionCosechaBean] Error Excel cosecha: " + e.getMessage());
+                    }
+                    return new ByteArrayInputStream(new byte[0]);
+                })
+                .build();
+    }
+
+    public void enviarCorreoCosecha() {
+        FacesContext ctx = FacesContext.getCurrentInstance();
+        if (emailDestinatario == null || emailDestinatario.isBlank()) {
+            ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
+                    "Correo requerido", "Ingrese el correo del destinatario."));
+            return;
+        }
+        try {
+            String rango = buildCalendarioUrl();
+            String enc = URLEncoder.encode(emailDestinatario.trim(), StandardCharsets.UTF_8);
+            URL url = new URL("http://localhost:8081/areaCultivo/email/calendario/" + rango + "?destinatario=" + enc);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setConnectTimeout(10000);
+            conn.setReadTimeout(30000);
+            int code = conn.getResponseCode();
+            conn.disconnect();
+            if (code == HttpURLConnection.HTTP_OK) {
+                ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
+                        "Correo enviado", "Reporte enviado a " + emailDestinatario));
+                PrimeFaces.current().ajax().update("cosechaForm:growl");
+            } else {
+                ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                        "Error al enviar", "El servidor devolvió código " + code + "."));
+                PrimeFaces.current().ajax().update("cosechaForm:growl");
+            }
+        } catch (Exception e) {
+            ctx.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "Error al enviar", "No se pudo conectar con el servidor: " + e.getMessage()));
+            PrimeFaces.current().ajax().update("cosechaForm:growl");
         }
     }
 }

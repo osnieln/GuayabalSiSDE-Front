@@ -63,6 +63,27 @@
                     </div>
                 </div>
 
+                <!-- Exportar Excel / Enviar correo -->
+                <div class="row" style="margin-bottom:16px; padding:10px 12px; background:#f0f7f0; border:1px solid #c3e6cb; border-radius:4px;">
+                    <div class="col-sm-5">
+                        <p:outputLabel for="emailDest" value="Correo del destinatario:"
+                                       style="font-weight:600; display:block; margin-bottom:4px;"/>
+                        <p:inputText id="emailDest" value="#{reportBean.emailDestinatario}"
+                                     placeholder="ejemplo@correo.com" style="width:100%;"/>
+                    </div>
+                    <div class="col-sm-7" style="display:flex; align-items:flex-end; gap:8px; padding-top:22px;">
+                        <p:commandButton value="Descargar Excel" icon="pi pi-file-excel"
+                                         ajax="false" styleClass="ui-button-success">
+                            <p:fileDownload value="#{reportBean.excelProdCultivosPermanenteAfter}"/>
+                        </p:commandButton>
+                        <p:commandButton value="Enviar correo" icon="pi pi-envelope"
+                                         styleClass="ui-button-info"
+                                         action="#{reportBean.enviarCorreoProdCultivosPermanenteAfter}"
+                                         update="formPerm:msgs"
+                                         process="@form"/>
+                    </div>
+                </div>
+
                 <p:dataTable id="tablaPerm"
                              value="#{reportPreviewBean.previewAreasCultivo}"
                              var="row"
