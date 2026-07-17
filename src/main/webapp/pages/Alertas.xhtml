@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="jakarta.faces.core">
+
+<h:head><title>Alertas y Notificaciones</title></h:head>
+
+<h:body>
+    <ui:composition template="template.xhtml">
+        <ui:define name="title">Alertas y Notificaciones</ui:define>
+        <ui:define name="content">
+
+            <h:form id="alertasForm">
+                <p:growl id="msgs" showDetail="true" life="4000"/>
+
+                <!-- Panel de resumen -->
+                <div class="row" style="margin-bottom: 20px;">
+                    <div class="col-sm-3">
+                        <div class="card" style="border-left: 4px solid #dc3545; padding: 12px;">
+                            <div style="font-size:0.85rem; color:#666;">Cultivos por vencer</div>
+                            <div style="font-size:1.6rem; font-weight:700; color:#dc3545;">
+                                #{alertasBean.totalCultivosPorVencer}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card" style="border-left: 4px solid #fd7e14; padding: 12px;">
+                            <div style="font-size:0.85rem; color:#666;">Riego pendiente</div>
+                            <div style="font-size:1.6rem; font-weight:700; color:#fd7e14;">
+                                #{alertasBean.totalRiegoPendiente}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card" style="border-left: 4px solid #ffc107; padding: 12px;">
+                            <div style="font-size:0.85rem; color:#666;">Bajo stock</div>
+                            <div style="font-size:1.6rem; font-weight:700; color:#ffc107;">
+                                #{alertasBean.totalBajoStock}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="card" style="border-left: 4px solid #6f42c1; padding: 12px;">
+                            <div style="font-size:0.85rem; color:#666;">Prioridad alta</div>
+                            <div style="font-size:1.6rem; font-weight:700; color:#6f42c1;">
+                                #{alertasBean.totalAltas}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom:12px;">
+                    <p:commandButton value="Actualizar" icon="pi pi-refresh"
+                                     action="#{alertasBean.cargarAlertas()}"
+                                     update="alertasForm"
+                                     styleClass="ui-button-info"/>
+                </div>
+
+                <!-- Tabla -->
+                <p:dataTable id="alertasTable" value="#{alertasBean.alertas}" var="alerta"
+                             paginator="true" rows="10"
+                             rowsPerPageTemplate="5,10,20"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                             emptyMessage="No hay alertas activas en este momento."
+                             sortMode="single"
+                             styleClass="table"
+                             style="width:100%;">
+
+                    <p:column headerText="Tipo" style="text-align:center;">
+                        <h:outputText value="Cultivo por vencer"
+                                      rendered="#{alerta.tipo == 'CULTIVO_POR_VENCER'}"
+                                      style="background-color:#f8d7da; color:#721c24; padding:3px 10px; border-radius:12px; font-size:0.82rem; font-weight:600;"/>
+                        <h:outputText value="Riego pendiente"
+                                      rendered="#{alerta.tipo == 'RIEGO_PENDIENTE'}"
+                                      style="background-color:#ffe5d0; color:#94400d; padding:3px 10px; border-radius:12px; font-size:0.82rem; font-weight:600;"/>
+                        <h:outputText value="Bajo stock"
+                                      rendered="#{alerta.tipo == 'AGROQUIMICO_BAJO_STOCK'}"
+                                      style="background-color:#fff3cd; color:#856404; padding:3px 10px; border-radius:12px; font-size:0.82rem; font-weight:600;"/>
+                    </p:column>
+
+                    <p:column headerText="Prioridad" style="text-align:center;">
+                        <h:outputText value="Alta"
+                                      rendered="#{alerta.prioridad == 'ALTA'}"
+                                      style="background-color:#dc3545; color:#fff; padding:3px 10px; border-radius:12px; font-size:0.82rem; font-weight:600;"/>
+                        <h:outputText value="Media"
+                                      rendered="#{alerta.prioridad == 'MEDIA'}"
+                                      style="background-color:#fd7e14; color:#fff; padding:3px 10px; border-radius:12px; font-size:0.82rem; font-weight:600;"/>
+                    </p:column>
+
+                    <p:column headerText="Mensaje">
+                        <h:outputText value="#{alerta.mensaje}"/>
+                    </p:column>
+
+                    <p:column headerText="Fecha de Referencia" style="text-align:center;">
+                        <h:outputText value="#{not empty alerta.fechaReferencia ? alerta.fechaReferencia : '—'}"/>
+                    </p:column>
+
+                    <p:column headerText="Área / Cultivo" style="text-align:center;">
+                        <h:outputText value="#{alerta.areaCultivoResponsePk.areaId} / #{alerta.areaCultivoResponsePk.cultivoId}"
+                                      rendered="#{not empty alerta.areaCultivoResponsePk}"/>
+                        <h:outputText value="—" rendered="#{empty alerta.areaCultivoResponsePk}"/>
+                    </p:column>
+
+                </p:dataTable>
+
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

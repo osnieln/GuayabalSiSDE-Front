@@ -25,9 +25,28 @@
     <link rel="icon" type="image/png" href="#{request.contextPath}/resources/images/logo1.svg"/>
     <!--    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous"/>-->
     <title>SGPA ::<ui:insert name="title"/></title>
+    <style>
+        /* Sidebar: tamaño de letra de menús principales */
+        .sidebar .nav-item .nav-link .menu-title {
+            font-size: 1.15em !important;
+            font-weight: 600 !important;
+        }
+        /* Sidebar: tamaño de letra de submenús */
+        .sidebar .sub-menu .nav-item .nav-link {
+            font-size: 1.08em !important;
+        }
+        /* Sidebar: iconos principales */
+        .sidebar .nav-item > .nav-link > i:first-child {
+            font-size: 1.2em !important;
+        }
+    </style>
 </h:head>
 
 <h:body>
+    <script type="text/javascript">
+        /* Save PrimeFaces jQuery reference before vendor scripts override window.$ */
+        var _pfjQuery = window.jQuery;
+    </script>
     #{templateBean.init()}
     <div class="container-scroller">
         <!-- partial:../../partials/_navbar.html -->
@@ -122,48 +141,92 @@
                                 <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director)}"><a class="nav-link"
                                                         href="#{request.contextPath}/pages/AdminCultivo.xhtml"> Cultivo </a>
                                 </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/AdminTrabajador.xhtml"> Empleados </a>
+                                </li>
                                 <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador)}"><a class="nav-link"
                                                         href="#{request.contextPath}/pages/AdminProduccion.xhtml"> Producci&oacute;n </a>
                                 </li>
                                 <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador)}"><a class="nav-link"
-                                                        href="#{request.contextPath}/pages/AdminAreaCultivo.xhtml"> Espacial </a>
+                                                        href="#{request.contextPath}/pages/AdminAreaCultivo.xhtml"> &Aacute;rea de Cultivo </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/AdminRiego.xhtml"> Planificaci&oacute;n de Riego </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/PlanificacionCosecha.xhtml"> Planificaci&oacute;n de Cosecha </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ControlInventarioAgroquimico.xhtml"> Control de Inventario de Agroqu&iacute;micos </a>
                                 </li>
                             </ul>
                         </div>
                     </li>
 
-                    <h:form id="linksForm">
+                    <!-- Análisis -->
+                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
+                        <a class="nav-link" data-toggle="collapse" href="#analisis" aria-expanded="false"
+                           aria-controls="analisis">
+                            <i class="pi pi-chart-bar"> </i>
+                            <span class="menu-title">&ensp;An&aacute;lisis</span>
+                            <i class="pi pi-chevron-right"/>
+                        </a>
+                        <div class="collapse" id="analisis">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item"><a class="nav-link"
+                                    href="#{request.contextPath}/pages/Dashboard.xhtml"> Resumen General </a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link"
+                                    href="#{request.contextPath}/pages/Rendimiento.xhtml"> Rendimiento </a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link"
+                                    href="#{request.contextPath}/pages/HistorialRiego.xhtml"> Historial de Riegos </a>
+                                </li>
+                                <li class="nav-item"><a class="nav-link"
+                                    href="#{request.contextPath}/pages/Alertas.xhtml"> Alertas </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
 
-                        <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
-                            <a class="nav-link" data-toggle="collapse" href="#reports" aria-expanded="false"
-                               aria-controls="reports">
-                                <i class="pi pi-chart-line"> </i>
-                                <span class="menu-title">&ensp;Reportes</span>
-                                <i class="pi pi-chevron-right"/>
-                            </a>
-                            <div class="collapse" id="reports">
-                                <ul class="nav flex-column sub-menu">
-                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
-                                        <p:commandLink class="nav-link" value="Resumen de cultivos" ajax="false">
-                                            <p:fileDownload value="#{reportBean.datosCultivos}"/>
-                                        </p:commandLink>
-                                    </li>
-                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
-                                                            href="#{request.contextPath}/pages/ReportePlanProduccion.xhtml"> Reporte Plan de Producci&oacute;n </a>
-                                    </li>
-                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
-                                                            href="#{request.contextPath}/pages/ReporteCultPermanente.xhtml"> Reporte Cultivo Permanente </a>
-                                    </li>
-                                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
-                                                            href="#{request.contextPath}/pages/ReporteFechaRecogida.xhtml"> Reporte Fecha de Recogida </a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                        <input type="hidden"
-                               name="${_csrf.parameterName}"
-                               value="${_csrf.token}"/>
-                    </h:form>
+                    <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}">
+                        <a class="nav-link" data-toggle="collapse" href="#reports" aria-expanded="false"
+                           aria-controls="reports">
+                            <i class="pi pi-chart-line"> </i>
+                            <span class="menu-title">&ensp;Reportes</span>
+                            <i class="pi pi-chevron-right"/>
+                        </a>
+                        <div class="collapse" id="reports">
+                            <ul class="nav flex-column sub-menu">
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReporteResumenCultivos.xhtml"> Resumen de Cultivos </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReportePlanProduccion.xhtml"> Reporte Plan de Producci&oacute;n </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReporteCultPermanente.xhtml"> Reporte Cultivo Permanente </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReporteFechaRecogida.xhtml"> Reporte Fecha de Recogida </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReporteCultivosPorVencer.xhtml"> Cultivos por Vencer </a>
+                                </li>
+                                <li class="nav-item" style="#{templateBean.translateRole_visible(templateBean.role_director, templateBean.role_trabajador, templateBean.role_tecnico)}"><a class="nav-link"
+                                                        href="#{request.contextPath}/pages/ReporteAgroquimicos.xhtml"> Agroqu&#237;micos M&#225;s Usados </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- Manual de Usuario -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#{request.contextPath}/pages/ManualUsuario.xhtml">
+                            <i class="pi pi-book"> </i>
+                            <span class="menu-title">&ensp;Manual de Usuario</span>
+                        </a>
+                    </li>
 
                 </ul>
             </nav>
@@ -202,17 +265,22 @@
         <!-- page-body-wrapper ends -->
     </div>
     <!--Scripts-->
-    <!--    <h:outputScript library="js" name="vendor.bundle.base.js"/>-->
-    <h:outputScript library="primefaces"
-                    value="primefaces/jquery"/> <!--esto permitira obtener la liberia propia de primefaces -->
-    <!--                                                                        en algunas ocaciones funciona la intefaz con esta misma liberia&ndash;&gt;-->
-    <!--                                                                       otras veces no y es necesario cambiar de plantilla por no ser compatibles&ndash;&gt;&ndash;&gt;-->
+    <h:outputScript library="js" name="vendor.bundle.base.js"/>
     <h:outputScript library="js" name="off-canvas.js"/>
     <h:outputScript library="js" name="hoverable-collapse.js"/>
     <h:outputScript library="js" name="template.js"/>
     <h:outputScript library="js" name="bootstrap.bundle.min.js"/>
     <h:outputScript library="js" name="fontawesome.js"/>
     <!--    <script src="/resources/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>-->
+    <script type="text/javascript">
+        /* Restore PrimeFaces jQuery as the global $ after vendor scripts load.
+           vendor.bundle.base.js contains its own jQuery which overrides $,
+           breaking PrimeFaces AJAX widget re-initialization. */
+        if (typeof _pfjQuery !== 'undefined' &amp;&amp; _pfjQuery) {
+            window.$ = _pfjQuery;
+            window.jQuery = _pfjQuery;
+        }
+    </script>
 </h:body>
 
 </html>

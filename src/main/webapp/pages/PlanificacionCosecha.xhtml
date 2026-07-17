@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="jakarta.faces.core">
+
+<h:head><title>Planificación de Cosecha</title></h:head>
+
+<h:body>
+<ui:composition template="template.xhtml">
+    <ui:define name="title">Planificación de Cosecha</ui:define>
+    <ui:define name="content">
+
+        <h:form id="cosechaForm">
+
+            <p:growl id="growl" showDetail="true"/>
+
+            <!-- Tarjetas resumen -->
+            <h:panelGroup id="statsPanel" layout="block" styleClass="row mb-4">
+                <div class="col-md-4">
+                    <div class="card text-white bg-primary mb-3">
+                        <div class="card-body py-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="card-title mb-1">Cosechas Planificadas</h6>
+                                <h2 class="mb-0"><h:outputText value="#{planificacionCosechaBean.pendientes}"/></h2>
+                            </div>
+                            <i class="mdi mdi-calendar-clock" style="font-size:2.5rem;opacity:0.7"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-success mb-3">
+                        <div class="card-body py-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="card-title mb-1">Cosechas Completadas</h6>
+                                <h2 class="mb-0"><h:outputText value="#{planificacionCosechaBean.completadas}"/></h2>
+                            </div>
+                            <i class="mdi mdi-calendar-check" style="font-size:2.5rem;opacity:0.7"/>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card text-white bg-danger mb-3">
+                        <div class="card-body py-3 d-flex align-items-center justify-content-between">
+                            <div>
+                                <h6 class="card-title mb-1">Cosechas Vencidas</h6>
+                                <h2 class="mb-0"><h:outputText value="#{planificacionCosechaBean.vencidas}"/></h2>
+                            </div>
+                            <i class="mdi mdi-calendar-remove" style="font-size:2.5rem;opacity:0.7"/>
+                        </div>
+                    </div>
+                </div>
+            </h:panelGroup>
+
+            <!-- Leyenda -->
+            <div class="mb-3 d-flex" style="gap:1.5rem;align-items:center;flex-wrap:wrap;">
+                <span><span style="display:inline-block;width:14px;height:14px;background:rgba(0,123,255,0.4);border-radius:3px;margin-right:5px;"></span>Planificada</span>
+                <span><span style="display:inline-block;width:14px;height:14px;background:rgba(40,167,69,0.4);border-radius:3px;margin-right:5px;"></span>Completada</span>
+                <span><span style="display:inline-block;width:14px;height:14px;background:rgba(220,53,69,0.4);border-radius:3px;margin-right:5px;"></span>Vencida sin cosecha</span>
+            </div>
+
+            <!-- Exportar Excel / Enviar por Gmail -->
+            <div class="mb-3 d-flex flex-wrap align-items-center"
+                 style="gap:8px; padding:10px 12px; background:#f0f7f0; border:1px solid #c3e6cb; border-radius:4px;">
+                <p:commandButton value="Descargar Excel" icon="pi pi-file-excel"
+                                 ajax="false" styleClass="ui-button-success">
+                    <p:fileDownload value="#{planificacionCosechaBean.excelCosecha}"/>
+                </p:commandButton>
+                <p:commandButton value="Enviar por Gmail" icon="pi pi-envelope"
+                                 styleClass="ui-button-info"
+                                 ajax="false"
+                                 onclick="window.open('https://mail.google.com/mail/?view=cm&amp;fs=1&amp;su=Planificaci%C3%B3n+de+Cosecha&amp;body=Adjunte+el+archivo+Excel+descargado.', '_blank')">
+                    <p:fileDownload value="#{planificacionCosechaBean.excelCosecha}"/>
+                </p:commandButton>
+                <small style="color:#6c757d; align-self:center;">
+                    <i class="pi pi-info-circle"/> El Excel se descarga autom&#225;ticamente. Adj&#250;ntelo en Gmail antes de enviar.
+                </small>
+            </div>
+
+            <!-- Tabla de cosechas -->
+            <p:dataTable id="cosechaTable"
+                         value="#{planificacionCosechaBean.listaEventos}"
+                         var="item"
+                         rowStyleClass="#{planificacionCosechaBean.determinarColor(item)}"
+                         paginator="true"
+                         rows="15"
+                         emptyMessage="No hay cosechas en el rango de fechas."
+                         styleClass="table">
+
+                <p:column headerText="Estado" style="width:110px">
+                    <h:outputText value="#{planificacionCosechaBean.estadoLabel(item)}"/>
+                </p:column>
+                <p:column headerText="Área" sortBy="#{item.areaCultivoResponsePK.areaId}">
+                    <h:outputText value="#{item.areaCultivoResponsePK.areaId}"/>
+                </p:column>
+                <p:column headerText="Cultivo" sortBy="#{item.areaCultivoResponsePK.cultivoId}">
+                    <h:outputText value="#{item.areaCultivoResponsePK.cultivoId}"/>
+                </p:column>
+                <p:column headerText="F. Siembra">
+                    <h:outputText value="#{item.areaCultivoResponsePK.fechaSiembra}"/>
+                </p:column>
+                <p:column headerText="F. Cosecha" sortBy="#{item.fechaRecogida}">
+                    <h:outputText value="#{item.fechaRecogida}"/>
+                </p:column>
+                <p:column headerText="Plan Prod.">
+                    <h:outputText value="#{item.planProd}"/>
+                </p:column>
+                <p:column headerText="Prod. Real">
+                    <h:outputText value="#{item.produccionReal}"/>
+                </p:column>
+                <p:column style="width:60px">
+                    <p:commandButton icon="pi pi-pencil"
+                                     process="@this"
+                                     update="cosechaForm:eventDialog"
+                                     oncomplete="PF('eventDlg').show()"
+                                     action="#{planificacionCosechaBean.seleccionarItem(item)}"
+                                     title="Registrar cosecha real"/>
+                </p:column>
+            </p:dataTable>
+
+            <!-- Diálogo de detalle y registro de cosecha real -->
+            <p:dialog id="eventDialog" widgetVar="eventDlg"
+                      header="Detalle de Cosecha"
+                      modal="true" resizable="false"
+                      style="width:460px;">
+
+                <p:outputPanel rendered="#{planificacionCosechaBean.selectedAreaCultivo != null}">
+                    <div class="p-fluid">
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Área ID</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.areaCultivoResponsePK.areaId}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Cultivo ID</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.areaCultivoResponsePK.cultivoId}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Fecha Siembra</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.areaCultivoResponsePK.fechaSiembra}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Fecha Cosecha Planificada</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.fechaRecogida}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Plan de Producción</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.planProd}"/>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-5 col-form-label font-weight-bold">Producción Real Actual</label>
+                            <div class="col-sm-7">
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.produccionReal}"/>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="form-group">
+                            <p:outputLabel for="inputProdReal" value="Registrar Producción Real:" styleClass="font-weight-bold"/>
+                            <p:inputNumber id="inputProdReal"
+                                          value="#{planificacionCosechaBean.nuevaProduccionReal}"
+                                          minValue="0"
+                                          style="width:100%"/>
+                        </div>
+                    </div>
+                </p:outputPanel>
+
+                <f:facet name="footer">
+                    <p:commandButton value="Guardar"
+                                     icon="pi pi-save"
+                                     action="#{planificacionCosechaBean.registrarCosechaReal()}"
+                                     styleClass="ui-button-success"/>
+                    <p:commandButton value="Cancelar"
+                                     icon="pi pi-times"
+                                     onclick="PF('eventDlg').hide()"
+                                     type="button"
+                                     styleClass="ui-button-secondary ml-2"/>
+                </f:facet>
+            </p:dialog>
+
+        </h:form>
+
+        <h:outputStylesheet>
+            .harvest-done td    { background-color: rgba(40,167,69,0.12) !important; }
+            .harvest-overdue td { background-color: rgba(220,53,69,0.12) !important; }
+            .harvest-planned td { background-color: rgba(0,123,255,0.12) !important; }
+        </h:outputStylesheet>
+
+    </ui:define>
+</ui:composition>
+</h:body>
+</html>

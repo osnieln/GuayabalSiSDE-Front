@@ -4,14 +4,18 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import cu.edu.unah.util.AreaCultivoResponse;
 import cu.edu.unah.util.AreaCultivoResponsePK;
 import cu.edu.unah.util.JSONUtils;
+import cu.edu.unah.util.RendimientoResponse;
 
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class RestAreaCultivo {
 
@@ -77,7 +81,7 @@ public class RestAreaCultivo {
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 return false;
             }
         } catch (InterruptedException e) {
@@ -99,7 +103,7 @@ public class RestAreaCultivo {
                 .PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 response.join();
                 return false;
             } else {
@@ -125,7 +129,7 @@ public class RestAreaCultivo {
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500) {
+            if(response.get().statusCode() >= 400) {
                 response.join();
                 return false;
             } else {
@@ -139,6 +143,50 @@ public class RestAreaCultivo {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<AreaCultivoResponse> findByActivo(boolean activo) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/findByActivo/"+activo)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<AreaCultivoResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<AreaCultivoResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
+    }
+
+    public List<AreaCultivoResponse> findByFechaRecogidaBetween(String desde, String hasta) {
+        HttpRequest req = HttpRequest.newBuilder()
+                .uri(URI.create(serviceURL + "/calendario/" + desde + "/" + hasta))
+                .timeout(Duration.ofSeconds(5))
+                .GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        try {
+            HttpResponse<String> resp = response.get(5, TimeUnit.SECONDS);
+            if (resp.statusCode() >= 400) return null;
+            return JSONUtils.convertFromJsonToList(resp.body(),
+                    new TypeReference<List<AreaCultivoResponse>>() {});
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
+            response.cancel(true);
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<RendimientoResponse> getRendimiento() {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/rendimiento")).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<RendimientoResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<RendimientoResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
     }
 
 }

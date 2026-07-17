@@ -22,6 +22,8 @@ public class AdminAgroquimicoBean implements Serializable{
 
     private List<AgroquimicoResponse> agroquimicoResponseList = new ArrayList<AgroquimicoResponse>();
     private String nombre ="";
+    private Double stockActual;
+    private Double stockMinimo;
 
 
     private AgroquimicoResponse agroquimico = new AgroquimicoResponse();
@@ -30,13 +32,15 @@ public class AdminAgroquimicoBean implements Serializable{
 
 
     public void init(){
-        agroquimicoResponseList.clear();
         cleanVariables();
         agroquimicoResponseList = restAgroquimico.findAllAgroquimico();
+        if (agroquimicoResponseList == null) agroquimicoResponseList = new ArrayList<>();
     }
 
     public void cleanVariables(){
         nombre="";
+        stockActual = null;
+        stockMinimo = null;
     }
 
     public void updateSelectedAgroquimico(AgroquimicoResponse agroquimicoResponse) {
@@ -46,6 +50,8 @@ public class AdminAgroquimicoBean implements Serializable{
     public void updateSelected_Agroquimico_toEdit(AgroquimicoResponse agroquimicoResponse) {
         selectedAgroquimicoResponse = agroquimicoResponse;
         nombre = agroquimicoResponse.getNombre();
+        stockActual = agroquimicoResponse.getStockActual();
+        stockMinimo = agroquimicoResponse.getStockMinimo();
     }
 
     public void updateSelectedAgroquimicoToDelete(AgroquimicoResponse agroquimicoResponse){
@@ -55,9 +61,15 @@ public class AdminAgroquimicoBean implements Serializable{
     public void addAgroquimico() {
         AgroquimicoResponse agroquimicoResponseToAdd = AgroquimicoResponse.builder()
                 .nombre(nombre)
+                .stockActual(stockActual)
+                .stockMinimo(stockMinimo)
                 .build();
         FacesContext context = FacesContext.getCurrentInstance();
 
+        if (nombre == null || nombre.isBlank()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El nombre del agroquímico es obligatorio.", ""));
+            return;
+        }
         if(restAgroquimico.create(agroquimicoResponseToAdd)){
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "AGROQUIMICO ADICIONADO CORRECTAMENTE", ""));
             init();
@@ -71,8 +83,14 @@ public class AdminAgroquimicoBean implements Serializable{
     public void editAgroquimico() {
         AgroquimicoResponse agroquimicoResponseBd = restAgroquimico.findById(selectedAgroquimicoResponse.getId());
         agroquimicoResponseBd.setNombre(nombre);
+        agroquimicoResponseBd.setStockActual(stockActual);
+        agroquimicoResponseBd.setStockMinimo(stockMinimo);
 
         FacesContext context = FacesContext.getCurrentInstance();
+        if (nombre == null || nombre.isBlank()) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "El nombre del agroquímico es obligatorio.", ""));
+            return;
+        }
         if(restAgroquimico.update(agroquimicoResponseBd)){
             init();
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "AGROQUIMICO EDITADO", ""));

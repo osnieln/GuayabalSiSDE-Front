@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="jakarta.faces.core">
+
+<h:head><title>Historial de Riegos</title></h:head>
+
+<h:body>
+    <ui:composition template="template.xhtml">
+        <ui:define name="title">Historial de Riegos por Área</ui:define>
+        <ui:define name="content">
+
+            <h:form id="searchForm">
+                <p:growl id="msgs" showDetail="true" life="4000"/>
+
+                <!-- Búsqueda -->
+                <div class="row" style="margin-bottom: 20px; align-items: flex-end;">
+                    <div class="col-sm-4">
+                        <p:outputLabel value="ID del Área:" for="areaIdInput"
+                                       style="font-weight:600; margin-bottom:5px; display:block;"/>
+                        <p:inputText id="areaIdInput" value="#{historialRiegoBean.areaId}"
+                                     placeholder="Ingrese el ID del área"
+                                     style="width:100%;">
+                            <f:converter converterId="jakarta.faces.Long"/>
+                        </p:inputText>
+                        <p:message for="areaIdInput" style="font-size:0.8rem;"/>
+                    </div>
+                    <div class="col-sm-2" style="padding-top:5px;">
+                        <p:commandButton value="Buscar" icon="pi pi-search"
+                                         action="#{historialRiegoBean.buscarHistorial()}"
+                                         update="msgs resultPanel"
+                                         process="@form"
+                                         styleClass="ui-button-primary"
+                                         style="margin-right:8px;"/>
+                        <p:commandButton value="Limpiar" icon="pi pi-times"
+                                         styleClass="ui-button-secondary"
+                                         action="#{historialRiegoBean.limpiar()}"
+                                         update="msgs areaIdInput resultPanel"
+                                         process="@this"/>
+                    </div>
+                </div>
+
+                <!-- Contenedor siempre presente para que el AJAX pueda actualizarlo -->
+                <p:outputPanel id="resultPanel">
+
+                    <!-- Panel de resumen -->
+                    <p:outputPanel rendered="#{historialRiegoBean.historial != null and not empty historialRiegoBean.historial}">
+                        <div class="row" style="margin-bottom: 20px;">
+                            <div class="col-sm-3">
+                                <div class="card" style="border-left: 4px solid #009440; padding: 12px;">
+                                    <div style="font-size:0.85rem; color:#666;">Total de riegos</div>
+                                    <div style="font-size:1.6rem; font-weight:700; color:#009440;">
+                                        #{historialRiegoBean.historial.size()}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="card" style="border-left: 4px solid #28a745; padding: 12px;">
+                                    <div style="font-size:0.85rem; color:#666;">Realizados</div>
+                                    <div style="font-size:1.6rem; font-weight:700; color:#28a745;">
+                                        #{historialRiegoBean.totalRealizados}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="card" style="border-left: 4px solid #ffc107; padding: 12px;">
+                                    <div style="font-size:0.85rem; color:#666;">Pendientes</div>
+                                    <div style="font-size:1.6rem; font-weight:700; color:#ffc107;">
+                                        #{historialRiegoBean.totalPendientes}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="card" style="border-left: 4px solid #dc3545; padding: 12px;">
+                                    <div style="font-size:0.85rem; color:#666;">Con advertencias</div>
+                                    <div style="font-size:1.6rem; font-weight:700; color:#dc3545;">
+                                        #{historialRiegoBean.totalAdvertencias}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:outputPanel>
+
+                    <!-- Tabla -->
+                    <p:dataTable id="historialTable" value="#{historialRiegoBean.historial}" var="riego"
+                                 paginator="true" rows="10"
+                                 rowsPerPageTemplate="5,10,20"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 currentPageReportTemplate="{startRecord}-{endRecord} de {totalRecords} registros"
+                                 emptyMessage="No hay riegos registrados para esta área."
+                                 rendered="#{historialRiegoBean.historial != null}"
+                                 sortMode="single"
+                                 styleClass="table"
+                                 style="width:100%;">
+
+                        <p:column headerText="#" style="width:60px; text-align:center;">
+                            <h:outputText value="#{riego.id}"/>
+                        </p:column>
+
+                        <p:column headerText="Fecha Planificada" sortBy="#{riego.fechaPlanificacion}">
+                            <h:outputText value="#{riego.fechaPlanificacion}"/>
+                        </p:column>
+
+                        <p:column headerText="Fecha Real" sortBy="#{riego.fechaReal}">
+                            <h:outputText value="#{not empty riego.fechaReal ? riego.fechaReal : '—'}"/>
+                        </p:column>
+
+                        <p:column headerText="Estado" style="text-align:center;">
+                            <h:outputText value="Realizado"
+                                          rendered="#{not empty riego.fechaReal}"
+                                          style="background-color:#d4edda; color:#155724; padding:3px 10px; border-radius:12px; font-size:0.82rem; font-weight:600;"/>
+                            <h:outputText value="Pendiente"
+                                          rendered="#{empty riego.fechaReal}"
+                                          style="background-color:#fff3cd; color:#856404; padding:3px 10px; border-radius:12px; font-size:0.82rem; font-weight:600;"/>
+                        </p:column>
+
+                        <p:column headerText="Área ID" style="text-align:center;">
+                            <h:outputText value="#{riego.areaCultivoResponsePk.areaId}"/>
+                        </p:column>
+
+                        <p:column headerText="Cultivo ID" style="text-align:center;">
+                            <h:outputText value="#{riego.areaCultivoResponsePk.cultivoId}"/>
+                        </p:column>
+
+                        <p:column headerText="Advertencia">
+                            <h:outputText value="#{riego.advertencia}"
+                                          rendered="#{not empty riego.advertencia}"
+                                          style="color:#dc3545; font-weight:600;"/>
+                            <h:outputText value="Sin advertencias"
+                                          rendered="#{empty riego.advertencia}"
+                                          style="color:#6c757d; font-style:italic;"/>
+                        </p:column>
+
+                    </p:dataTable>
+
+                    <!-- Exportar CSV -->
+                    <div style="margin-top:12px;">
+                        <p:commandButton value="Exportar CSV" icon="pi pi-download"
+                                         styleClass="ui-button-secondary" ajax="false"
+                                         action="#{historialRiegoBean.exportarCsv()}"
+                                         rendered="#{historialRiegoBean.historial != null and not empty historialRiegoBean.historial}"/>
+                    </div>
+
+                </p:outputPanel>
+
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

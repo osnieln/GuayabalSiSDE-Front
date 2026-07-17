@@ -1,10 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Created by IntelliJ IDEA.
-  User: Nerzur
-  Date: 22/01/2021
-  Time: 01:35
--->
 <!DOCTYPE html
         PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -12,56 +6,91 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
+      xmlns:f="jakarta.faces.core"
       xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
 
 <h:head>
-    <title>Title</title>
+    <title>Inicio — SGPA El Guayabal</title>
 </h:head>
 
 <h:body>
     <ui:composition template="template.xhtml">
-        <ui:define name="title">
-            Inicio
-        </ui:define>
+        <ui:define name="title">Inicio</ui:define>
         <ui:define name="content">
-            <h3>¡Bienvenido/a al Sistema de Gestión de la Producción Agrícola en la Granja "El Guayabal" (SGPA).</h3>
-            <br/>
-            <div class="row">
-                <div class="col col-sm-5">
-                    <p align="justify">
-                        Este sistema está diseñado para optimizar y modernizar la gestión integral de la producción agrícola, centralizando datos clave como:
-                    </p>
-                    <p align="justify">
-                        Planificación y seguimiento de cultivos, siembras y cosechas.
-                    </p>
-                    <p align="justify">
-                        Gestión eficiente de recursos y asignación de áreas de cultivo.
-                    </p>
-                    <p align="justify">
-                        Monitoreo en tiempo real del crecimiento y estado de los cultivos.
-                    </p>
-                    <p align="justify">
-                        Generación de reportes detallados para una toma de decisiones estratégica.
-                    </p>
-                    <p align="justify">
-                        Con esta herramienta, la UDP "El Guayabal" fortalece su capacidad productiva, promueve prácticas agrícolas sostenibles y optimiza el uso de sus recursos.
-                    </p>
-                    <p align="justify">
-                        ¡Explore las opciones del menú y descubra cómo potenciar la gestión de su producción agrícola!
-                    </p>
-                    <p align="justify">
-                        "Innovación tecnológica al servicio del campo."
-                    </p>
-                </div>
-                <div class="col col-sm-6">
-                    <img width="80%" src="#{request.contextPath}/resources/images/guayabal.jpg" alt="guayabal"/>
+
+            <!-- Hero: imagen con overlay y texto -->
+            <div style="position:relative; height:340px; border-radius:10px; overflow:hidden; margin-bottom:28px; margin-left:-15px; margin-right:-15px;">
+                <img src="#{request.contextPath}/resources/images/guayabal.jpg" alt="El Guayabal"
+                     style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; object-position:center 35%;"/>
+                <div style="position:absolute; top:0; left:0; width:100%; height:100%;
+                            background:linear-gradient(to top, rgba(0,0,0,0.75) 30%, rgba(0,0,0,0.05) 70%);"/>
+                <div style="position:absolute; bottom:0; left:0; padding:22px 28px; color:white;">
+                    <div style="display:inline-block; background:#43a047; color:white; font-size:0.85em;
+                                font-weight:700; padding:4px 14px; border-radius:20px; margin-bottom:10px;
+                                text-transform:uppercase; letter-spacing:0.05em;">
+                        &#127807; UDP El Guayabal
+                    </div>
+                    <div style="font-size:2em; font-weight:800; line-height:1.2;
+                                text-shadow:0 2px 8px rgba(0,0,0,0.5);">
+                        Sistema de Gesti&#243;n de Producci&#243;n Agr&#237;cola
+                    </div>
+                    <div style="font-size:1.05em; margin-top:6px; opacity:0.9;">
+                        Planificaci&#243;n, seguimiento y control &#8212; todo en un solo lugar.
+                    </div>
                 </div>
             </div>
 
-        </ui:define>
+            <!-- Accesos rápidos -->
+            <div class="row">
 
+                <div class="col-sm-3" style="margin-bottom:16px;">
+                    <a href="#{request.contextPath}/pages/Dashboard.xhtml"
+                       style="display:block; border-radius:8px; padding:32px 16px 28px; text-align:center;
+                              background:linear-gradient(135deg,#43a047,#1b5e20);
+                              color:#ffffff; text-decoration:none;">
+                        <i class="pi pi-chart-bar" style="font-size:2.6em; display:block; margin-bottom:12px; color:#ffffff;"/>
+                        <span style="font-size:1.25em; font-weight:800; color:#ffffff;">Resumen General</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-3" style="margin-bottom:16px;">
+                    <a href="#{request.contextPath}/pages/AdminAreaCultivo.xhtml"
+                       style="display:block; border-radius:8px; padding:32px 16px 28px; text-align:center;
+                              background:linear-gradient(135deg,#29b6f6,#01579b);
+                              color:#ffffff; text-decoration:none;">
+                        <i class="pi pi-map" style="font-size:2.6em; display:block; margin-bottom:12px; color:#ffffff;"/>
+                        <span style="font-size:1.25em; font-weight:800; color:#ffffff;">&#193;reas de Cultivo</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-3" style="margin-bottom:16px;">
+                    <a href="#{request.contextPath}/pages/AdminAgroquimico.xhtml"
+                       style="display:block; border-radius:8px; padding:32px 16px 28px; text-align:center;
+                              background:linear-gradient(135deg,#ffa726,#e65100);
+                              color:#ffffff; text-decoration:none;">
+                        <i class="pi pi-filter" style="font-size:2.6em; display:block; margin-bottom:12px; color:#ffffff;"/>
+                        <span style="font-size:1.25em; font-weight:800; color:#ffffff;">Agroqu&#237;micos</span>
+                    </a>
+                </div>
+
+                <div class="col-sm-3" style="margin-bottom:16px;">
+                    <a href="#{request.contextPath}/pages/ReporteResumenCultivos.xhtml"
+                       style="display:block; border-radius:8px; padding:32px 16px 28px; text-align:center;
+                              background:linear-gradient(135deg,#ef5350,#b71c1c);
+                              color:#ffffff; text-decoration:none;">
+                        <i class="pi pi-file-pdf" style="font-size:2.6em; display:block; margin-bottom:12px; color:#ffffff;"/>
+                        <span style="font-size:1.25em; font-weight:800; color:#ffffff;">Reportes PDF</span>
+                    </a>
+                </div>
+
+            </div>
+
+            <p style="text-align:center; color:#9e9e9e; font-style:italic; font-size:0.88em; margin-top:20px;">
+                "Innovaci&#243;n tecnol&#243;gica al servicio del campo." &#8212; UDP El Guayabal
+            </p>
+
+        </ui:define>
     </ui:composition>
 </h:body>
-
 
 </html>

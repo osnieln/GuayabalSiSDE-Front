@@ -1,54 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  Created by IntelliJ IDEA.
-  User: Nerzur
-  Date: 22/01/2021
-  Time: 01:35
--->
-<!DOCTYPE html
-        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:p="http://primefaces.org/ui"
-      xmlns:ui="http://xmlns.jcp.org/jsf/facelets" xmlns:f="http://java.sun.com/jsf/core">
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core">
 
-<h:head>
-    <title>Title</title>
-</h:head>
+<h:head><title>Reporte Cultivo Permanente</title></h:head>
 
 <h:body>
     <ui:composition template="template.xhtml">
-        <ui:define name="title">
-            Resumen Cultivo Permanente
-        </ui:define>
+        <ui:define name="title">Reporte Cultivo Permanente</ui:define>
         <ui:define name="content">
-            <p:card>
-                <f:facet name="title">
-                    Resumen Cultivo Permanente
-                </f:facet>
-                <h:form>
-                <div class="row">
-                    <div class="col col-md-5">
-                        <p:outputLabel for="init" value="Cultivo Permanente Mínimo"/>
-                        <p:inputNumber required="true" id="init" value="#{reportBean.init}" modifyValueOnWheel="false"/>
+
+            <div class="row" style="margin-bottom:16px;">
+                <div class="col-sm-12">
+                    <div style="background:#e8f4fd; border-left:4px solid #007bff; padding:12px 16px; border-radius:4px;">
+                        <strong><i class="pi pi-info-circle" style="color:#007bff;"/> Descripci&oacute;n:</strong>
+                        Genera un reporte en PDF con los cultivos permanentes cuya producci&oacute;n
+                        real supera el umbral m&iacute;nimo indicado.
+                        Incluye &aacute;rea, tipo de cultivo, fecha de siembra, producci&oacute;n planificada y real.
                     </div>
-                    <p:commandButton value="Enviar" ajax="false" icon="pi pi-search">
-                        <p:fileDownload value="#{reportBean.prodCultivosPermanenteAfter}"/>
-                    </p:commandButton>
                 </div>
-                <p:messages autoUpdate="true" showDetail="true" />
+            </div>
 
-                    <input type="hidden"
-                           name="${_csrf.parameterName}"
-                           value="${_csrf.token}"/>
-                </h:form>
-            </p:card>
+            <h:form id="formPerm">
+                <p:messages id="msgs" autoUpdate="true" showDetail="true"/>
+
+                <!-- Filtros -->
+                <div class="row" style="margin-bottom:12px;">
+                    <div class="col-sm-4">
+                        <p:outputLabel for="init" value="Producci&oacute;n permanente m&iacute;nima (t):"
+                                       style="font-weight:600; display:block; margin-bottom:5px;"/>
+                        <p:inputNumber id="init" required="true" value="#{reportBean.init}"
+                                       modifyValueOnWheel="false" style="width:100%;"
+                                       placeholder="Ej: 50"
+                                       requiredMessage="Debe ingresar un valor m&iacute;nimo."/>
+                        <small style="color:#6c757d;">
+                            Cultivos permanentes con producci&oacute;n mayor o igual a este valor.
+                        </small>
+                    </div>
+                </div>
+
+                <!-- Barra de botones -->
+                <div class="row" style="margin-bottom:16px;">
+                    <div class="col-sm-12">
+                        <p:commandButton value="Ver en pantalla" icon="pi pi-eye"
+                                         styleClass="ui-button-info" style="margin-right:8px;"
+                                         action="#{reportPreviewBean.cargarPorProdPermanente}"
+                                         update="formPerm" process="@form">
+                            <f:setPropertyActionListener target="#{reportPreviewBean.prodPermanenteMin}" value="#{reportBean.init}"/>
+                        </p:commandButton>
+                        <p:commandButton value="Descargar PDF" icon="pi pi-file-pdf"
+                                         ajax="false" styleClass="ui-button-danger" style="margin-right:8px;">
+                            <p:fileDownload value="#{reportBean.prodCultivosPermanenteAfter}"/>
+                        </p:commandButton>
+                        <p:commandButton value="Limpiar" icon="pi pi-times"
+                                         styleClass="ui-button-secondary"
+                                         action="#{reportPreviewBean.limpiarPreviewAreasCultivo}"
+                                         update="formPerm"/>
+                    </div>
+                </div>
+
+                <!-- Exportar Excel / Enviar por Gmail -->
+                <div class="mb-3 d-flex flex-wrap align-items-center"
+                     style="gap:8px; padding:10px 12px; background:#f0f7f0; border:1px solid #c3e6cb; border-radius:4px;">
+                    <p:commandButton value="Descargar Excel" icon="pi pi-file-excel"
+                                     ajax="false" styleClass="ui-button-success">
+                        <p:fileDownload value="#{reportBean.excelProdCultivosPermanenteAfter}"/>
+                    </p:commandButton>
+                    <p:commandButton value="Enviar por Gmail" icon="pi pi-envelope"
+                                     styleClass="ui-button-info"
+                                     ajax="false"
+                                     onclick="window.open('https://mail.google.com/mail/?view=cm&amp;fs=1&amp;su=Reporte+Cultivos+Permanentes&amp;body=Adjunte+el+archivo+Excel+descargado.', '_blank')">
+                        <p:fileDownload value="#{reportBean.excelProdCultivosPermanenteAfter}"/>
+                    </p:commandButton>
+                    <small style="color:#6c757d; align-self:center;">
+                        <i class="pi pi-info-circle"/> El Excel se descarga autom&#225;ticamente. Adj&#250;ntelo en Gmail antes de enviar.
+                    </small>
+                </div>
+
+                <p:dataTable id="tablaPerm"
+                             value="#{reportPreviewBean.previewAreasCultivo}"
+                             var="row"
+                             rendered="#{not empty reportPreviewBean.previewAreasCultivo}"
+                             paginator="true" rows="15"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="10,15,25"
+                             emptyMessage="Sin resultados"
+                             styleClass="p-datatable-sm"
+                             style="margin-top:10px;">
+                    <f:facet name="header">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span><i class="pi pi-table"/> Resultados</span>
+                            <span style="font-size:12px; color:#6c757d;">
+                                #{reportPreviewBean.previewAreasCultivo.size()} registro(s)
+                            </span>
+                        </div>
+                    </f:facet>
+                    <p:column headerText="&#193;rea" sortBy="#{row['area']}">
+                        <h:outputText value="#{row['area']}"/>
+                    </p:column>
+                    <p:column headerText="Cultivo" sortBy="#{row['cultivo']}">
+                        <h:outputText value="#{row['cultivo']}"/>
+                    </p:column>
+                    <p:column headerText="F. Siembra" style="width:100px; text-align:center;">
+                        <h:outputText value="#{row['fechaSiembra']}"/>
+                    </p:column>
+                    <p:column headerText="Plan (t)" style="width:80px; text-align:right;" sortBy="#{row['planProd']}">
+                        <h:outputText value="#{row['planProd']}"/>
+                    </p:column>
+                    <p:column headerText="Real (t)" style="width:80px; text-align:right;" sortBy="#{row['produccionReal']}">
+                        <h:outputText value="#{row['produccionReal']}"/>
+                    </p:column>
+                    <p:column headerText="Perm. (t)" style="width:90px; text-align:right;" sortBy="#{row['prodCultivosPermanente']}">
+                        <h:outputText value="#{row['prodCultivosPermanente']}"
+                                      style="font-weight:bold; color:#2e7d32;"/>
+                    </p:column>
+                    <p:column headerText="Agroqu&#237;micos">
+                        <h:outputText value="#{row['agroquimicos']}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
+            </h:form>
+
         </ui:define>
-
     </ui:composition>
 </h:body>
-
-
 </html>
