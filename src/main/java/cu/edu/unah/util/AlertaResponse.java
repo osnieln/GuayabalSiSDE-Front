@@ -11,10 +11,14 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AlertaResponse {
 
+    Long id;
     String tipo;
     String prioridad;
     String mensaje;
     String fechaReferencia;
     AreaCultivoResponsePK areaCultivoResponsePk;
     Long agroquimicoId;
+    String fechaGeneracion;
+    boolean leida;
+    boolean resuelta;
 }

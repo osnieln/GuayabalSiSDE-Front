@@ -93,17 +93,17 @@
                 <p:column headerText="Estado" style="width:110px">
                     <h:outputText value="#{planificacionCosechaBean.estadoLabel(item)}"/>
                 </p:column>
-                <p:column headerText="Área" sortBy="#{item.areaCultivoResponsePK.areaId}">
-                    <h:outputText value="#{item.areaCultivoResponsePK.areaId}"/>
+                <p:column headerText="Área" sortBy="#{item.areaDescripcion}">
+                    <h:outputText value="#{item.areaDescripcion}"/>
                 </p:column>
-                <p:column headerText="Cultivo" sortBy="#{item.areaCultivoResponsePK.cultivoId}">
-                    <h:outputText value="#{item.areaCultivoResponsePK.cultivoId}"/>
+                <p:column headerText="Cultivo" sortBy="#{item.cultivoDescripcion}">
+                    <h:outputText value="#{item.cultivoDescripcion}"/>
                 </p:column>
                 <p:column headerText="F. Siembra">
-                    <h:outputText value="#{item.areaCultivoResponsePK.fechaSiembra}"/>
+                    <h:outputText value="#{item.areaCultivoResponsePk.fechaSiembra}"/>
                 </p:column>
-                <p:column headerText="F. Cosecha" sortBy="#{item.fechaRecogida}">
-                    <h:outputText value="#{item.fechaRecogida}"/>
+                <p:column headerText="F. Cosecha" sortBy="#{item.fechaEstimada}">
+                    <h:outputText value="#{item.fechaEstimada}"/>
                 </p:column>
                 <p:column headerText="Plan Prod.">
                     <h:outputText value="#{item.planProd}"/>
@@ -111,15 +111,35 @@
                 <p:column headerText="Prod. Real">
                     <h:outputText value="#{item.produccionReal}"/>
                 </p:column>
-                <p:column style="width:60px">
+                <p:column headerText="Cumplimiento">
+                    <h:outputText value="#{item.cumplimientoPct} %" rendered="#{item.cumplimientoPct != null}"/>
+                    <h:outputText value="—" rendered="#{item.cumplimientoPct == null}"/>
+                </p:column>
+                <p:column style="width:100px">
                     <p:commandButton icon="pi pi-pencil"
                                      process="@this"
                                      update="cosechaForm:eventDialog"
                                      oncomplete="PF('eventDlg').show()"
                                      action="#{planificacionCosechaBean.seleccionarItem(item)}"
-                                     title="Registrar cosecha real"/>
+                                     title="Registrar cosecha real"
+                                     rendered="#{item.estado != 'CANCELADA'}"
+                                     style="margin-right:4px;"/>
+                    <p:commandButton icon="pi pi-ban"
+                                     process="@this"
+                                     update="cosechaForm:statsPanel cosechaForm:cosechaTable cosechaForm:growl"
+                                     action="#{planificacionCosechaBean.cancelarCosecha(item)}"
+                                     title="Cancelar cosecha"
+                                     rendered="#{item.estado == 'PLANIFICADA' or item.estado == 'VENCIDA'}"
+                                     styleClass="ui-button-secondary">
+                        <p:confirm header="Confirmar" message="¿Cancelar esta planificación de cosecha?" icon="pi pi-exclamation-triangle"/>
+                    </p:commandButton>
                 </p:column>
             </p:dataTable>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                <p:commandButton value="Sí" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check"/>
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times"/>
+            </p:confirmDialog>
 
             <!-- Diálogo de detalle y registro de cosecha real -->
             <p:dialog id="eventDialog" widgetVar="eventDlg"
@@ -127,42 +147,42 @@
                       modal="true" resizable="false"
                       style="width:460px;">
 
-                <p:outputPanel rendered="#{planificacionCosechaBean.selectedAreaCultivo != null}">
+                <p:outputPanel rendered="#{planificacionCosechaBean.selectedItem != null}">
                     <div class="p-fluid">
                         <div class="form-group row">
-                            <label class="col-sm-5 col-form-label font-weight-bold">Área ID</label>
+                            <label class="col-sm-5 col-form-label font-weight-bold">Área</label>
                             <div class="col-sm-7">
-                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.areaCultivoResponsePK.areaId}"/>
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedItem.areaDescripcion}"/>
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label class="col-sm-5 col-form-label font-weight-bold">Cultivo ID</label>
+                            <label class="col-sm-5 col-form-label font-weight-bold">Cultivo</label>
                             <div class="col-sm-7">
-                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.areaCultivoResponsePK.cultivoId}"/>
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedItem.cultivoDescripcion}"/>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label font-weight-bold">Fecha Siembra</label>
                             <div class="col-sm-7">
-                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.areaCultivoResponsePK.fechaSiembra}"/>
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedItem.areaCultivoResponsePk.fechaSiembra}"/>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label font-weight-bold">Fecha Cosecha Planificada</label>
                             <div class="col-sm-7">
-                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.fechaRecogida}"/>
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedItem.fechaEstimada}"/>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label font-weight-bold">Plan de Producción</label>
                             <div class="col-sm-7">
-                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.planProd}"/>
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedItem.planProd}"/>
                             </div>
                         </div>
                         <div class="form-group row">
                             <label class="col-sm-5 col-form-label font-weight-bold">Producción Real Actual</label>
                             <div class="col-sm-7">
-                                <p:outputLabel value="#{planificacionCosechaBean.selectedAreaCultivo.produccionReal}"/>
+                                <p:outputLabel value="#{planificacionCosechaBean.selectedItem.produccionReal}"/>
                             </div>
                         </div>
                         <hr/>
@@ -192,9 +212,10 @@
         </h:form>
 
         <h:outputStylesheet>
-            .harvest-done td    { background-color: rgba(40,167,69,0.12) !important; }
-            .harvest-overdue td { background-color: rgba(220,53,69,0.12) !important; }
-            .harvest-planned td { background-color: rgba(0,123,255,0.12) !important; }
+            .harvest-done td      { background-color: rgba(40,167,69,0.12) !important; }
+            .harvest-overdue td   { background-color: rgba(220,53,69,0.12) !important; }
+            .harvest-planned td   { background-color: rgba(0,123,255,0.12) !important; }
+            .harvest-cancelled td { background-color: rgba(108,117,125,0.12) !important; color:#6c757d; }
         </h:outputStylesheet>
 
     </ui:define>

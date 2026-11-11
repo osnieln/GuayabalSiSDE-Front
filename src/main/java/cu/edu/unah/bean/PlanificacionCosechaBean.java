@@ -1,7 +1,7 @@
 package cu.edu.unah.bean;
 
-import cu.edu.unah.rest.RestAreaCultivo;
-import cu.edu.unah.util.AreaCultivoResponse;
+import cu.edu.unah.rest.RestPlanificacionCosecha;
+import cu.edu.unah.util.PlanificacionCosechaResponse;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
@@ -19,11 +19,8 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Named
@@ -33,15 +30,14 @@ import java.util.List;
 public class PlanificacionCosechaBean implements Serializable {
 
     private static final DateTimeFormatter FMT_DDMMYYYY = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-    private static final DateTimeFormatter FMT_YYYYMMDD = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    private List<AreaCultivoResponse> listaEventos = new ArrayList<>();
-    private AreaCultivoResponse selectedAreaCultivo;
+    private List<PlanificacionCosechaResponse> listaEventos = new ArrayList<>();
+    private PlanificacionCosechaResponse selectedItem;
     private double nuevaProduccionReal;
     private int pendientes;
     private int completadas;
     private int vencidas;
-    private RestAreaCultivo restAreaCultivo = new RestAreaCultivo();
+    private final RestPlanificacionCosecha restPlanificacionCosecha = new RestPlanificacionCosecha();
 
     @PostConstruct
     public void init() {
@@ -59,34 +55,31 @@ public class PlanificacionCosechaBean implements Serializable {
         String hasta = hoy.plusMonths(9).format(FMT_DDMMYYYY);
 
         try {
-            List<AreaCultivoResponse> lista = restAreaCultivo.findByFechaRecogidaBetween(desde, hasta);
+            List<PlanificacionCosechaResponse> lista = restPlanificacionCosecha.findCalendario(desde, hasta);
             if (lista == null) return;
 
-            for (AreaCultivoResponse ac : lista) {
-                if (ac.getFechaRecogida() == null || ac.getFechaRecogida().isEmpty()) continue;
-                String styleClass = determinarColor(ac);
-                if ("harvest-done".equals(styleClass)) completadas++;
-                else if ("harvest-overdue".equals(styleClass)) vencidas++;
-                else pendientes++;
-                listaEventos.add(ac);
+            for (PlanificacionCosechaResponse item : lista) {
+                switch (item.getEstado()) {
+                    case "COMPLETADA" -> completadas++;
+                    case "VENCIDA" -> vencidas++;
+                    case "PLANIFICADA" -> pendientes++;
+                    default -> { /* CANCELADA no se contabiliza */ }
+                }
+                listaEventos.add(item);
             }
         } catch (Exception e) {
             // backend no disponible
         }
     }
 
-    public void seleccionarItem(AreaCultivoResponse item) {
-        selectedAreaCultivo = item;
+    public void seleccionarItem(PlanificacionCosechaResponse item) {
+        selectedItem = item;
         nuevaProduccionReal = item.getProduccionReal() != null ? item.getProduccionReal() : 0.0;
     }
 
     public void registrarCosechaReal() {
-        if (selectedAreaCultivo == null) return;
-        if (selectedAreaCultivo.getAgroquimicos() == null) {
-            selectedAreaCultivo.setAgroquimicos(Collections.emptyList());
-        }
-        selectedAreaCultivo.setProduccionReal(nuevaProduccionReal);
-        boolean ok = restAreaCultivo.update(selectedAreaCultivo);
+        if (selectedItem == null) return;
+        boolean ok = restPlanificacionCosecha.completar(selectedItem.getAreaCultivoResponsePk(), nuevaProduccionReal);
         if (ok) {
             cargarDatos();
             FacesContext.getCurrentInstance().addMessage(null,
@@ -102,33 +95,34 @@ public class PlanificacionCosechaBean implements Serializable {
         }
     }
 
-    public String determinarColor(AreaCultivoResponse ac) {
-        if (ac.getProduccionReal() != null && ac.getProduccionReal() > 0) return "harvest-done";
-        LocalDateTime fecha = parseDate(ac.getFechaRecogida());
-        LocalDate hoy = LocalDate.now();
-        if (fecha != null && fecha.toLocalDate().isBefore(hoy) && Boolean.TRUE.equals(ac.getActivo())) return "harvest-overdue";
-        return "harvest-planned";
+    public void cancelarCosecha(PlanificacionCosechaResponse item) {
+        boolean ok = restPlanificacionCosecha.cancelar(item.getAreaCultivoResponsePk());
+        if (ok) {
+            cargarDatos();
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Cosecha cancelada", null));
+        } else {
+            FacesContext.getCurrentInstance().addMessage(null,
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No se pudo cancelar la cosecha."));
+        }
     }
 
-    public String estadoLabel(AreaCultivoResponse ac) {
-        return switch (determinarColor(ac)) {
-            case "harvest-done"    -> "Completada";
-            case "harvest-overdue" -> "Vencida";
-            default                -> "Planificada";
+    public String determinarColor(PlanificacionCosechaResponse item) {
+        return switch (item.getEstado()) {
+            case "COMPLETADA" -> "harvest-done";
+            case "VENCIDA" -> "harvest-overdue";
+            case "CANCELADA" -> "harvest-cancelled";
+            default -> "harvest-planned";
         };
     }
 
-    private LocalDateTime parseDate(String dateStr) {
-        if (dateStr == null || dateStr.isEmpty()) return null;
-        try {
-            return LocalDate.parse(dateStr, FMT_DDMMYYYY).atStartOfDay();
-        } catch (DateTimeParseException e1) {
-            try {
-                return LocalDate.parse(dateStr, FMT_YYYYMMDD).atStartOfDay();
-            } catch (DateTimeParseException e2) {
-                return null;
-            }
-        }
+    public String estadoLabel(PlanificacionCosechaResponse item) {
+        return switch (item.getEstado()) {
+            case "COMPLETADA" -> "Completada";
+            case "VENCIDA" -> "Vencida";
+            case "CANCELADA" -> "Cancelada";
+            default -> "Planificada";
+        };
     }
 
     // ── Excel ─────────────────────────────────────────────────────────────────

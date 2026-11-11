@@ -53,11 +53,19 @@
                     </div>
                 </div>
 
-                <div style="margin-bottom:12px;">
+                <div style="margin-bottom:12px; display:flex; align-items:center; gap:14px;">
                     <p:commandButton value="Actualizar" icon="pi pi-refresh"
                                      action="#{alertasBean.cargarAlertas()}"
                                      update="alertasForm"
                                      styleClass="ui-button-info"/>
+                    <p:commandButton value="Generar ahora" icon="pi pi-bolt"
+                                     action="#{alertasBean.generarAhora()}"
+                                     update="alertasForm msgs"
+                                     styleClass="ui-button-warning"/>
+                    <p:selectBooleanCheckbox value="#{alertasBean.soloNoLeidas}">
+                        <p:ajax event="change" listener="#{alertasBean.cargarAlertas()}" update="alertasForm"/>
+                    </p:selectBooleanCheckbox>
+                    <h:outputText value="Mostrar solo no leídas" style="font-size:0.9rem;"/>
                 </div>
 
                 <!-- Tabla -->
@@ -104,6 +112,26 @@
                         <h:outputText value="#{alerta.areaCultivoResponsePk.areaId} / #{alerta.areaCultivoResponsePk.cultivoId}"
                                       rendered="#{not empty alerta.areaCultivoResponsePk}"/>
                         <h:outputText value="—" rendered="#{empty alerta.areaCultivoResponsePk}"/>
+                    </p:column>
+
+                    <p:column headerText="Estado" style="text-align:center;">
+                        <h:outputText value="Nueva" rendered="#{not alerta.leida}"
+                                      style="color:#0d6efd; font-weight:600;"/>
+                        <h:outputText value="Leída" rendered="#{alerta.leida}"
+                                      style="color:#666;"/>
+                    </p:column>
+
+                    <p:column headerText="Acciones" style="text-align:center; width:220px;">
+                        <p:commandButton value="Marcar leída" icon="pi pi-eye"
+                                         rendered="#{not alerta.leida}"
+                                         action="#{alertasBean.marcarLeida(alerta)}"
+                                         update="alertasForm"
+                                         styleClass="ui-button-secondary"
+                                         style="margin-right:6px;"/>
+                        <p:commandButton value="Resolver" icon="pi pi-check"
+                                         action="#{alertasBean.marcarResuelta(alerta)}"
+                                         update="alertasForm msgs"
+                                         styleClass="ui-button-success"/>
                     </p:column>
 
                 </p:dataTable>
