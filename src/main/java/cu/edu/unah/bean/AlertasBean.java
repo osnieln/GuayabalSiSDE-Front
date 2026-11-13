@@ -20,14 +20,13 @@ public class AlertasBean implements Serializable {
     private List<AlertaResponse> alertas;
     private boolean soloNoLeidas = false;
 
-    private final RestAlertas restAlertas = new RestAlertas();
-
     @PostConstruct
     public void init() {
         cargarAlertas();
     }
 
     public void cargarAlertas() {
+        RestAlertas restAlertas = new RestAlertas();
         alertas = restAlertas.findAll(soloNoLeidas);
     }
 
@@ -37,18 +36,21 @@ public class AlertasBean implements Serializable {
     }
 
     public void generarAhora() {
+        RestAlertas restAlertas = new RestAlertas();
         restAlertas.generar();
         cargarAlertas();
         mensaje("Alertas actualizadas desde el sistema.");
     }
 
     public void marcarLeida(AlertaResponse alerta) {
+        RestAlertas restAlertas = new RestAlertas();
         if (restAlertas.marcarLeida(alerta.getId())) {
             cargarAlertas();
         }
     }
 
     public void marcarResuelta(AlertaResponse alerta) {
+        RestAlertas restAlertas = new RestAlertas();
         if (restAlertas.marcarResuelta(alerta.getId())) {
             cargarAlertas();
             mensaje("Alerta marcada como resuelta.");

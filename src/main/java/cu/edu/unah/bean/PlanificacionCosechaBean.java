@@ -37,7 +37,6 @@ public class PlanificacionCosechaBean implements Serializable {
     private int pendientes;
     private int completadas;
     private int vencidas;
-    private final RestPlanificacionCosecha restPlanificacionCosecha = new RestPlanificacionCosecha();
 
     @PostConstruct
     public void init() {
@@ -55,6 +54,7 @@ public class PlanificacionCosechaBean implements Serializable {
         String hasta = hoy.plusMonths(9).format(FMT_DDMMYYYY);
 
         try {
+            RestPlanificacionCosecha restPlanificacionCosecha = new RestPlanificacionCosecha();
             List<PlanificacionCosechaResponse> lista = restPlanificacionCosecha.findCalendario(desde, hasta);
             if (lista == null) return;
 
@@ -79,6 +79,7 @@ public class PlanificacionCosechaBean implements Serializable {
 
     public void registrarCosechaReal() {
         if (selectedItem == null) return;
+        RestPlanificacionCosecha restPlanificacionCosecha = new RestPlanificacionCosecha();
         boolean ok = restPlanificacionCosecha.completar(selectedItem.getAreaCultivoResponsePk(), nuevaProduccionReal);
         if (ok) {
             cargarDatos();
@@ -96,6 +97,7 @@ public class PlanificacionCosechaBean implements Serializable {
     }
 
     public void cancelarCosecha(PlanificacionCosechaResponse item) {
+        RestPlanificacionCosecha restPlanificacionCosecha = new RestPlanificacionCosecha();
         boolean ok = restPlanificacionCosecha.cancelar(item.getAreaCultivoResponsePk());
         if (ok) {
             cargarDatos();

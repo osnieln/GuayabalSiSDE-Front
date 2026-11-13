@@ -60,7 +60,7 @@
                                      styleClass="ui-button-info"/>
                     <p:commandButton value="Generar ahora" icon="pi pi-bolt"
                                      action="#{alertasBean.generarAhora()}"
-                                     update="alertasForm msgs"
+                                     update="alertasForm"
                                      styleClass="ui-button-warning"/>
                     <p:commandButton value="#{alertasBean.soloNoLeidas ? 'Mostrar todas' : 'Solo no leídas'}"
                                      icon="pi pi-filter"
@@ -131,7 +131,7 @@
                                          style="margin-right:6px;"/>
                         <p:commandButton value="Resolver" icon="pi pi-check"
                                          action="#{alertasBean.marcarResuelta(alerta)}"
-                                         update="alertasForm msgs"
+                                         update="alertasForm"
                                          styleClass="ui-button-success"/>
                     </p:column>
 
