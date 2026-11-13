@@ -31,6 +31,11 @@ public class AlertasBean implements Serializable {
         alertas = restAlertas.findAll(soloNoLeidas);
     }
 
+    public void toggleSoloNoLeidas() {
+        soloNoLeidas = !soloNoLeidas;
+        cargarAlertas();
+    }
+
     public void generarAhora() {
         restAlertas.generar();
         cargarAlertas();
