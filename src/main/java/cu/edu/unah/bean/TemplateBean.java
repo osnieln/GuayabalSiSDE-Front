@@ -1,6 +1,7 @@
 package cu.edu.unah.bean;
 
 import cu.edu.unah.rest.RestUsers;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.SessionScoped;
 import jakarta.inject.Named;
 import lombok.Data;
@@ -37,6 +38,7 @@ public class TemplateBean implements Serializable {
         return auth.getName();
     }
 
+    @PostConstruct
     public void init() {
         username = getCurrentUser();
         roles = restUsers.findAuthoritiesByUsername(username);
