@@ -62,11 +62,10 @@
                                      action="#{alertasBean.generarAhora()}"
                                      update="alertasForm"
                                      styleClass="ui-button-warning"/>
-                    <p:commandButton value="#{alertasBean.soloNoLeidas ? 'Mostrar todas' : 'Solo no leídas'}"
-                                     icon="pi pi-filter"
-                                     action="#{alertasBean.toggleSoloNoLeidas()}"
-                                     update="alertasForm"
-                                     styleClass="ui-button-secondary"/>
+                    <p:selectBooleanCheckbox value="#{alertasBean.soloNoLeidas}">
+                        <p:ajax event="change" listener="#{alertasBean.cargarAlertas()}" update="alertasForm"/>
+                    </p:selectBooleanCheckbox>
+                    <h:outputText value="Mostrar solo no leídas" style="font-size:0.9rem;"/>
                 </div>
 
                 <!-- Tabla -->
