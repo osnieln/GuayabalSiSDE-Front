@@ -148,4 +148,17 @@ public class RestArea {
         return false;
     }
 
+    public List<AreaResponse> findByCapa(String capa) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/findByCapa/"+capa)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<AreaResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<AreaResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
+    }
+
 }

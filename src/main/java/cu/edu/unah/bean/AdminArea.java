@@ -89,9 +89,9 @@ public class AdminArea implements Serializable {
     }
 
     public void init() {
-        listArea.clear();
         cleanVariables();
         listArea = restArea.findAllArea();
+        if (listArea == null) listArea = new ArrayList<>();
         initMap();
     }
 

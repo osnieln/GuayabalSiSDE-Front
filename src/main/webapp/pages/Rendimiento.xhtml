@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="jakarta.faces.core">
+
+<h:head><title>Rendimiento por Área</title></h:head>
+
+<h:body>
+    <ui:composition template="template.xhtml">
+        <ui:define name="title">Rendimiento por Área de Cultivo</ui:define>
+        <ui:define name="content">
+
+            <h:form id="rendimientoForm">
+                <p:commandButton value="Actualizar" icon="pi pi-refresh"
+                                 action="#{rendimientoBean.cargarRendimiento()}"
+                                 update="rendimientoTable" styleClass="ui-button-info"
+                                 style="margin-bottom:15px;"/>
+
+                <p:dataTable id="rendimientoTable" value="#{rendimientoBean.rendimientos}" var="r"
+                             paginator="true" rows="15"
+                             emptyMessage="No hay datos de rendimiento disponibles."
+                             sortField="rendimientoPorcentaje" sortOrder="DESCENDING">
+
+                    <p:column headerText="Área" sortBy="#{r.areaDescripcion}">
+                        <h:outputText value="#{r.areaDescripcion}"/>
+                    </p:column>
+                    <p:column headerText="Cultivo" sortBy="#{r.cultivoDescripcion}">
+                        <h:outputText value="#{r.cultivoDescripcion}"/>
+                    </p:column>
+                    <p:column headerText="Fecha Siembra">
+                        <h:outputText value="#{r.fechaSiembra}"/>
+                    </p:column>
+                    <p:column headerText="Plan Prod." sortBy="#{r.planProd}">
+                        <h:outputText value="#{r.planProd}"/>
+                    </p:column>
+                    <p:column headerText="Producción Real" sortBy="#{r.produccionReal}">
+                        <h:outputText value="#{r.produccionReal}">
+                            <f:convertNumber maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Rendimiento %" sortBy="#{r.rendimientoPorcentaje}">
+                        <h:outputText value="#{r.rendimientoPorcentaje != null ? r.rendimientoPorcentaje : 'N/A'}">
+                            <f:convertNumber maxFractionDigits="1"
+                                             rendered="#{r.rendimientoPorcentaje != null}"/>
+                        </h:outputText>
+                        <h:outputText value=" %" rendered="#{r.rendimientoPorcentaje != null}"/>
+                    </p:column>
+                </p:dataTable>
+
+                <br/>
+                <h:link value="Exportar CSV (AreaCultivo)"
+                        href="http://localhost:8081/areaCultivo/export/csv"
+                        style="color:#007bff;"/>
+            </h:form>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>

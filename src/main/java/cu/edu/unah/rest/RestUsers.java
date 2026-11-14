@@ -10,45 +10,49 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 public class RestUsers {
 
-    private static final HttpClient client = HttpClient.newBuilder().version(HttpClient.Version.HTTP_2).build();
+    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
+
+    private static final HttpClient client = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_2)
+            .connectTimeout(Duration.ofSeconds(5))
+            .build();
     private static final String serviceURL = "http://localhost:8081/Users/";
 
     //sending request to retrieve all users available.
     public List<Users> findAllUsers() {
-        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).GET().build();
-        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAll")).timeout(REQUEST_TIMEOUT).GET().build();
         List<Users> list_users = null;
         try {
-            list_users = JSONUtils.convertFromJsonToList(response.get().body(), new
+            HttpResponse<String> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString())
+                    .get(REQUEST_TIMEOUT.plusSeconds(5).getSeconds(), TimeUnit.SECONDS);
+            list_users = JSONUtils.convertFromJsonToList(response.body(), new
                     TypeReference<List<Users>>() {});
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             e.printStackTrace();
         }
-        response.join();
         return list_users;
     }
 
     public List<String> findAuthoritiesByUsername(String username) {
-        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAuthoritiesByUsername/"+username)).GET().build();
-        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"findAuthoritiesByUsername/"+username)).timeout(REQUEST_TIMEOUT).GET().build();
         List<String> listAuthorities = null;
         try {
-            listAuthorities = JSONUtils.convertFromJsonToList(response.get().body(), new
+            HttpResponse<String> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString())
+                    .get(REQUEST_TIMEOUT.plusSeconds(5).getSeconds(), TimeUnit.SECONDS);
+            listAuthorities = JSONUtils.convertFromJsonToList(response.body(), new
                     TypeReference<List<String>>() {});
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
+        } catch (InterruptedException | ExecutionException | TimeoutException e) {
             e.printStackTrace();
         }
-        response.join();
         return listAuthorities;
     }
 
@@ -90,7 +94,7 @@ public class RestUsers {
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 return false;
             }
         } catch (InterruptedException e) {
@@ -112,7 +116,7 @@ public class RestUsers {
                 .PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 response.join();
                 return false;
             } else {
@@ -133,7 +137,7 @@ public class RestUsers {
         HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"delete/"+username)).DELETE().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500) {
+            if(response.get().statusCode() >= 400) {
                 response.join();
                 return false;
             } else {

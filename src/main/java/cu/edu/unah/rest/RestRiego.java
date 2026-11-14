@@ -30,7 +30,6 @@ public class RestRiego {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
-        response.join();
         return list_Area;
     }
 
@@ -89,7 +88,7 @@ public class RestRiego {
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 return false;
             }
         } catch (InterruptedException e) {
@@ -110,7 +109,7 @@ public class RestRiego {
                 .PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 response.join();
                 return false;
             } else {
@@ -131,7 +130,7 @@ public class RestRiego {
         HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"/delete/"+id)).DELETE().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500) {
+            if(response.get().statusCode() >= 400) {
                 response.join();
                 return false;
             } else {
@@ -146,5 +145,29 @@ public class RestRiego {
         }
         return false;
     }
-    
+
+    public List<RiegoResponse> findRiegosProximos(int dias) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/proximos/"+dias)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<RiegoResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<RiegoResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public List<RiegoResponse> findHistorialByArea(Long areaId) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/historial/area/"+areaId)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<RiegoResponse> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<RiegoResponse>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

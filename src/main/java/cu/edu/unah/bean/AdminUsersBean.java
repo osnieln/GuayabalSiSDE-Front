@@ -46,9 +46,9 @@ public class AdminUsersBean implements Serializable{
     PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public void init(){
-        listUsers.clear();
         cleanVariables();
         listUsers = restUsers.findAllUsers();
+        if (listUsers == null) listUsers = new ArrayList<>();
     }
 
     public String getCurrentUser() {
@@ -84,8 +84,10 @@ public class AdminUsersBean implements Serializable{
         this.setSelectedUser(users);
         List<Authorities> authoritiesList = restAuthorities.findAuthorityByUsername(users.getUsername());
         Roles.clear();
-        for (Authorities authorities : authoritiesList) {
-            Roles.add(authorities.getAuthoritiesPK().getAuthority());
+        if (authoritiesList != null) {
+            for (Authorities authorities : authoritiesList) {
+                Roles.add(authorities.getAuthoritiesPK().getAuthority());
+            }
         }
     }
 
@@ -100,13 +102,12 @@ public class AdminUsersBean implements Serializable{
 
         List<Authorities> authoritiesList = restAuthorities.findAuthorityByUsername(users.getUsername());
         Roles.clear();
-        for (Authorities authorities : authoritiesList) {
-            Roles.add(authorities.getAuthoritiesPK().getAuthority());
-        }
-
         Roles1.clear();
-        for (Authorities authorities : authoritiesList) {
-            Roles1.add(authorities.getAuthoritiesPK().getAuthority());
+        if (authoritiesList != null) {
+            for (Authorities authorities : authoritiesList) {
+                Roles.add(authorities.getAuthoritiesPK().getAuthority());
+                Roles1.add(authorities.getAuthoritiesPK().getAuthority());
+            }
         }
     }
 

@@ -19,6 +19,7 @@ public class RiegoResponse {
     AreaCultivoResponsePK areaCultivoResponsePk;
     String fechaPlanificacion;
     String fechaReal;
+    String advertencia;
 
     public static RiegoResponse map(Riego riego){
         return RiegoResponse.builder()

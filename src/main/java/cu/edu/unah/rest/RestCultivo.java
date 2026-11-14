@@ -102,7 +102,7 @@ public class RestCultivo {
                 .POST(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 return false;
             }
         } catch (InterruptedException e) {
@@ -124,7 +124,7 @@ public class RestCultivo {
                 .PUT(HttpRequest.BodyPublishers.ofString(inputJson)).build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500){
+            if(response.get().statusCode() >= 400){
                 response.join();
                 return false;
             } else {
@@ -145,7 +145,7 @@ public class RestCultivo {
         HttpRequest request = HttpRequest.newBuilder(URI.create(serviceURL+"/delete/"+id)).DELETE().build();
         CompletableFuture<HttpResponse<String>> response = client.sendAsync(request,HttpResponse.BodyHandlers.ofString());
         try {
-            if(response.get().statusCode() == 500) {
+            if(response.get().statusCode() >= 400) {
                 response.join();
                 return false;
             } else {
@@ -159,6 +159,19 @@ public class RestCultivo {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public List<Cultivo> searchByDescripcion(String texto) {
+        HttpRequest req = HttpRequest.newBuilder(URI.create(serviceURL+"/search/"+texto)).GET().build();
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(req, HttpResponse.BodyHandlers.ofString());
+        List<Cultivo> list = null;
+        try {
+            list = JSONUtils.convertFromJsonToList(response.get().body(), new TypeReference<List<Cultivo>>() {});
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        response.join();
+        return list;
     }
 
 }

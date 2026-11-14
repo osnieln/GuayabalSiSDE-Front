@@ -136,8 +136,10 @@
                                 <p:outputLabel for="descripcion" value="Descripci&oacute;n"/><br/>
                                 <p:inputTextarea id="descripcion" style="height: 30px;"
                                                  value="#{adminProduccion.descripcion}"
-                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
-                                    <f:validateLength maximum="250"/>
+                                                 required="true"
+                                                 requiredMessage="La descripción de la producción es obligatoria."
+                                                 validatorMessage="La descripción solo puede contener letras, números y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputTextarea>
                             </div>
@@ -148,7 +150,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnAddModal" actionListener="#{adminProduccion.addProduccion()}"
-                                         update="add-produccion-content form:messages"
+                                         update="add-produccion-content :form:messages"
                                          process="add-produccion-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addproduccionDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -176,8 +178,10 @@
                                 <p:outputLabel for="edit-descripcion" value="Descripci&oacute;n"/><br/>
                                 <p:inputTextarea id="edit-descripcion" style="height: 30px;"
                                                  value="#{adminProduccion.descripcion}"
-                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
-                                    <f:validateLength maximum="250"/>
+                                                 required="true"
+                                                 requiredMessage="La descripción de la producción es obligatoria."
+                                                 validatorMessage="La descripción solo puede contener letras, números y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputTextarea>
                             </div>
@@ -188,7 +192,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditModal" actionListener="#{adminProduccion.editProduccion()}"
-                                         update="edit-produccion-content form:messages"
+                                         update="edit-produccion-content :form:messages"
                                          process="edit-produccion-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editproduccionDialog').hide()"
                                          class="ui-button-secondary" type="button"/>

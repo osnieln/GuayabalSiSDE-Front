@@ -34,10 +34,9 @@ public class AdminProduccion implements Serializable{
     RestProduccion restProduccion = new RestProduccion();
     
     public void init(){
-        listProduccion.clear();
         cleanVariables();
         listProduccion = restProduccion.findAllProduccion();
-        System.out.println(listProduccion.size());
+        if (listProduccion == null) listProduccion = new ArrayList<>();
     }
 
     public void cleanVariables(){

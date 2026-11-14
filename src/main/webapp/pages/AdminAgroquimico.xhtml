@@ -60,6 +60,12 @@
                     <p:column exportHeaderValue="Nombre" headerText="Nombre">
                         <h:outputText value="#{agroquimico.nombre}"/>
                     </p:column>
+                    <p:column exportHeaderValue="Stock Actual" headerText="Stock Actual">
+                        <h:outputText value="#{agroquimico.stockActual}"/>
+                    </p:column>
+                    <p:column exportHeaderValue="Stock Mínimo" headerText="Stock Mínimo">
+                        <h:outputText value="#{agroquimico.stockMinimo}"/>
+                    </p:column>
                     <p:column exportable="false">
                         <p:commandButton icon="pi pi-info-circle"
                                          oncomplete="PF('infoagroquimicoDialog').show()"
@@ -69,13 +75,13 @@
                                          title="Informaci&oacute;n">
                             <p:resetInput target=":dialogs:info-agroquimico-content"/>
                         </p:commandButton>
-<!--                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-agroquimico-content"-->
-<!--                                         style="margin-left: 10px"-->
-<!--                                         oncomplete="PF('editagroquimicoDialog').show()"-->
-<!--                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"-->
-<!--                                         actionListener="#{adminAgroquimicoBean.updateSelected_Agroquimico_toEdit(agroquimico)}">-->
-<!--                            <p:resetInput target=":dialogs:edit-agroquimico-content"/>-->
-<!--                        </p:commandButton>-->
+                        <p:commandButton icon="pi pi-pencil" update=":dialogs:edit-agroquimico-content"
+                                         style="margin-left: 10px"
+                                         oncomplete="PF('editagroquimicoDialog').show()"
+                                         styleClass="edit-button rounded-button ui-button-warning" process="@this"
+                                         actionListener="#{adminAgroquimicoBean.updateSelected_Agroquimico_toEdit(agroquimico)}">
+                            <p:resetInput target=":dialogs:edit-agroquimico-content"/>
+                        </p:commandButton>
                         <p:commandButton icon="pi pi-trash"
                                          oncomplete="PF('deleteagroquimicoDialog').show()"
                                          style="margin-left: 10px"
@@ -116,6 +122,24 @@
                                             value="#{adminAgroquimicoBean.selectedAgroquimicoResponse.nombre}"/>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Stock Actual: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAgroquimicoBean.selectedAgroquimicoResponse.stockActual}"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col col-lg-5">
+                                    <strong><h:outputLabel value="Stock M&iacute;nimo: "/></strong>
+                                </div>
+                                <div class="col col-lg-7">
+                                    <h:outputText
+                                            value="#{adminAgroquimicoBean.selectedAgroquimicoResponse.stockMinimo}"/>
+                                </div>
+                            </div>
                         </p:outputPanel>
                     </p:outputPanel>
 
@@ -136,10 +160,25 @@
                                 <p:outputLabel for="nombre" value="Nombre"/><br/>
                                 <p:inputTextarea id="nombre" style="height: 30px;"
                                                  value="#{adminAgroquimicoBean.nombre}"
-                                                 validatorMessage="La descripci&oacute;n introducida no es válida">
-                                    <f:validateLength maximum="250"/>
+                                                 required="true"
+                                                 requiredMessage="El nombre del agroquímico es obligatorio."
+                                                 validatorMessage="El nombre solo puede contener letras, números y espacios.">
+                                    <f:validateLength minimum="2" maximum="250"/>
                                     <f:validateRegex pattern="[a-zA-Z0-9 áéíóúüñÁÉÍÓÚÜÑ]+$"/>
                                 </p:inputTextarea>
+                            </div>
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="stockActual" value="Stock Actual"/><br/>
+                                <p:inputNumber id="stockActual" value="#{adminAgroquimicoBean.stockActual}"
+                                               decimalPlaces="2" minValue="0"/>
+                            </div>
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="stockMinimo" value="Stock M&iacute;nimo"/><br/>
+                                <p:inputNumber id="stockMinimo" value="#{adminAgroquimicoBean.stockMinimo}"
+                                               decimalPlaces="2" minValue="0"/>
                             </div>
                         </div>
                         <br/>
@@ -148,7 +187,7 @@
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnAddModal" actionListener="#{adminAgroquimicoBean.addAgroquimico()}"
-                                         update="add-agroquimico-content form:messages"
+                                         update="add-agroquimico-content :form:messages"
                                          process="add-agroquimico-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('addagroquimicoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>
@@ -183,12 +222,25 @@
                             </div>
                         </div>
                         <br/>
+                        <div class="row">
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-stockActual" value="Stock Actual"/><br/>
+                                <p:inputNumber id="edit-stockActual" value="#{adminAgroquimicoBean.stockActual}"
+                                               decimalPlaces="2" minValue="0"/>
+                            </div>
+                            <div class="col col-sm-6" style="padding-left: 15px; padding-right: 15px">
+                                <p:outputLabel for="edit-stockMinimo" value="Stock M&iacute;nimo"/><br/>
+                                <p:inputNumber id="edit-stockMinimo" value="#{adminAgroquimicoBean.stockMinimo}"
+                                               decimalPlaces="2" minValue="0"/>
+                            </div>
+                        </div>
+                        <br/>
                     </p:outputPanel>
 
                     <f:facet name="footer">
                         <p:commandButton value="Guardar" icon="pi pi-check"
                                          id="btnEditModal" actionListener="#{adminAgroquimicoBean.editAgroquimico()}"
-                                         update="edit-agroquimico-content form:messages"
+                                         update="edit-agroquimico-content :form:messages"
                                          process="edit-agroquimico-content @this"/>
                         <p:commandButton value="Cerrar" icon="pi pi-times" onclick="PF('editagroquimicoDialog').hide()"
                                          class="ui-button-secondary" type="button"/>

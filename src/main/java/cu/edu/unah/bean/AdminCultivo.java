@@ -42,13 +42,13 @@ public class AdminCultivo implements Serializable{
 
 
     public void init(){
-        listCultivo.clear();
-        listProduccion.clear();
-        tipoCultivoList.clear();
         cleanVariables();
         listCultivo = restCultivo.findAllCultivo();
         listProduccion = restProduccion.findAllProduccion();
         tipoCultivoList = restTipoCultivo.findAllTipoCultivo();
+        if (listCultivo == null) listCultivo = new ArrayList<>();
+        if (listProduccion == null) listProduccion = new ArrayList<>();
+        if (tipoCultivoList == null) tipoCultivoList = new ArrayList<>();
     }
 
     public void cleanVariables(){

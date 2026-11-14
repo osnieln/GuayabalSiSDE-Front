@@ -1,0 +1,84 @@
+/* Fondo completo con la foto de la finca */
+.auth.login-full-bg {
+    background: url("../images/guayabal.jpg") center center / cover no-repeat fixed;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* Overlay oscuro */
+.auth.login-full-bg::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 0;
+}
+
+/* La fila por encima del overlay */
+.auth.login-full-bg > .row {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+}
+
+/* Tarjeta */
+.auth .auth-form-light {
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    animation: cardFadeIn 0.45s ease forwards;
+}
+
+@keyframes cardFadeIn {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Título SGPA */
+.login-card-title {
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: #3d3d3d;
+    letter-spacing: 2px;
+    margin-bottom: 0.25rem;
+}
+
+/* Subtítulo */
+.login-card-subtitle {
+    font-size: 1.2rem;
+    color: #6c757d;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+/* Labels más grandes (sobreescribe el 0.8125rem de style.css) */
+.auth form .form-group label {
+    font-size: 1.15rem !important;
+    font-weight: 500;
+    color: #444;
+}
+
+/* Texto de los inputs más grande */
+.auth form .form-control {
+    font-size: 1.4rem !important;
+}
+
+/* Texto del botón Autenticar */
+.auth form .auth-form-btn {
+    font-size: 1.15rem !important;
+}
+
+/* Botón toggle de contraseña */
+.password-toggle-btn {
+    background: transparent;
+    border: 1px solid #ced4da;
+    border-left: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0 .75rem;
+    border-radius: 0 4px 4px 0;
+    line-height: 1;
+    transition: color 0.15s ease;
+}
+.password-toggle-btn:focus { outline: none; box-shadow: none; }
+.password-toggle-btn:hover { color: #4d83ff; }
+.password-toggle-btn .mdi { font-size: 1.3rem; vertical-align: middle; }

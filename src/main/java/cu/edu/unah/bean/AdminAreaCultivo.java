@@ -64,13 +64,19 @@ public class AdminAreaCultivo implements Serializable {
     double planProduccion, prodPermanente, prodTemporal, prodReal;
 
     public void init() {
+        if (listAreaCultivo == null) listAreaCultivo = new ArrayList<>();
+        if (areaResponsesList == null) areaResponsesList = new ArrayList<>();
+        if (cultivoList == null) cultivoList = new ArrayList<>();
         listAreaCultivo.clear();
         cleanVariables();
         areaResponsesList.clear();
         cultivoList.clear();
-        listAreaCultivo = restAreaCultivo.findAllAreaCultivo();
-        areaResponsesList = restArea.findAllArea();
-        cultivoList = restCultivo.findAllCultivo();
+        List<AreaCultivoResponse> fetched = restAreaCultivo.findAllAreaCultivo();
+        listAreaCultivo = fetched != null ? fetched : new ArrayList<>();
+        List<AreaResponse> fetchedAreas = restArea.findAllArea();
+        areaResponsesList = fetchedAreas != null ? fetchedAreas : new ArrayList<>();
+        List<Cultivo> fetchedCultivos = restCultivo.findAllCultivo();
+        cultivoList = fetchedCultivos != null ? fetchedCultivos : new ArrayList<>();
         riegoResponseList = new ArrayList<>();
         System.out.println(listAreaCultivo.size());
     }
